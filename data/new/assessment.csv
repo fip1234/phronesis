@@ -1,0 +1,14 @@
+student_id,subject,assessment_title,assessment_date,score,max_score,pass_mark
+S001,Maths,Test 1,2026-01-10,60,100,50
+S001,Maths,Test 2,2026-02-10,70,100,50
+S002,Maths,Test 1,2026-01-10,45,100,50
+S002,Maths,Test 2,2026-02-10,40,100,50
+S003,Maths,Test 1,2026-01-10,65,100,50
+S003,Maths,Test 2,2026-02-10,75,100,50
+S004,Maths,Test 1,2026-01-10,55,100,50
+S004,Maths,Test 2,2026-02-10,65,100,50
+S005,Maths,Test 1,2026-01-10,50,100,50
+S005,Maths,Test 2,2026-02-10,60,100,50
+S006,Maths,Test 1,2026-01-10,70,100,50
+S006,Maths,Test 2,2026-02-10,80,100,50
+S007,Maths,Test 1,2026-01-10,65,100,50
