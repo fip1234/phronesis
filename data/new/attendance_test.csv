@@ -1,0 +1,16 @@
+test_case,expected_valid,student_id,total_sessions,sessions_attended
+normal valid attendance,True,S001,100,96
+all sessions attended,True,S002,100,100
+zero sessions attended,True,S003,100,0
+sessions attended greater than total,False,S004,100,120
+negative sessions attended,False,S005,100,-5
+zero total sessions,False,S006,0,0
+negative total sessions,False,S007,-100,50
+non numeric total sessions,False,S008,abc,50
+non numeric sessions attended,False,S009,100,xyz
+missing total sessions,False,S010,,80
+missing sessions attended,False,S011,100,
+missing student id,False,,100,90
+both session values missing,False,S013,,
+null total sessions,False,S014,NULL,90
+null sessions attended,False,S015,100,NULL
