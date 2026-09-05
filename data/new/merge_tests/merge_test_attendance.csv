@@ -1,0 +1,4 @@
+student_id,absences,attendance_percentage,attendance_status
+T001,4,96.0,Valid
+T002,5,95.0,Valid
+T005,3,97.0,Valid

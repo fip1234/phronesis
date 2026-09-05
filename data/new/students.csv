@@ -1,12 +1,11 @@
 student_id,name,year_group
-S001,Sarah Khan,10
-S002,Ahmed Ali,10
-S003,Mariam Hussain,10
-S004,Adam Patel,10
-S005,Aisha Begum,10
-S006,Yusuf Malik,10
-S007,Zara Ahmed,10
-S008,Omar Iqbal,10
-S009,Hana Mahmood,10
-S010,Rayyan Shah,10
-S011,Missing Student,10
+S001,Student 1,10
+S002,Student 2,10
+S003,Student 3,10
+S004,Student 4,10
+S005,Student 5,10
+S006,Student 6,10
+S007,Student 7,10
+S008,Student 8,10
+S009,Student 9,10
+S010,Student 10,10

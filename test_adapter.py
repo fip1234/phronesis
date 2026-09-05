@@ -5,6 +5,7 @@ from assessment_adapter import validate_assessment_data
 from attendance_adapter import process_attendances
 from attendance_adapter import validate_attendance_data
 from model_adapter import merge_model_features
+from model_adapter import risk_predict
 
 ##########Assessment##########
 #read in assessment data
@@ -18,7 +19,7 @@ print(assessment_features)
 
 ##########Assessment Test##########
 #read assessment test data
-test_assessment = pd.read_csv("data/new/assessment_test.csv")
+test_assessment = pd.read_csv("data/new/tests/assessment_test.csv")
 
 #validate test data
 assessment_validation_results = validate_assessment_data(test_assessment)
@@ -41,7 +42,7 @@ print(attendance_features)
 
 ##########Attendance Test##########
 #read attendance test data
-test_attendance = pd.read_csv("data/new/attendance_test.csv")
+test_attendance = pd.read_csv("data/new/tests/attendance_test.csv")
 
 #validate attendance test data
 attendance_validation_results = validate_attendance_data(test_attendance)
@@ -52,13 +53,22 @@ attendance_validation_results["test_passed"] =(attendance_validation_results["ex
 print("\nATTENDANCE VALIDATION TESTS:")
 print(attendance_validation_results[["test_case","expected_valid","valid_record","test_passed"]])
 
-##########Model##########
-#merge assessment and attendance features
-merged_features = merge_model_features(assessment_features, attendance_features)
 
-print("\nCOMBINED MODEL FEATURES:")
+##########Students##########
+#read student list
+students = pd.read_csv("data/new/students.csv")
+
+##########Model Merge Tests##########
+
+test_students = pd.read_csv("data/new/merge_tests/merge_test_students.csv")
+test_assessment_features = pd.read_csv("data/new/merge_tests/merge_test_assessment.csv")
+test_attendance_features = pd.read_csv("data/new/merge_tests/merge_test_attendance.csv")
+test_merged = merge_model_features(test_students,test_assessment_features,test_attendance_features)
+
+print("\nMODEL MERGE TEST DATA:")
+
 print(
-    merged_features[
+    test_merged[
         [
             "student_id",
             "subject",
@@ -70,3 +80,22 @@ print(
         ]
     ]
 )
+
+
+##########Model##########
+#merge assessment and attendance features
+merged_features = merge_model_features(students,assessment_features, attendance_features)
+
+print("\nCOMBINED MODEL FEATURES:")
+print(merged_features[["student_id","subject","prev_failure","absences","grade_average","grade_change","prediction_status"]])
+
+
+##########Random Forest Prediction##########
+#generate risk predictions
+prediction_results = risk_predict(merged_features)
+
+print("\nRANDOM FOREST PREDICTIONS:")
+print(prediction_results[["student_id","subject","prediction_status","risk_prediction"]])
+
+
+
