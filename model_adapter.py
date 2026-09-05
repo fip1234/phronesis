@@ -1,165 +1,178 @@
 import pandas as pd
 
-
-def process_assessments(assessment):
-
-    #make copy so original data is not changed
+def validate_assessment_data(assessment):
+    #make copy so original data not changed
     assessment= assessment.copy()
 
     #columns needed for assessment processing
-    required_columns= [
-        "student_id",
-        "subject",
-        "assessment_title",
-        "assessment_date",
-        "score",
-        "max_score",
-        "pass_mark"
-    ]
+    required_columns= ["student_id","subject","assessment_title","assessment_date","score","max_score","pass_mark"]
 
-    #check required columns exist
-    missing_columns= [
-        column for column in required_columns
-        if column not in assessment.columns
-    ]
+    #check required columns exist- if not add to missing columns list
+    missing_columns = []
+
+    for column in required_columns:
+        if column not in assessment.columns:
+            missing_columns.append(column)
 
     if missing_columns:
-        raise ValueError(
-            f"Missing assessment columns: {missing_columns}"
-        )
+        raise ValueError(f"Missing assessment columns: {missing_columns}")
 
     #convert assessment numbers to numeric values
-    assessment["score"]= pd.to_numeric(
-        assessment["score"],
-        errors="coerce"
-    )
-
-    assessment["max_score"]= pd.to_numeric(
-        assessment["max_score"],
-        errors="coerce"
-    )
-
-    assessment["pass_mark"]= pd.to_numeric(
-        assessment["pass_mark"],
-        errors="coerce"
-    )
+    #coerce- turn invalid values into NaN
+    assessment["score"]= pd.to_numeric(assessment["score"],errors="coerce")
+    assessment["max_score"]= pd.to_numeric(assessment["max_score"],errors="coerce")
+    assessment["pass_mark"]= pd.to_numeric(assessment["pass_mark"],errors="coerce")
 
     #convert dates into proper dates
-    assessment["assessment_date"]= pd.to_datetime(
-        assessment["assessment_date"],
-        errors="coerce"
+    assessment["assessment_date"]= pd.to_datetime(assessment["assessment_date"],errors="coerce")
+
+    #check all required values are present
+    complete_record = assessment[required_columns].notna().all(axis=1)
+
+    #check values are within valid ranges
+    valid_scores = (
+        (assessment["max_score"] >0)
+        & (assessment["score"] >=0)
+        & (assessment["score"] <=assessment["max_score"])
+        & (assessment["pass_mark"] >=0)
+        & (assessment["pass_mark"] <=assessment["max_score"])
     )
 
-    #check whether each assessment record is valid
-    assessment["valid_record"]= (
-        assessment["student_id"].notna()
-        & assessment["subject"].notna()
-        & assessment["assessment_title"].notna()
-        & assessment["assessment_date"].notna()
-        & assessment["score"].notna()
-        & assessment["max_score"].notna()
-        & assessment["pass_mark"].notna()
-        & (assessment["max_score"] > 0)
-        & (assessment["score"] >= 0)
-        & (assessment["score"] <= assessment["max_score"])
-        & (assessment["pass_mark"] >= 0)
-        & (assessment["pass_mark"] <= assessment["max_score"])
+    #valid record-has all required values and valid scores
+    assessment["valid_record"] = complete_record & valid_scores
+
+    return assessment
+
+
+
+
+
+################Process assessment data- normal#####################
+def process_assessments(assessment):
+    #make copy so original data not changed
+    assessment= assessment.copy()
+
+    #columns needed for assessment processing
+    required_columns= ["student_id","subject","assessment_title","assessment_date","score","max_score","pass_mark"]
+
+    #check required columns exist- if not add to missing columns list
+    missing_columns = []
+
+    for column in required_columns:
+        if column not in assessment.columns:
+            missing_columns.append(column)
+
+    if missing_columns:
+        raise ValueError(f"Missing assessment columns: {missing_columns}")
+    
+    #convert assessment numbers to numeric values
+    #coerce- turn invalid values into NaN
+    assessment["score"]= pd.to_numeric(assessment["score"],errors="coerce")
+    assessment["max_score"]= pd.to_numeric(assessment["max_score"],errors="coerce")
+    assessment["pass_mark"]= pd.to_numeric(assessment["pass_mark"],errors="coerce")
+
+    #convert dates into proper dates
+    assessment["assessment_date"]= pd.to_datetime(assessment["assessment_date"],errors="coerce")
+
+    #check all required values are present
+    complete_record = assessment[required_columns].notna().all(axis=1)
+
+    #check values are within valid ranges
+    valid_scores = (
+        (assessment["max_score"] >0)
+        & (assessment["score"] >=0)
+        & (assessment["score"] <=assessment["max_score"])
+        & (assessment["pass_mark"] >=0)
+        & (assessment["pass_mark"] <=assessment["max_score"])
     )
 
-    #convert valid assessment results onto 0-20 scale
+    #valid record-has all required values and valid scores
+    assessment["valid_record"] = complete_record & valid_scores
+
+    #convert valid assessmentresults onto 0-20 scale
     assessment["model_grade"]= pd.NA
 
-    assessment.loc[
-        assessment["valid_record"],
-        "model_grade"
-    ]= (
-        assessment.loc[
-            assessment["valid_record"],
-            "score"
-        ]
+    valid_rows = assessment["valid_record"]
+
+    #calculate model grade for valid rows
+    #find the valid rows, take score,divide by max score, multiply by 20 save the result in model_grade
+    assessment.loc[valid_rows, "model_grade"]=(
+        assessment.loc[valid_rows,"score"]
         /
-        assessment.loc[
-            assessment["valid_record"],
-            "max_score"
-        ]
-    ) * 20
+        assessment.loc[valid_rows,"max_score"]
+    )*20
 
     #store calculated features for each student
     assessment_features= []
 
     #only rows with student and subject can be grouped
-    assessment_groups= assessment.dropna(
-        subset=["student_id","subject"]
-    )
+    assessment_groups= assessment.dropna(subset=["student_id","subject"])
 
-    #process each student separately for each subject
-    for (student_id,subject), student_assessments in assessment_groups.groupby(
-        ["student_id","subject"]
-    ):
+    ############process each student separately for each subject##############
+    #go through each student
+    for student_id in assessment_groups["student_id"].unique():
+        #get all data for that student
+        student_data=assessment_groups[assessment_groups["student_id"] ==student_id]
 
-        #only use valid assessments
-        valid_assessments= student_assessments[
-            student_assessments["valid_record"]
-        ].copy()
+        #go through each subject for that student
+        for subject in student_data["subject"].unique():
+            #get all data for that student and subject
+            subject_data = student_data[student_data["subject"] ==subject].copy() 
 
-        #put assessments in date order
-        valid_assessments= valid_assessments.sort_values(
-            by="assessment_date"
-        )
+            #only keep valid assessments
+            valid_assessments = subject_data[subject_data["valid_record"]].copy() 
 
-        #need at least two assessments
-        if len(valid_assessments) < 2:
+            #put assessments in dates order
+            valid_assessments = valid_assessments.sort_values("assessment_date")
 
+            #if less than 2 valid assessments, cant calculate features
+            if len(valid_assessments)<2:
+                assessment_features.append({
+                    "student_id": student_id,
+                    "subject": subject,
+                    "prev_failure": pd.NA,
+                    "grade_average": pd.NA,
+                    "grade_change": pd.NA,
+                    "assessment_status": "Insufficient data"
+                })
+                continue
+
+            
+            #get latest two assessments
+            latest_two =valid_assessments.tail(2)
+
+            previous_grade =float(latest_two["model_grade"].iloc[0])
+            latest_grade =float(latest_two["model_grade"].iloc[1])
+
+            #average grade
+            grade_average =(previous_grade +latest_grade)/2
+
+            #grade change
+            grade_change = latest_grade -previous_grade
+
+            #get all assessments before latest one
+            previous_assessments = valid_assessments.iloc[:-1]
+
+            #check if failed any previous assessments-score less than pass mark
+            failed_before =(previous_assessments["score"]< previous_assessments["pass_mark"]).any()
+
+            if failed_before:
+                prev_failure =1
+            else:
+                prev_failure =0
+
+            #store calculated features
             assessment_features.append({
-                "student_id":student_id,
-                "subject":subject,
-                "prev_failure":pd.NA,
-                "grade_average":pd.NA,
-                "grade_change":pd.NA,
-                "assessment_status":"Insufficient data"
+                "student_id": student_id,
+                "subject": subject,
+                "prev_failure": prev_failure,
+                "grade_average": grade_average,
+                "grade_change": grade_change,
+                "assessment_status": "Valid"
             })
 
-            continue
 
-        #get latest two assessments
-        latest_two= valid_assessments.tail(2)
-
-        #average of latest two model grades
-        grade_average= latest_two[
-            "model_grade"
-        ].astype(float).mean()
-
-        #latest grade minus previous grade
-        grade_change= (
-            float(latest_two["model_grade"].iloc[-1])
-            -
-            float(latest_two["model_grade"].iloc[-2])
-        )
-
-        #all assessments before the latest assessment
-        previous_assessments= valid_assessments.iloc[:-1]
-
-        #check whether student previously failed
-        prev_failure= int(
-            (
-                previous_assessments["score"]
-                <
-                previous_assessments["pass_mark"]
-            ).any()
-        )
-
-        assessment_features.append({
-            "student_id":student_id,
-            "subject":subject,
-            "prev_failure":prev_failure,
-            "grade_average":grade_average,
-            "grade_change":grade_change,
-            "assessment_status":"Valid"
-        })
-
-    #turn calculated results into dataframe
-    assessment_features= pd.DataFrame(
-        assessment_features
-    )
+    #turn results into a dataframe
+    assessment_features = pd.DataFrame(assessment_features)
 
     return assessment_features
