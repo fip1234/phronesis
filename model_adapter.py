@@ -25,6 +25,8 @@ def validate_assessment_data(assessment):
 
     #convert dates into proper dates
     assessment["assessment_date"]= pd.to_datetime(assessment["assessment_date"],errors="coerce")
+    #check if date is not in future
+    valid_date=(assessment["assessment_date"]<= pd.Timestamp.today())
 
     #check all required values are present
     complete_record = assessment[required_columns].notna().all(axis=1)
@@ -39,7 +41,7 @@ def validate_assessment_data(assessment):
     )
 
     #valid record-has all required values and valid scores
-    assessment["valid_record"] = complete_record & valid_scores
+    assessment["valid_record"] = (complete_record & valid_scores & valid_date)
 
     return assessment
 
@@ -74,6 +76,9 @@ def process_assessments(assessment):
     #convert dates into proper dates
     assessment["assessment_date"]= pd.to_datetime(assessment["assessment_date"],errors="coerce")
 
+    #check if date is not in future
+    valid_date=(assessment["assessment_date"]<= pd.Timestamp.today())
+
     #check all required values are present
     complete_record = assessment[required_columns].notna().all(axis=1)
 
@@ -87,7 +92,7 @@ def process_assessments(assessment):
     )
 
     #valid record-has all required values and valid scores
-    assessment["valid_record"] = complete_record & valid_scores
+    assessment["valid_record"] = (complete_record & valid_scores & valid_date)
 
     #convert valid assessmentresults onto 0-20 scale
     assessment["model_grade"]= pd.NA
