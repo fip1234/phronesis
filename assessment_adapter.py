@@ -53,7 +53,7 @@ def validate_assessment_data(assessment):
 def process_assessments(assessment):
     #validate assessment data first
     assessment = validate_assessment_data(assessment)
-    
+
     #convert valid assessmentresults onto 0-20 scale
     assessment["model_grade"]= pd.NA
 
