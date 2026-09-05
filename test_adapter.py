@@ -4,6 +4,7 @@ from assessment_adapter import process_assessments
 from assessment_adapter import validate_assessment_data
 from attendance_adapter import process_attendances
 from attendance_adapter import validate_attendance_data
+from model_adapter import merge_model_features
 
 ##########Assessment##########
 #read in assessment data
@@ -50,3 +51,22 @@ attendance_validation_results["test_passed"] =(attendance_validation_results["ex
 
 print("\nATTENDANCE VALIDATION TESTS:")
 print(attendance_validation_results[["test_case","expected_valid","valid_record","test_passed"]])
+
+##########Model##########
+#merge assessment and attendance features
+merged_features = merge_model_features(assessment_features, attendance_features)
+
+print("\nCOMBINED MODEL FEATURES:")
+print(
+    merged_features[
+        [
+            "student_id",
+            "subject",
+            "prev_failure",
+            "absences",
+            "grade_average",
+            "grade_change",
+            "prediction_status"
+        ]
+    ]
+)
