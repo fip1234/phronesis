@@ -67,19 +67,7 @@ test_merged = merge_model_features(test_students,test_assessment_features,test_a
 
 print("\nMODEL MERGE TEST DATA:")
 
-print(
-    test_merged[
-        [
-            "student_id",
-            "subject",
-            "prev_failure",
-            "absences",
-            "grade_average",
-            "grade_change",
-            "prediction_status"
-        ]
-    ]
-)
+print(test_merged[["student_id","subject","prev_failure","absences","grade_average","grade_change","prediction_status"]])
 
 
 ##########Model##########
@@ -97,5 +85,27 @@ prediction_results = risk_predict(merged_features)
 print("\nRANDOM FOREST PREDICTIONS:")
 print(prediction_results[["student_id","subject","prediction_status","risk_prediction"]])
 
+##########Random Forest Prediction Tests##########
+#read expected prediction results
+prediction_test = pd.read_csv("data/new/tests/prediction_test.csv")
+#attach actual results to expected results
+prediction_test_results = prediction_test.merge(
+    prediction_results[["student_id","prediction_status","risk_prediction"]],on="student_id",how="left")
 
+#check prediction status
+prediction_test_results["status_test_passed"] =(
+    prediction_test_results["expected_status"]
+    ==
+    prediction_test_results["prediction_status"]
+)
+
+#check risk prediction
+prediction_test_results["prediction_test_passed"] =(
+    prediction_test_results["expected_prediction"]
+    ==
+    prediction_test_results["risk_prediction"]
+)
+
+print("\nRANDOM FOREST PREDICTION TESTS:")
+print(prediction_test_results[["student_id","expected_status", "prediction_status", "status_test_passed", "expected_prediction", "risk_prediction","prediction_test_passed"]])
 
