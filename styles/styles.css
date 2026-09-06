@@ -1,0 +1,65 @@
+/* Main app */
+
+.stApp {
+    background-color: #EDEDED;
+    color: #000000;
+    font-family: "Segoe UI", sans-serif;
+}
+
+
+/* Make ALL text black */
+
+.stApp,
+.stMarkdown,
+p,
+span,
+div,
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #000000 !important;
+    font-family: "Segoe UI", sans-serif !important;
+}
+
+
+/* Sidebar */
+
+section[data-testid="stSidebar"] {
+    background-color: #FF8266;
+}
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+    font-family: "Segoe UI", sans-serif !important;
+}
+
+
+/* Risk cards */
+
+.high-risk {
+    background-color: #FF8266;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.medium-risk {
+    background-color: #FFB866;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.low-risk {
+    background-color: #FFFF83;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}

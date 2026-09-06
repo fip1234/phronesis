@@ -109,3 +109,12 @@ prediction_test_results["prediction_test_passed"] =(
 print("\nRANDOM FOREST PREDICTION TESTS:")
 print(prediction_test_results[["student_id","expected_status", "prediction_status", "status_test_passed", "expected_prediction", "risk_prediction","prediction_test_passed"]])
 
+
+
+##########App Data Test##########
+from app_data import load_app_data
+
+app_data_test = load_app_data()
+print("\nAPP DATA TEST:")
+
+print(app_data_test[["student_id","subject","prediction_status","risk_prediction"]])
