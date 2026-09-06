@@ -1,0 +1,186 @@
+#Add info like students, classes, subjects
+#imports
+import streamlit as st
+import pandas as pd
+
+
+def show_subjects():
+    st.subheader("Subjects")
+    st.write("Add, view and manage subjects.")
+
+    #read subject data
+    subjects =pd.read_csv("data/new/subjects.csv")
+
+    ##########SUCCESS MESSAGES##########
+
+    #add subject
+    if "subject_message" in st.session_state:
+        st.success(st.session_state["subject_message"])
+        del st.session_state["subject_message"]
+
+    #delete
+    if "delete_message" in st.session_state:
+        st.success(st.session_state["delete_message"])
+        del st.session_state["delete_message"]
+
+    #rename
+    if "rename_message" in st.session_state:
+        st.success(st.session_state["rename_message"])
+        del st.session_state["rename_message"]
+
+
+    ##########ADD SUBJECT##########
+    @st.dialog("Add Subject")
+    def add_subject_dialog(subjects):
+
+        st.write("Enter the new subject below.")
+
+        subject_name =st.text_input("Subject Name")
+
+        if st.button("Add Subject",type="primary"):
+
+            #remove whitespace
+            subject_name =subject_name.strip()
+
+            #empty?-check and flag error
+            if subject_name =="":
+                st.error("Subject name is required.")
+
+            #subject already exist? check and flag error
+            elif subject_name.lower() in subjects["subject_name"].str.lower().values:
+                st.error("This subject already exists.")
+
+            else:
+                #find highest existing subject id number
+                highest_subject_number =0
+
+                #loop through subjects to find highest number
+                #replace SUB with empty string,convert to int,compare to highest number
+                for subject_id in subjects["subject_id"]:
+                    subject_number =int(subject_id.replace("SUB",""))
+
+                    #compare to highest number-if higher,set as new highest number
+                    if subject_number >highest_subject_number:
+                        highest_subject_number =subject_number
+
+                #new subject id +1
+                new_subject_number =highest_subject_number +1
+
+                #new id-three digits, leading zeros, prefix SUB
+                subject_id =("SUB"+str(new_subject_number).zfill(3))
+
+                #add new subject to dataframe
+                new_subject =pd.DataFrame(
+                    {
+                        "subject_id":[subject_id],
+                        "subject_name":[subject_name]
+                    }
+                )
+
+                #add subject
+                subjects =pd.concat([subjects,new_subject],ignore_index=True)
+
+                #save subjects
+                subjects.to_csv("data/new/subjects.csv",index=False)
+
+                #save success message
+                st.session_state["subject_message"] ="Subject added successfully!"
+                st.rerun()
+
+
+    #button which opens add subject box
+    if st.button("Add Subject"):
+        add_subject_dialog(subjects)
+
+    ##########DELETE SUBJECT##########
+    @st.dialog("Delete Subject")
+    def confirm_delete_subject(subjects,selected_subject_id,selected_subject_name):
+        st.warning(f"Are you sure you want to delete {selected_subject_name}?")
+
+        #make two columns for yes/no buttons
+        col1,col2 =st.columns(2)
+        #YES button column
+        with col1:
+            if st.button("Yes, Delete",type="primary",use_container_width=True):
+
+                #subjects is now dataframe without selected subject
+                subjects =subjects[subjects["subject_id"]!=selected_subject_id].copy()
+
+                #save
+                subjects.to_csv("data/new/subjects.csv",index=False)
+                st.session_state["delete_message"] ="Subject deleted successfully!"
+                st.rerun()
+
+        #NO
+        with col2:
+            if st.button("Cancel",use_container_width=True):
+                st.rerun()
+
+    ##########VIEW SUBJECTS##########
+    #bold
+    st.write("### Current Subjects")
+
+    #if no subjects added
+    if len(subjects) ==0:
+        st.info("No subjects have been added yet.")
+
+    else:
+        #choose subject directly from table
+        subject_table =st.dataframe(subjects,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row")
+
+        ##########SELECTED SUBJECT##########
+        #get selected rows
+        selected_rows =subject_table.selection.rows
+
+        #if subject selected- show options to rename and delete
+        if len(selected_rows) >0:
+            #get selected row
+            selected_row =selected_rows[0]
+
+            #get selected subject
+            selected_subject =subjects.iloc[selected_row]
+            selected_subject_id =selected_subject["subject_id"]
+            selected_subject_name =selected_subject["subject_name"]
+
+            st.write("### Manage Selected Subject")
+
+            #bold subject
+            st.write(f"Selected: **{selected_subject_name}**")
+
+            ##########RENAME SUBJECT##########
+            #input box- prefill with current name
+            new_subject_name =st.text_input("Rename Subject",value=selected_subject_name)
+
+            #if rename button clicked- remove whitespace,check empty
+            if st.button("Rename Subject"):
+                new_subject_name =new_subject_name.strip()
+
+                #if empty-flag error
+                if new_subject_name =="":
+                    st.error("Subject name is required.")
+
+                #if new name is not same as current & already exists- flag error
+                elif(new_subject_name.lower()!=selected_subject_name.lower()
+                    and
+                    new_subject_name.lower()
+                    in subjects["subject_name"].str.lower().values
+                    ):
+                    st.error("This subject already exists.")
+
+                else:
+                    #change name- update in dataframe with id
+                    subjects.loc[subjects["subject_id"]==selected_subject_id,"subject_name"] =new_subject_name
+
+                    #save updated subjects
+                    subjects.to_csv("data/new/subjects.csv",index=False)
+
+                    #save success message
+                    st.session_state["rename_message"] ="Subject renamed successfully."
+
+                    st.rerun()
+
+            ##########DELETE SUBJECT BUTTON##########
+            #delete button only show when subject selected
+            if st.button("Delete Subject",type="primary"):
+
+                confirm_delete_subject(subjects,selected_subject_id,selected_subject_name)
