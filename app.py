@@ -1,29 +1,70 @@
 import streamlit as st
 
 from style_loader import load_styles
-from pages.sidebar import show_sidebar
-from pages.dashboard import show_dashboard
-from app_data import load_app_data
-from pages.student_page import show_student_page
 
+
+#set up app
 st.set_page_config(
     page_title="Phronesis",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-#load styling
+
+#apply styling
 load_styles()
 
-#show sidebar
-show_sidebar()
 
-#main title
-st.title("Phronesis")
-st.subheader("AI-Driven Student Risk Analytics")
+##########Pages##########
 
-#load final processed data
-df = load_app_data()
+dashboard_page = st.Page(
+    "pages/dashboard.py",
+    title="Dashboard",
+    icon="🏠",
+    default=True
+)
 
-#show dashboard
-show_dashboard(df)
-show_student_page(df)
+student_page = st.Page(
+    "pages/student_page.py",
+    title="Students",
+    icon="👥"
+)
+
+data_upload_page = st.Page(
+    "pages/data_upload.py",
+    title="Data Upload",
+    icon="📁"
+)
+
+about_page = st.Page(
+    "pages/about.py",
+    title="About",
+    icon="ℹ️"
+)
+
+
+##########Navigation##########
+
+page = st.navigation(
+    [
+        dashboard_page,
+        student_page,
+        data_upload_page,
+        about_page
+    ],
+    position="sidebar",
+    expanded=True
+)
+
+
+#sidebar heading
+st.sidebar.title("Phronesis")
+st.sidebar.write(
+    "AI-Driven Student Risk Analytics"
+)
+
+st.sidebar.markdown("---")
+
+
+#run selected page
+page.run()

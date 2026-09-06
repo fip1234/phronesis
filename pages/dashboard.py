@@ -1,22 +1,15 @@
 import streamlit as st
-
+from app_data import load_app_data
 
 def show_dashboard(df):
-
     st.header("Student Risk Dashboard")
 
-    #count students in each prediction group
-    at_risk_count = (
-        df["risk_prediction"] == "At Risk"
-    ).sum()
+    #count students in each group
+    at_risk_count =(df["risk_prediction"] == "At Risk").sum()
 
-    not_at_risk_count = (
-        df["risk_prediction"] == "Not At Risk"
-    ).sum()
+    not_at_risk_count =(df["risk_prediction"] == "Not At Risk").sum()
 
-    insufficient_count = (
-        df["prediction_status"] == "Insufficient data"
-    ).sum()
+    insufficient_count =(df["prediction_status"] == "Insufficient data").sum()
 
 
     ##########Dashboard summary cards##########
@@ -94,3 +87,11 @@ def show_dashboard(df):
         display_df,
         use_container_width=True
     )
+
+
+
+#load final app data
+df = load_app_data()
+
+#show dashboard
+show_dashboard(df)
