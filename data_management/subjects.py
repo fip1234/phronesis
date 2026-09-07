@@ -88,7 +88,6 @@ def show_subjects():
                 st.session_state["subject_message"] ="Subject added successfully!"
                 st.rerun()
 
-
     #button which opens add subject box
     if st.button("Add Subject"):
         add_subject_dialog(subjects)
@@ -107,7 +106,7 @@ def show_subjects():
     #pop-up window to upload subject csv
     @st.dialog("Upload Subject CSV")
     def upload_subject_csv(subjects):
-        st.write("Upload a CSV file containing a subject_name column.")
+        st.write("Upload a CSV file following the template. The file should contain the following column: subject_name.")
 
         #must be csv
         uploaded_file =st.file_uploader("Choose Subject CSV",type=["csv"])
@@ -120,8 +119,8 @@ def show_subjects():
             #show uploaded data
             st.write("### Preview")
             st.dataframe(uploaded_subjects,use_container_width=True,hide_index=True)
-            if st.button("Upload Subjects",type="primary"):
 
+            if st.button("Upload Subjects",type="primary"):
                 ##########VALIDATE CSV##########
                 #columns needed for upload
                 required_columns =["subject_name"]
@@ -134,7 +133,6 @@ def show_subjects():
 
                 #missing columns?-flag error
                 if missing_columns:
-
                     st.error(f"Missing required columns: {missing_columns}")
                     return
 
@@ -158,7 +156,7 @@ def show_subjects():
 
                 #loop through existing subjects- get number from subject_id (remove sub)
                 for subject_id in subjects["subject_id"]:
-                    subject_number =int(subject_id.replace("SUB",""))
+                    subject_number =int( subject_id.replace("SUB",""))
 
                     #compare to highest number
                     if subject_number >highest_subject_number:
@@ -177,7 +175,8 @@ def show_subjects():
                     uploaded_duplicate =False
 
                     for new_subject in new_subjects:
-                        if(new_subject["subject_name"].lower() ==subject_name.lower()):uploaded_duplicate =True
+                        if(new_subject["subject_name"].lower() ==subject_name.lower()):
+                            uploaded_duplicate =True
 
                     #only add new subject
                     if not subject_exists and not uploaded_duplicate:
