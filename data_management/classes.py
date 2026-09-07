@@ -72,7 +72,7 @@ def show_classes():
                 highest_class_number =0
 
                 #loop through classes to find highest number
-                #replace C with empty string,convert to int,compare to highest number
+                #replace c with empty string,convert to int,compare to highest number
                 for class_id in classes["class_id"]:
                     class_number =int(class_id.replace("C",""))
 
@@ -83,7 +83,7 @@ def show_classes():
                 #new class id +1
                 new_class_number =highest_class_number +1
 
-                #new id-three digits, leading zeros, prefix C
+                #new id-three digits, leading zeros, s prefix
                 class_id =("C"+str(new_class_number).zfill(3))
 
                 #add new class to dataframe
@@ -177,7 +177,7 @@ def show_classes():
 
                 #remove empty class or subject names
                 uploaded_classes =uploaded_classes[(uploaded_classes["class_name"] !="") &
-                    (uploaded_classes["subject_name"] !="")].copy()
+                                                   (uploaded_classes["subject_name"] !="")].copy()
 
                 #if no valid classes left after validation-flag error
                 if len(uploaded_classes) ==0:
@@ -269,7 +269,7 @@ def show_classes():
                 #####save
                 classes.to_csv("data/new/classes.csv",index=False)
                 #save success message
-                st.session_state["class_upload_message"] =(f"{len(new_classes)} classes uploaded successfully!")
+                st.session_state["class_upload_message"] =(f"{len(new_classes)}  classes uploaded successfully!")
 
                 st.rerun()
 
