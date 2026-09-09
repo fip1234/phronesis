@@ -1,0 +1,6 @@
+student_id,subject,prev_failure,grade_average,grade_change,assessment_status
+T001,Maths,0,13.0,2.0,Valid
+T002,Maths,,,,Insufficient data
+T003,Maths,0,12.0,1.0,Valid
+T005,Maths,0,14.0,2.0,Valid
+T005,English,1,9.0,-1.0,Valid

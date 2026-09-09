@@ -52,15 +52,22 @@ def show_classes():
 
         #if add button clicked
         if st.button("Add Class",type="primary"):
-            #remove whitespace
-            class_name =class_name.strip()
+            #TEST FIX!-remove extra spaces
+            class_name =" ".join(class_name.split())
+
+            #TEST FIX- extra whitespaces from existing subjects removed
+            existing_class_names =[]
+
+            for existing_class in classes["class_name"]:
+                clean_class =" ".join(existing_class.split()).lower()
+                existing_class_names.append(clean_class)
 
             #empty?-check and flag error
             if class_name =="":
                 st.error("Class name is required.")
 
-            #class already exist? check and flag error
-            elif class_name.lower() in classes["class_name"].str.lower().values:
+            #TEST FIX! class already exist? check and flag error
+            elif class_name.lower() in existing_class_names:
                 st.error("This class already exists.")
 
             else:
@@ -123,7 +130,9 @@ def show_classes():
     ##########UPLOAD CLASS CSV##########
     @st.dialog("Upload Class CSV")
     def upload_class_csv(classes,subjects):
-        st.write("Upload a CSV file following the template. The file should contain the following columns: class_name, subject_name, year_group.")
+        st.write("Upload a CSV file following the template.")
+        #nice box
+        st.info("The file should contain the following columns: class_name, subject_name, year_group.")
 
         #must be csv
         uploaded_file =st.file_uploader("Choose Class CSV",type=["csv"])
@@ -158,6 +167,8 @@ def show_classes():
 
                 #remove whitespace class names - string
                 uploaded_classes["class_name"] =(uploaded_classes["class_name"].astype(str).str.strip())
+                #TEST FIX!- extra spaces removed from class names
+                uploaded_classes["class_name"] =(uploaded_classes["class_name"].str.split().str.join(" "))
 
                 #remove whitespace subject names - string
                 uploaded_classes["subject_name"] =(uploaded_classes["subject_name"].astype(str).str.strip())
@@ -217,14 +228,22 @@ def show_classes():
                 #store new classes
                 new_classes =[]
 
+                #TEST FIX!-remove extra spaces from uploaded class names
+                existing_class_names =[]
+
+                for existing_class in classes["class_name"]:
+                    clean_class =" ".join(existing_class.split()).lower()
+                    existing_class_names.append(clean_class)
+
+                
                 #go through uploaded classes to add to existing classes 
                 for index,class_row in uploaded_classes.iterrows():
                     class_name =class_row["class_name"]
                     subject_name =class_row["subject_name"]
                     year_group =int(class_row["year_group"])
 
-                    #check class does not already exist
-                    class_exists =(class_name.lower()in classes["class_name"].str.lower().values)
+                    #test fix! check class doesnt already exist (class_name already cleaned for whitespaces)
+                    class_exists =(class_name.lower() in existing_class_names)
 
                     #check class was not already added from same upload
                     uploaded_duplicate =False
@@ -386,16 +405,26 @@ def show_classes():
 
             #if update button clicked-remove whitespace,check empty
             if st.button("Update Class"):
-                new_class_name =new_class_name.strip()
+                new_class_name =" ".join(new_class_name.split())
+
+                #test fix! - check against other existing class names
+                existing_class_names =[]
+                other_classes =classes[classes["class_id"] !=selected_class_id]
+
+                for existing_class in other_classes["class_name"]:
+                    clean_class =" ".join(existing_class.split()).lower()
+                    existing_class_names.append(clean_class)
+
 
                 #if empty-flag error
                 if new_class_name =="":
                     st.error("Class name is required.")
 
                 #if new name not same as current & already exists-flag error
-                elif(new_class_name.lower()!=selected_class_name.lower() and new_class_name.lower()
-                    in classes["class_name"].str.lower().values):
+                #checks already done for whitespace and case-insensitive duplicates
+                elif new_class_name.lower() in existing_class_names:
                     st.error("This class already exists.")
+
                 else:
                     #get subject id from selected subject name
                     new_subject =subjects[subjects["subject_name"] ==new_subject_name]

@@ -1,3 +1,12 @@
 class_id,class_name,subject_id,year_group
-C001,10A Maths,SUB001,10
-C002,10B English,SUB002,10
+C005,12A English,SUB003,12
+C008,10Y Language Test,SUB003,11
+C009,13Y Arabic Test,SUB002,13
+C012,12B,SUB004,12
+C014,7C,SUB002,11
+C016,9z science test,SUB002,9
+C017,9Z     SCIENCE test,SUB002,9
+C018,7B Maths,SUB002,7
+C019,7B Maths 7B                  Maths,SUB002,7
+C020,7B                  Maths,SUB002,7
+C021,9A Maths,SUB002,9

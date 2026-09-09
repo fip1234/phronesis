@@ -27,9 +27,9 @@ def show_subjects():
         del st.session_state["rename_message"]
 
     #upload
-    if "upload_message" in st.session_state:
-        st.success(st.session_state["upload_message"])
-        del st.session_state["upload_message"]
+    if "subject_upload_message" in st.session_state:
+        st.success(st.session_state["subject_upload_message"])
+        del st.session_state["subject_upload_message"]
 
     ##########ADD SUBJECT##########
     #pop-up window to add subject
@@ -40,15 +40,23 @@ def show_subjects():
 
         #if add button clicked
         if st.button("Add Subject",type="primary"):
-            #remove whitespace
-            subject_name =subject_name.strip()
+            #test fix-remove extra whitespaces
+            #remove extra whitespace 
+            subject_name =" ".join(subject_name.split())
+
+            #TEST FIX- extra whitespaces from existing subjects removed
+            existing_subject_names =[]
+            for existing_subject in subjects["subject_name"]:
+                clean_subject =" ".join(existing_subject.split()).lower()
+
+                existing_subject_names.append(clean_subject)
 
             #empty?-check and flag error
             if subject_name =="":
                 st.error("Subject name is required.")
 
             #subject already exist? check and flag error
-            elif subject_name.lower() in subjects["subject_name"].str.lower().values:
+            elif subject_name.lower() in existing_subject_names:
                 st.error("This subject already exists.")
 
             else:
@@ -141,6 +149,9 @@ def show_subjects():
 
                 #remove whitespace subject names - string
                 uploaded_subjects["subject_name"] =(uploaded_subjects["subject_name"].astype(str).str.strip())
+                #remove extra whitespace within subject names
+                uploaded_subjects["subject_name"] = (uploaded_subjects["subject_name"]
+                                                    .str.split().str.join(" "))
 
                 #remove empty subject names
                 uploaded_subjects =uploaded_subjects[uploaded_subjects["subject_name"] !=""].copy()
@@ -284,8 +295,9 @@ def show_subjects():
             new_subject_name =st.text_input("Rename Subject",value=selected_subject_name)
 
             #if rename button clicked- remove whitespace,check empty
+            #test fix-remove extra whitespaces
             if st.button("Rename Subject"):
-                new_subject_name =new_subject_name.strip()
+                new_subject_name =" ".join(new_subject_name.split())
 
                 #if empty-flag error
                 if new_subject_name =="":

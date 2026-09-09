@@ -1,0 +1,31 @@
+test_case,expected_valid,student_id,subject,assessment_title,assessment_date,score,max_score,pass_mark
+normal valid assessment,True,S001,Math,Test 1,2026-01-15,15,20,10
+score equal to max score,True,S002,Math,Test 2,2026-01-16,20,20,10
+score below pass mark but still valid record,True,S003,Science,Test 1,2026-01-17,5,20,10
+score equal to zero,True,S004,Math,Test 3,2026-01-18,0,20,10
+score greater than max score,False,S005,Math,Score Test 1,2026-01-20,25,20,10
+negative score,False,S006,Science,Score Test 2,2026-01-21,-5,20,10
+non numeric score,False,S007,Math,Score Test 3,2026-01-22,abc,20,10
+missing score,False,S008,Science,Score Test 4,2026-01-23,,20,10
+negative max score,False,S009,Math,Max Test 1,2026-01-24,15,-20,10
+max score equal to zero,False,S010,Science,Max Test 2,2026-01-25,0,0,0
+non numeric max score,False,S011,Math,Max Test 3,2026-01-26,15,xyz,10
+missing max score,False,S012,Science,Max Test 4,2026-01-27,15,,10
+negative pass mark,False,S013,Math,Pass Test 1,2026-01-28,10,20,-5
+pass mark greater than max score,False,S014,Math,Pass Test 2,2026-01-29,15,20,25
+pass mark equal to max score,True,S015,Math,Pass Test 3,2026-01-30,15,20,20
+pass mark equal to zero,True,S016,Science,Pass Test 4,2026-01-31,15,20,0
+non numeric pass mark,False,S017,Math,Pass Test 5,2026-02-01,15,20,pqr
+missing pass mark,False,S018,Math,Pass Test 6,2026-02-02,15,20,
+normal date,True,S019,Math,Date Test 1,2026-02-03,15,20,10
+old but valid date,True,S020,Science,Date Test 2,2020-01-15,15,20,10
+invalid date format,False,S021,Math,Date Test 3,not-a-date,15,20,10
+missing date,False,S022,Science,Date Test 4,,15,20,10
+future date,False,S023,Math,Date Test 5,2027-01-15,15,20,10
+missing subject,False,S024,,Missing Test 1,2026-02-05,15,20,10
+missing student id,False,,Math,Missing Test 2,2026-02-06,15,20,10
+missing assessment title,False,S026,Math,,2026-02-07,15,20,10
+all main values missing,False,S027,,,,,,
+numeric fields non numeric,False,S028,Math,Bad Values 1,2026-02-08,jkl,mno,pqr
+mixed invalid types,False,S029,Math,Bad Values 2,2026-02-09,xyz,20,10
+null style values,False,S030,NULL,NULL,NULL,NULL,NULL,NULL
