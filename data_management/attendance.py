@@ -167,8 +167,9 @@ def show_attendance():
 
 
                 #if csv has no rows
+                #code fix!
                 if len(uploaded_attendance) ==0:
-                    st.error("The uploaded file contains no assessment records.")
+                    st.error("The uploaded file contains no attendance records.")
                     return
 
                 #check missing values
@@ -200,7 +201,7 @@ def show_attendance():
                 invalid_numbers =uploaded_attendance[numeric_columns].isna().any().any()
 
                 if invalid_numbers:
-                    st.error("Score, maximum score and pass mark must contain numbers.")
+                    st.error("Total sessions and sessions attended must contain numbers.")
                     return
 
                 ##########CHECK WHOLE NUMBERS##########
@@ -384,17 +385,13 @@ def show_attendance():
 
 
             #get selected student from display table
-            selected_student_id =attendance_display.iloc[selected_row]["student_id"]
-            selected_attendance =attendance_display.iloc[selected_row]["student_id"]
-            selected_student =attendance_display.iloc[selected_row]["name"]
+            selected_attendance =attendance_display.iloc[selected_row]
+            selected_student_id =selected_attendance["student_id"]
+            selected_student_name =selected_attendance["name"]
 
-            #if student still exists
-            if len(selected_student) >0:
-                selected_student_name =selected_student["name"].iloc[0]
-
-            else:
-                selected_student_name =(selected_student_id + " - Student no longer exists")
-
+            #if student no longer exists
+            if pd.isna(selected_student_name):
+                selected_student_name =(selected_student_id+" - Student no longer exists")
 
             st.write( "### Manage Selected Attendance")
             #bold student
@@ -406,16 +403,11 @@ def show_attendance():
                                                 value=int(selected_attendance["total_sessions"]), step=1 )
             
 
-            #make sure current attended does not go above new total sessions
-            current_sessions_attended =min(int(selected_attendance["sessions_attended"]),
-                                           int(new_total_sessions))
-
-            #input box-prefill current sessions attended
+            #test fix!- dont change the attendance value automatically
             new_sessions_attended =st.number_input(
                 "Sessions Attended",
                 min_value=0,
-                max_value=int(new_total_sessions),
-                value=current_sessions_attended,
+                value=int(selected_attendance["sessions_attended"]),
                 step=1
             )
 
@@ -431,19 +423,24 @@ def show_attendance():
 
             #if update button pressed
             if st.button("Update Attendance"):
-                #update total sessions
-                attendance.loc[attendance["student_id"] == selected_student_id, 
-                               "total_sessions"] =new_total_sessions
+                #test fix!- dont change the attendance value automatically
+                if new_sessions_attended > new_total_sessions:
+                    st.error("The number of sessions attended cannot exceed the total sessions.")
 
-                #update sessions attended
-                attendance.loc[ attendance["student_id"] == selected_student_id,
-                    "sessions_attended"] =new_sessions_attended
+                else:
+                    #update total sessions
+                    attendance.loc[attendance["student_id"] == selected_student_id, 
+                                "total_sessions"] =new_total_sessions
 
-                #save attendance
-                attendance.to_csv("data/new/attendance.csv",index=False)
-                #save success message
-                st.session_state["update_attendance_message"] ="Attendance updated successfully."
-                st.rerun()
+                    #update sessions attended
+                    attendance.loc[ attendance["student_id"] == selected_student_id,
+                        "sessions_attended"] =new_sessions_attended
+
+                    #save attendance
+                    attendance.to_csv("data/new/attendance.csv",index=False)
+                    #save success message
+                    st.session_state["update_attendance_message"] ="Attendance updated successfully."
+                    st.rerun()
 
             ##########DELETE ATTENDANCE BUTTON##########
             #delete button only show when attendance selected
