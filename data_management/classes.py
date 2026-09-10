@@ -10,6 +10,7 @@ def show_classes():
     #read class and subject data
     classes =pd.read_csv("data/new/classes.csv")
     subjects =pd.read_csv("data/new/subjects.csv")
+    class_students =pd.read_csv("data/new/class_students.csv")
 
     ##########SUCCESS MESSAGES##########
 
@@ -300,7 +301,7 @@ def show_classes():
     ##########DELETE CLASS##########
     #pop-up window to confirm delete subject
     @st.dialog("Delete Class")
-    def confirm_delete_class(classes,selected_class_id,selected_class_name):
+    def confirm_delete_class(classes,class_students,selected_class_id,selected_class_name):
         st.warning(f"Are you sure you want to delete {selected_class_name}?")
 
         #make two columns for yes/no buttons
@@ -309,13 +310,23 @@ def show_classes():
         #YES button column 1
         with col1:
             if st.button("Yes, Delete",type="primary",use_container_width=True):
-                #classes is now dataframe without selected class
-                classes =classes[classes["class_id"] !=selected_class_id].copy()
+                #test fix!- are students assigned to class?
+                students_in_class =class_students[class_students["class_id"] ==selected_class_id]
 
-                #save
-                classes.to_csv("data/new/classes.csv",index=False)
-                st.session_state["delete_class_message"] ="Class deleted successfully!"
-                st.rerun()
+                #if no students are assigned to the class
+                if len(students_in_class) >0:
+                    st.warning(f"There are {len(students_in_class)} students assigned to this class.")
+                    st.info("Consider reassigning or removing these students before deleting the class.")
+
+                else:
+                    st.info("No students are assigned to this class.")
+                    #class can be removed because no class assigned
+                    classes =classes[classes["class_id"] !=selected_class_id].copy()
+
+                    #save
+                    classes.to_csv("data/new/classes.csv",index=False)
+                    st.session_state["delete_class_message"] ="Class deleted successfully!"
+                    st.rerun()
 
 
         #NO button column 2
@@ -448,4 +459,4 @@ def show_classes():
             ##########DELETE CLASS BUTTON##########
             #delete button only show when class selected
             if st.button("Delete Class",type="primary"):
-                confirm_delete_class(classes,selected_class_id,selected_class_name)
+                confirm_delete_class(classes,class_students, selected_class_id,selected_class_name)

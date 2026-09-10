@@ -59,8 +59,25 @@ def show_students():
 
         #if add button clicked
         if st.button("Add Student",type="primary"):
-            #remove whitespace
-            student_name =student_name.strip()
+            #!TEST FIX- get rid of more white spaces
+            student_name =" ".join(student_name.split())
+
+            #TEST FIX!---student not in two classes for same subject at once??
+            selected_subject_ids =[]
+            duplicate_subject =False
+
+            for class_option in selected_classes:
+                #get classid, selected class, subject id so duplicates checked 
+                class_id =class_option.split(" - ")[-1]
+                selected_class =classes[classes["class_id"] ==class_id]
+                subject_id =selected_class["subject_id"].iloc[0]
+
+                #same subject already selected?
+                if subject_id in selected_subject_ids:
+                    duplicate_subject =True
+                else:
+                    selected_subject_ids.append(subject_id)
+
 
             #empty?-check and flag error
             if student_name =="":
@@ -69,6 +86,10 @@ def show_students():
             #no classes selected?-check
             elif len(selected_classes) ==0:
                 st.error("Please select at least one class.")
+
+            #test fix!- more than one class for the same subject
+            elif duplicate_subject:
+                st.error("A student cannot be assigned to more than one class for the same subject.")
 
             else:
                 #find highest existing student id number
@@ -103,9 +124,7 @@ def show_students():
 
                 #save students
                 students.to_csv("data/new/students.csv",index=False)
-                #save success message
-                st.session_state["students_message"] ="Student added successfully!"
-                st.rerun()
+                #deleted the rerun after saving students-test fix!
 
                 ##########ADD STUDENT TO CLASSES##########
                 #go through selected classes
@@ -185,8 +204,28 @@ def show_students():
                 #remove whitespace student names - string
                 uploaded_students["name"] =(uploaded_students["name"].astype(str).str.strip())
 
+                #remove extra spaces inside student names
+                uploaded_students["name"] =(uploaded_students["name"].str.split().str.join(" "))
+
+                #test fix!-get rid of more whitespaces
                 #remove whitespace class - string
                 uploaded_students["classes"] =(uploaded_students["classes"].astype(str).str.strip())
+
+                #test fix! get rid of whitespaces when someone enrolled to multiple classes
+                #remove extra spaces inside each class name
+                cleaned_classes =[]
+
+                #loop through all classes, remove extra spaces
+                for class_list in uploaded_students["classes"]:
+                    class_names =class_list.split(";")
+                    clean_class_names =[]
+
+                    for class_name in class_names:
+                        clean_class =" ".join(class_name.split())
+                        clean_class_names.append(clean_class)
+
+                    cleaned_classes.append(";".join(clean_class_names))
+                uploaded_students["classes"] =cleaned_classes
 
                 #year group to number for validation
                 uploaded_students["year_group"] =pd.to_numeric(uploaded_students["year_group"],errors="coerce")
@@ -262,6 +301,40 @@ def show_students():
                 if year_group_errors:
                     st.error(f"These students have been assigned to classes in a different year group: {year_group_errors}")
                     return
+
+                ##########CHECK DOUBLE SAME SUBJECTS##########
+                #test fix! get rid of whitespaces when someone enrolled to multiple classes
+                #remove extra spaces inside each class name
+                duplicate_subject_errors =[]
+
+                #loop through all classes, remove extra spaces
+                for index,student_row in uploaded_students.iterrows():
+                    student_name =student_row["name"]
+                    class_names =student_row["classes"].split(";")
+                    #store subject ids already chosen for this student
+                    selected_subject_ids =[]
+
+                    #each class checked for duplicate subjects
+                    for class_name in class_names:
+                        class_name =class_name.strip()
+
+                        #get classid, selected class, subject id so duplicates checked 
+                        selected_class =classes[classes["class_name"].str.lower() ==class_name.lower()]
+                        subject_id =selected_class["subject_id"].iloc[0]
+
+                        #same subject already selected?
+                        if subject_id in selected_subject_ids:
+                            if student_name not in duplicate_subject_errors:
+                                duplicate_subject_errors.append(student_name)
+
+                        else:
+                            selected_subject_ids.append(subject_id)
+
+                #duplicate subject found?-stop upload
+                if duplicate_subject_errors:
+                    st.error(f"These students have been assigned to more than one class for the same subject: {duplicate_subject_errors}")
+                    return
+
 
                 ##########ADD STUDENTS##########
                 #find highest existing student id number
@@ -458,7 +531,25 @@ def show_students():
 
             #if update button clicked-remove whitespace,check empty
             if st.button("Update Student"):
-                new_student_name =new_student_name.strip()
+                #test fix!- get rid of extra whitespace
+                new_student_name =" ".join(new_student_name.split())
+
+                #TEST FIX!---student not in two classes for same subject at once??
+                selected_subject_ids =[]
+                duplicate_subject =False
+
+                for class_option in selected_classes:
+                    ##get classid, selected class, subject id so duplicates checked 
+                    class_id =class_option.split(" - ")[-1]
+                    selected_class =classes[classes["class_id"] ==class_id]
+                    subject_id =selected_class["subject_id"].iloc[0]
+
+                    #same subject already selected?
+                    if subject_id in selected_subject_ids:
+                        duplicate_subject =True
+                    else:
+                        selected_subject_ids.append(subject_id)
+
 
                 #if empty-flag error
                 if new_student_name =="":
@@ -467,6 +558,11 @@ def show_students():
                 #no class selected?-flag error
                 elif len(selected_classes) ==0:
                     st.error("Please select at least one class.")
+
+                #test fix!- more than one class for the same subject
+                elif duplicate_subject:
+                    st.error("A student cannot be assigned to more than one class for the same subject.")
+
 
                 else:
                     #change name-update in dataframe with id
