@@ -118,18 +118,22 @@ def show_assessments():
 
         #if add button clicked
         if st.button("Add Assessment",type="primary"):
-            #remove whitespace
-            assessment_title =assessment_title.strip()
+            #test fix!--- remove extra whitespaces
+            assessment_title =" ".join(assessment_title.split())
+
             #empty title?-check and flag error
             if assessment_title =="":
                 st.error("Assessment name is required.")
 
             else:
+                #test fix!-clean assessment titles first
+                existing_assess_titles=(assessments["assessment_title"]  .astype(str)  .str.split()  .str.join(" ") .str.lower())
                 #does assessment already exist for student?
                 duplicate_assessment =((assessments["student_id"] ==student_id)&
                     (assessments["subject"].str.lower()==subject_name.lower())&
-                    (assessments["assessment_title"].str.lower()==assessment_title.lower())&
+                    (existing_assess_titles ==assessment_title.lower())&
                     (pd.to_datetime(assessments["assessment_date"]).dt.date==assessment_date)).any()
+
 
                 #duplicate?-flag error
                 if duplicate_assessment:
@@ -225,12 +229,15 @@ def show_assessments():
                 uploaded_assessments["class_name"] =(uploaded_assessments["class_name"].astype(str).str.strip())
                 uploaded_assessments["assessment_title"] =(uploaded_assessments["assessment_title"].astype(str).str.strip())
 
+                #test fix!-extra whitespaces removed 
+                uploaded_assessments["class_name"] =(uploaded_assessments["class_name"].str.split().str.join(" "))
+                uploaded_assessments["assessment_title"] =(uploaded_assessments["assessment_title"].str.split().str.join(" "))
+
                 #check empty text fields
                 empty_values =(
                     (uploaded_assessments["student_id"] =="")|
                     (uploaded_assessments["class_name"] =="")|
-                    (uploaded_assessments["assessment_title"] =="")
-                )
+                    (uploaded_assessments["assessment_title"] ==""))
 
                 if empty_values.any():
                     st.error("Student ID, class name and assessment title cannot be empty.")
@@ -403,6 +410,9 @@ def show_assessments():
                     st.error(f"These classes do not have a valid subject: {subject_errors}. Please update the classes first.")
                     return
 
+                #test fix!---clean assessment titles for duplicate check
+                existing_assess_titles=(assessments["assessment_title"]  .astype(str)  .str.split()  .str.join(" ") .str.lower())
+
                 ##########CREATE ASSESSMENT RECORDS##########
                 new_assessments =[]
                 duplicate_errors =[]
@@ -433,7 +443,7 @@ def show_assessments():
                         &
                         (assessments["subject"].str.lower()==subject_name.lower())
                         &
-                        (assessments["assessment_title"].str.lower()==assessment_title.lower())
+                        (existing_assess_titles ==assessment_title.lower())
                         &
                         (pd.to_datetime(assessments["assessment_date"]).dt.date
                             ==assessment_date.date())).any()
@@ -601,10 +611,10 @@ def show_assessments():
                 value=float(selected_assessment["max_score"]),
                 step=1.0)
 
+            #test fix!- make sure student score doesnt pass max score
             new_score =st.number_input("Student Score",
                 min_value=0.0,
-                max_value=float(new_max_score),
-                value=min(float(selected_assessment["score"]),float(new_max_score)),
+                value=float(selected_assessment["score"]),
                 step=1.0)
 
             new_pass_mark =st.number_input(
@@ -619,11 +629,19 @@ def show_assessments():
 
             #if update button clicked-remove whitespace,check empty
             if st.button("Update Assessment"):
-                new_assessment_title =new_assessment_title.strip()
+                #test fix!- whitespaces extra removal
+                new_assessment_title =" ".join(new_assessment_title.split())
+
+                #test fix!--clean assessment title for duplicate check
+                existing_assess_titles=(assessments["assessment_title"]  .astype(str)  .str.split()  .str.join(" ")  .str.lower())
 
                 #empty?-flag error
                 if new_assessment_title =="":
                     st.error("Assessment title is required.")
+
+                #score cant be above new max score
+                elif new_score >new_max_score:
+                        st.error("Student score cannot be greater than maximum score.")
 
                 else:
                     #check if updated assessment would create duplicate
@@ -633,8 +651,7 @@ def show_assessments():
                         (assessments["subject"].str.lower()
                          ==str(selected_assessment["subject"]).lower())  
                          &
-                        (assessments["assessment_title"].str.lower()
-                         ==new_assessment_title.lower()) 
+                        (existing_assess_titles ==new_assessment_title.lower())
                          &
                         (pd.to_datetime(assessments["assessment_date"]).dt.date
                          ==new_assessment_date)   
