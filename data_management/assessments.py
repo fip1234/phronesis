@@ -2,17 +2,18 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_assessments():
     st.subheader("Assessments")
     st.write("Add, view and manage assessment results.")
 
     #read assessment,class,subject,student and class-student data
-    assessments =pd.read_csv("data/new/assessment.csv")
-    classes =pd.read_csv("data/new/classes.csv")
-    subjects =pd.read_csv("data/new/subjects.csv")
-    students =pd.read_csv("data/new/students.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    assessments =pd.read_csv(get_user_file("assessment.csv"))
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    subjects =pd.read_csv(get_user_file("subjects.csv"))
+    students =pd.read_csv(get_user_file("students.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -157,7 +158,7 @@ def show_assessments():
                     assessments =pd.concat([assessments,new_assessment],ignore_index=True)
 
                     #save assessments
-                    assessments.to_csv("data/new/assessment.csv",index=False)
+                    assessments.to_csv(get_user_file("assessment.csv"),index=False)
 
                     #save success message
                     st.session_state["assessment_message"] ="Assessment added successfully!"
@@ -168,14 +169,78 @@ def show_assessments():
         add_assessment_dialog(assessments,classes,subjects,students,class_students)
 
     ##########DOWNLOAD ASSESSMENT TEMPLATE##########
-    #empty template with assessment csv headers
-    assessment_template =pd.DataFrame(columns=["student_id","class_name","assessment_title","assessment_date","score","max_score","pass_mark"])
+    #test fix!- added student ids prefilled on template
 
-    #turn template into csv
-    assessment_template_csv =assessment_template.to_csv(index=False)
+    @st.dialog("Download Assessment Template")
+    def download_assessment_template():
 
-    #download template button
-    st.download_button("Download Assessment Template",data=assessment_template_csv,file_name="assessment_template.csv",mime="text/csv")
+        #no classes?
+        if len(classes) == 0:
+            st.info("No classes available. Please create a class before downloading an assessment template :)")
+            return
+
+        #class options to choose from before downloading template
+        templ_class_options= []
+        
+        for i,class_row in classes.iterrows():
+            #display class options- classname-class id
+            class_option =(class_row["class_name"] + " - " + class_row["class_id"])
+            templ_class_options.append(class_option)
+
+        #choose a class
+        templ_selected_class = st.selectbox("Choose a class for an assessment template", templ_class_options)
+        templ_selected_class_id = templ_selected_class.split(" - ")[-1]
+
+        #selected class and name by getting class id from selectbox
+        templ_selected_class_data= classes[classes["class_id"] == templ_selected_class_id]
+        templ_selected_class_name = templ_selected_class_data.iloc[0]["class_name"]
+
+        #assessments deats
+        assessment_title=st.text_input("Assessment Title")
+        assessment_date=st.date_input("Assessment Date (YYYY-MM-DD)",max_value="today")
+        max_score =st.number_input("Maximum Score", min_value=1.0, step=1.0)
+        pass_mark =st.number_input("Pass Mark",min_value=0.0,max_value=float(max_score),step=1.0)
+
+        #cleaned title-fix!
+        assessment_titlee = " ".join(assessment_title.split())
+
+        #selected student ids by filtering class_students dataframe for the chosen class id
+        templ_student_ids= class_students[class_students["class_id"] == templ_selected_class_id]["student_id"].tolist()
+        #isin-filter students based on chosen class and id
+        templ_students = students[students["student_id"].isin(templ_student_ids)].copy()
+
+        #if no students
+        if len(templ_students) == 0:
+            st.info("No students available in this class. Please add students before downloading an assessment template :)")
+
+        if assessment_title == "" or assessment_date == "":
+            st.info("Please fill in all assessment details before downloading the template.")
+            return
+
+        ####MAKE TEMPLATE WITH STUDENT ID,NAME###
+        assessment_template =templ_students[["student_id","name"]].copy()
+        assessment_template =assessment_template.rename(columns={"name":"student_name"})
+
+        #CLASS NAME PREFILLED
+        assessment_template["class_name"] = templ_selected_class_name
+        assessment_template["assessment_title"] = assessment_title
+        assessment_template["assessment_date"] = assessment_date
+        assessment_template["max_score"] = max_score
+        assessment_template["pass_mark"] = pass_mark
+
+        #teacher only needs to fill this
+        assessment_template["score"] = ""
+
+        #template into csv
+        assessment_template_csv =assessment_template.to_csv(index=False)
+
+        #download template button
+        st.download_button("Download Assessment Template",data=assessment_template_csv,file_name="assessment_template.csv",mime="text/csv")
+
+    #button for popup
+    if st.button("Download Assessment CSV Template"):
+        download_assessment_template()
+
 
     ##########UPLOAD ASSESSMENT CSV##########
     @st.dialog("Upload Assessment CSV")
@@ -497,8 +562,8 @@ def show_assessments():
                 #add uploaded assessments
                 assessments =pd.concat([assessments,new_assessments],ignore_index=True)
 
-                #save assessments
-                assessments.to_csv("data/new/assessment.csv", index=False)
+                #fix!-save assessments
+                assessments.to_csv(get_user_file("assessment.csv"),index=False)
                 #save success message
                 st.session_state["assessment_upload_message"] =(f"{len(new_assessments)} assessments uploaded successfully!")
                 st.rerun()
@@ -523,7 +588,7 @@ def show_assessments():
                 assessments =assessments.drop(selected_assessment_index).reset_index(drop=True)
 
                 #save
-                assessments.to_csv("data/new/assessment.csv",index=False)
+                assessments.to_csv(get_user_file("assessment.csv"),index=False)
                 st.session_state["delete_assessment_message"] ="Assessment deleted successfully!"
                 st.rerun()
 
@@ -671,7 +736,7 @@ def show_assessments():
                         assessments.loc[selected_assessment_index,"pass_mark"] =new_pass_mark
 
                         #save updated classes
-                        assessments.to_csv("data/new/assessment.csv",index=False)
+                        assessments.to_csv(get_user_file("assessment.csv"),index=False)
                         #save success message
                         st.session_state["update_assessment_message"] ="Assessment updated successfully."
                         st.rerun()
