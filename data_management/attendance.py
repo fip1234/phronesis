@@ -2,16 +2,17 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_attendance():
     st.subheader("Attendance")
     st.write("Add, view and manage student attendance.")
 
     #read attendance,student,class and class-student data
-    attendance =pd.read_csv("data/new/attendance.csv")
-    students =pd.read_csv("data/new/students.csv")
-    classes =pd.read_csv("data/new/classes.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    attendance =pd.read_csv(get_user_file("attendance.csv"))
+    students =pd.read_csv(get_user_file("students.csv"))
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -109,7 +110,7 @@ def show_attendance():
                 attendance =pd.concat([attendance,new_attendance],ignore_index=True)
 
                 #save attendance
-                attendance.to_csv("data/new/attendance.csv",index=False)
+                attendance.to_csv(get_user_file("attendance.csv"),index=False)
 
                 #save success message
                 st.session_state["attendance_message"] ="Attendance added successfully!"
@@ -120,15 +121,66 @@ def show_attendance():
         add_attendance_dialog(attendance,students,classes,class_students)
 
     ##########DOWNLOAD ATTENDANCE TEMPLATE##########
-    #create empty template with correct headers
-    attendance_template =pd.DataFrame(
-        columns=["student_id","total_sessions","sessions_attended"])
+    #user test fix!- prefilled student ids in attendance template
 
-    #turn template into csv
-    attendance_template_csv =attendance_template.to_csv(index=False)
+    @st.dialog("Download Attendance Template")
+    def download_attendance_template():
 
-    #download template
-    st.download_button("Download Attendance Template",data=attendance_template_csv,file_name="attendance_template.csv",mime="text/csv")
+        #no classes?
+        if len(classes) == 0:
+            st.info("No classes available. Please create a class before downloading an attendance template :)")
+            return
+
+        #class options to choose from before downloading template
+        templ_class_options= []
+
+        for i,class_row in classes.iterrows():
+            #display class options- classname-class id
+            class_option =(class_row["class_name"] + " - " + class_row["class_id"])
+            templ_class_options.append(class_option)
+
+        #choose a class
+        templ_selected_class = st.selectbox("Choose a class for an attendance template", templ_class_options)
+        templ_selected_class_id = templ_selected_class.split(" - ")[-1]
+
+        #selected class and name by getting class id from selectbox
+        templ_selected_class_data= classes[classes["class_id"] == templ_selected_class_id]
+        templ_selected_class_name = templ_selected_class_data.iloc[0]["class_name"]
+
+        #total sessions
+        total_sessions =st.number_input("Total Sessions",min_value=1,step=1)
+
+        #selected student ids by filtering class_students dataframe for the chosen class id
+        templ_student_ids= class_students[class_students["class_id"] == templ_selected_class_id]["student_id"].tolist()
+        #isin-filter students based on chosen class and id
+        templ_students = students[students["student_id"].isin(templ_student_ids)].copy()
+
+        #if no students
+        if len(templ_students) == 0:
+            st.info("No students available in this class. Please add students before downloading an attendance template :)")
+            return
+
+        ####MAKE TEMPLATE WITH STUDENT ID,NAME###
+        attendance_template =templ_students[["student_id","name"]].copy()
+        attendance_template =attendance_template.rename(columns={"name":"student_name"})
+
+        #prefilled details
+        attendance_template["class_name"] =templ_selected_class_name
+        attendance_template["total_sessions"] =total_sessions
+
+        #teacher only needs to fill this
+        attendance_template["sessions_attended"] = ""
+
+        #template into csv
+        attendance_template_csv =attendance_template.to_csv(index=False)
+
+        #download template button
+        st.download_button("Download attendance Template",data=attendance_template_csv,file_name="attendance_template.csv",mime="text/csv")
+
+    #button for popup
+    if st.button("Download attendance CSV Template"):
+        download_attendance_template()
+
 
     ##########UPLOAD ATTENDANCE CSV##########
     @st.dialog("Upload Attendance CSV")
@@ -307,7 +359,7 @@ def show_attendance():
                 attendance =pd.concat([attendance,new_attendance],ignore_index=True)
 
                 #save attendance
-                attendance.to_csv("data/new/attendance.csv",index=False)
+                attendance.to_csv(get_user_file("attendance.csv"),index=False)
                 #save success message
                 st.session_state["attendance_upload_message"] =(f"{len(new_attendance)} attendance records uploaded successfully!")
                 st.rerun()
@@ -317,7 +369,7 @@ def show_attendance():
         upload_attendance_csv(attendance,students)
 
     ##########DELETE ATTENDANCE##########
-    #pop-up window to confirm delete assessment
+    #pop-up window to confirm delete attendance
     @st.dialog("Delete Attendance")
     def confirm_delete_attendance(attendance,selected_student_id,selected_student_name):
         st.warning( f"Are you sure you want to delete the attendance data for {selected_student_name}?")
@@ -332,7 +384,7 @@ def show_attendance():
                 attendance =attendance[attendance["student_id"]!=selected_student_id].copy()
 
                 #save
-                attendance.to_csv("data/new/attendance.csv",index=False)
+                attendance.to_csv(get_user_file("attendance.csv"),index=False)
                 st.session_state["delete_attendance_message"] ="Attendance deleted successfully!"
                 st.rerun()
 
@@ -398,7 +450,7 @@ def show_attendance():
             st.write(f"Selected: **{selected_student_name}**")
 
             ##########EDIT ATTENDANCE##########
-            #input box-   prefill with current assessment name
+            #input box-   prefill with current attendance name
             new_total_sessions =st.number_input("Total Sessions", min_value=1,
                                                 value=int(selected_attendance["total_sessions"]), step=1 )
             
@@ -437,7 +489,7 @@ def show_attendance():
                         "sessions_attended"] =new_sessions_attended
 
                     #save attendance
-                    attendance.to_csv("data/new/attendance.csv",index=False)
+                    attendance.to_csv(get_user_file("attendance.csv"),index=False)
                     #save success message
                     st.session_state["update_attendance_message"] ="Attendance updated successfully."
                     st.rerun()
