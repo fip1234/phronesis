@@ -2,15 +2,16 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_students():
     st.subheader("Students")
     st.write("Add, view and manage students.")
 
     #read student,class and class-student data
-    students =pd.read_csv("data/new/students.csv")
-    classes =pd.read_csv("data/new/classes.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    students =pd.read_csv(get_user_file("students.csv"))
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -123,7 +124,8 @@ def show_students():
                 students =pd.concat([students,new_student],ignore_index=True)
 
                 #save students
-                students.to_csv("data/new/students.csv",index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                
                 #deleted the rerun after saving students-test fix!
 
                 ##########ADD STUDENT TO CLASSES##########
@@ -144,7 +146,7 @@ def show_students():
                     class_students =pd.concat([class_students,new_class_student],ignore_index=True)
 
                 #save classes student
-                class_students.to_csv("data/new/class_students.csv",index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
 
                 #save success message
                 st.session_state["student_message"] ="Student added successfully!"
@@ -408,8 +410,8 @@ def show_students():
                 class_students =pd.concat([class_students,new_class_students],ignore_index=True)
 
                 #####save
-                students.to_csv("data/new/students.csv",index=False)
-                class_students.to_csv( "data/new/class_students.csv", index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
                 #save success message
                 st.session_state["student_upload_message"] =(f"{len(new_students)}  students uploaded successfully!")
 
@@ -439,8 +441,8 @@ def show_students():
                 class_students =class_students[class_students["student_id"] !=selected_student_id].copy()
 
                 #save-student and class student pairs
-                students.to_csv("data/new/students.csv",index=False)
-                class_students.to_csv("data/new/class_students.csv",index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
                 st.session_state["delete_student_message"] ="Student deleted successfully!"
                 st.rerun()
 
@@ -591,10 +593,10 @@ def show_students():
                         class_students =pd.concat([class_students,new_class_student],ignore_index=True)
 
                     #save updated students
-                    students.to_csv("data/new/students.csv",index=False)
+                    students.to_csv(get_user_file("students.csv"),index=False)
 
                     #save updated class student pairs
-                    class_students.to_csv("data/new/class_students.csv",index=False)
+                    class_students.to_csv(get_user_file("class_students.csv"),index=False)
                     st.session_state["update_student_message"] ="Student updated successfully."
                     st.rerun()
 

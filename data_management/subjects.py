@@ -2,13 +2,14 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_subjects():
     st.subheader("Subjects")
     st.write("Add, view and manage subjects.")
 
     #read subject data
-    subjects =pd.read_csv("data/new/subjects.csv")
+    subjects =pd.read_csv(get_user_file("subjects.csv"))
 
     ##########SUCCESS MESSAGES##########
     #add subject
@@ -90,7 +91,7 @@ def show_subjects():
                 subjects =pd.concat([subjects,new_subject],ignore_index=True)
 
                 #save subjects
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
 
                 #save success message
                 st.session_state["subject_message"] ="Subject added successfully!"
@@ -215,7 +216,7 @@ def show_subjects():
                 subjects =pd.concat([subjects,new_subjects],ignore_index=True)
 
                 #####save
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
                 #save success message
                 st.session_state["subject_upload_message"] =(f"{len(new_subjects)} subjects uploaded successfully!")
                 st.rerun()
@@ -226,7 +227,7 @@ def show_subjects():
 
     ##########DELETE SUBJECT##########
     #read class data-to check if subject is being used already
-    classes =pd.read_csv("data/new/classes.csv")
+    classes =pd.read_csv(get_user_file("classes.csv"))
 
     #pop-up window to confirm delete subject
     @st.dialog("Delete Subject")
@@ -251,7 +252,7 @@ def show_subjects():
                 subjects =subjects[subjects["subject_id"] !=selected_subject_id].copy()
 
                 #save
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
                 st.session_state["delete_message"] ="Subject deleted successfully!"
                 st.rerun()
 
@@ -313,7 +314,7 @@ def show_subjects():
                     subjects.loc[subjects["subject_id"]==selected_subject_id,"subject_name"] =new_subject_name
 
                     #save updated subjects
-                    subjects.to_csv("data/new/subjects.csv",index=False)
+                    subjects.to_csv(get_user_file("subjects.csv"),index=False)
                     st.session_state["rename_message"] ="Subject renamed successfully."
                     st.rerun()
 

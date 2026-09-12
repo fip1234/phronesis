@@ -2,15 +2,16 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_classes():
     st.subheader("Classes")
     st.write("Add, view and manage classes.")
 
     #read class and subject data
-    classes =pd.read_csv("data/new/classes.csv")
-    subjects =pd.read_csv("data/new/subjects.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    subjects =pd.read_csv(get_user_file("subjects.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -108,7 +109,7 @@ def show_classes():
                 classes =pd.concat([classes,new_class],ignore_index=True)
 
                 #save classes
-                classes.to_csv("data/new/classes.csv",index=False)
+                classes.to_csv(get_user_file("classes.csv"),index=False)
 
                 #save success message
                 st.session_state["class_message"] ="Class added successfully!"
@@ -287,7 +288,7 @@ def show_classes():
                 classes =pd.concat([classes,new_classes],ignore_index=True)
 
                 #####save
-                classes.to_csv("data/new/classes.csv",index=False)
+                classes.to_csv(get_user_file("classes.csv"),index=False)
                 #save success message
                 st.session_state["class_upload_message"] =(f"{len(new_classes)}  classes uploaded successfully!")
 
@@ -324,7 +325,7 @@ def show_classes():
                     classes =classes[classes["class_id"] !=selected_class_id].copy()
 
                     #save
-                    classes.to_csv("data/new/classes.csv",index=False)
+                    classes.to_csv(get_user_file("classes.csv"),index=False)
                     st.session_state["delete_class_message"] ="Class deleted successfully!"
                     st.rerun()
 
@@ -452,7 +453,7 @@ def show_classes():
                     classes.loc[classes["class_id"] ==selected_class_id,"year_group"] =new_year_group
 
                     #save updated classes
-                    classes.to_csv("data/new/classes.csv",index=False)
+                    classes.to_csv(get_user_file("classes.csv"),index=False)
                     st.session_state["update_class_message"] ="Class updated successfully."
                     st.rerun()
 

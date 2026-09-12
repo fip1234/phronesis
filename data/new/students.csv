@@ -1,30 +1,101 @@
 student_id,name,year_group
-S001,Student 1,10
-S002,Student 2,10
-S003,Student 3,10
-S004,Student 4,10
-S005,Student 5,10
-S006,Student 6,10
-S007,Student 7,10
-S008,Student 8,10
-S009,Student 9,10
-S010,Student 10,10
-S011,TH,10
-S012,test,10
-S013,test,7
-S014,7c test,7
-S015,7b student tests,7
-S016,yr 9 student,9
-S017,test delete class,7
-S018,John      Smith,7
-S019,John,7
-S020,john,12
-S021,LUCY,12
-S022,john,12
-S023,LUCY,12
-S024,john,12
-S025,LUCY,12
-S026,john,12
-S027,LUCY,12
-S028,Lucy,12
-S029,Tom,12
+S001,Student 001,7
+S002,Student 002,7
+S003,Student 003,7
+S004,Student 004,7
+S005,Student 005,7
+S006,Student 006,7
+S007,Student 007,7
+S008,Student 008,7
+S009,Student 009,7
+S010,Student 010,7
+S011,Student 011,7
+S012,Student 012,7
+S013,Student 013,7
+S014,Student 014,7
+S015,Student 015,7
+S016,Student 016,7
+S017,Student 017,7
+S018,Student 018,7
+S019,Student 019,7
+S020,Student 020,7
+S021,Student 021,8
+S022,Student 022,8
+S023,Student 023,8
+S024,Student 024,8
+S025,Student 025,8
+S026,Student 026,8
+S027,Student 027,8
+S028,Student 028,8
+S029,Student 029,8
+S030,Student 030,8
+S031,Student 031,8
+S032,Student 032,8
+S033,Student 033,8
+S034,Student 034,8
+S035,Student 035,8
+S036,Student 036,8
+S037,Student 037,8
+S038,Student 038,8
+S039,Student 039,8
+S040,Student 040,8
+S041,Student 041,9
+S042,Student 042,9
+S043,Student 043,9
+S044,Student 044,9
+S045,Student 045,9
+S046,Student 046,9
+S047,Student 047,9
+S048,Student 048,9
+S049,Student 049,9
+S050,Student 050,9
+S051,Student 051,9
+S052,Student 052,9
+S053,Student 053,9
+S054,Student 054,9
+S055,Student 055,9
+S056,Student 056,9
+S057,Student 057,9
+S058,Student 058,9
+S059,Student 059,9
+S060,Student 060,9
+S061,Student 061,10
+S062,Student 062,10
+S063,Student 063,10
+S064,Student 064,10
+S065,Student 065,10
+S066,Student 066,10
+S067,Student 067,10
+S068,Student 068,10
+S069,Student 069,10
+S070,Student 070,10
+S071,Student 071,10
+S072,Student 072,10
+S073,Student 073,10
+S074,Student 074,10
+S075,Student 075,10
+S076,Student 076,10
+S077,Student 077,10
+S078,Student 078,10
+S079,Student 079,10
+S080,Student 080,10
+S081,Student 081,11
+S082,Student 082,11
+S083,Student 083,11
+S084,Student 084,11
+S085,Student 085,11
+S086,Student 086,11
+S087,Student 087,11
+S088,Student 088,11
+S089,Student 089,11
+S090,Student 090,11
+S091,Student 091,11
+S092,Student 092,11
+S093,Student 093,11
+S094,Student 094,11
+S095,Student 095,11
+S096,Student 096,11
+S097,Student 097,11
+S098,Student 098,11
+S099,Student 099,11
+S100,Student 100,11

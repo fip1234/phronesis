@@ -118,3 +118,54 @@ app_data_test = load_app_data()
 print("\nAPP DATA TEST:")
 
 print(app_data_test[["student_id","subject","prediction_status","risk_prediction"]])
+
+
+
+
+##########CLASS APP DATA TEST##########
+from app_data import load_app_data
+
+app_data_test =load_app_data()
+
+print("\nCLASS APP DATA:")
+
+print(
+    app_data_test[
+        [
+            "student_id",
+            "name",
+            "year_group",
+            "class_id",
+            "class_name",
+            "subject",
+            "attendance_percentage",
+            "grade_average",
+            "grade_change",
+            "prediction_status",
+            "risk_prediction"
+        ]
+    ].to_string(index=False)
+)
+
+
+##########CHECK BROKEN CLASS LINKS##########
+
+classes =pd.read_csv("data/new/classes.csv")
+class_students =pd.read_csv("data/new/class_students.csv")
+subjects =pd.read_csv("data/new/subjects.csv")
+
+#class-student links where class no longer exists
+broken_class_links =class_students[
+    ~class_students["class_id"].isin(classes["class_id"])
+]
+
+print("\nBROKEN CLASS-STUDENT LINKS:")
+print(broken_class_links)
+
+#classes where subject no longer exists
+broken_subject_links =classes[
+    ~classes["subject_id"].isin(subjects["subject_id"])
+]
+
+print("\nBROKEN CLASS-SUBJECT LINKS:")
+print(broken_subject_links)

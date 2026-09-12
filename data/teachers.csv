@@ -1,0 +1,4 @@
+teacher_id,name,email,password_hash,tutorial_seen
+T001,Test Teacher,hello@email.com,e0cb05d98fc5f38266f3ea8376d84c61a8c16050240e439e7ae96f12e2cb30a4,True
+T002,boss,boss@gmail.com,13929b448b649474f5cb3cae0a776afa94b28b53d96edf9d28862d70389b11f8,True
+T003,dataTest,datatest@gmail.com,548a36e9a43c5862cba6c6657e9c26a03971d823d03e9f3671e22813ab29b4b4,True
