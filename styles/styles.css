@@ -1,65 +1,429 @@
-/* Main app */
 
-.stApp {
-    background-color: #EDEDED;
-    color: #000000;
-    font-family: "Segoe UI", sans-serif;
+/* #####Stylesheet##### */
+
+/* ##########GLOBAL VARIABLES#########*/
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
+:root{
+    --headerFont:"Fredoka", sans-serif;
+    --bodyFont:"Nunito", sans-serif;
+    
+    /*when closed-width responsive */
+    --sidebarClosed:clamp(4.4rem, 5vw, 5.2rem);
+    /*when opened-width responsive */
+    --sidebarOpened:clamp(16rem, 20vw, 18rem);
+    /*each button- responsive*/
+    --navButtonSize:clamp(3.3rem, 4.2vw, 4rem);
+    /* big icon size when closed*/
+    --iconLarger:clamp(1.8rem, 2vw, 2.15rem);
+    /*small icon size when opened */
+    --iconSmaller:clamp(1.3rem, 1.5vw, 1.55rem);
+    /*text size responsive*/
+    --navTextSize:clamp(0.9rem, 1vw, 1.05rem);
+    /* have gap at the top of sidebar*/
+    --sidebarTopPad:clamp(5rem, 1vw, 1.5rem);
+    /* --sidebarTopPad:clamp(0.5rem, 1vw, 0.8rem); */
+    /* icon and page name gap*/
+    --navGap:clamp(0.5rem, 0.8vw, 0.8rem);
+    /* highlighted boxes border radius */
+    --navRadius:0.75rem;
+    --sideBarColour:#FF8266;
+    /* main app background */
+    ----appBackground:#EDEDED;
+}
+/* MAIN APP */
+/* default app settings */
+.stApp{
+    background-color:var(----appBackground);
+    color:#000000;
+    font-family:var(--bodyFont);
+}
+/* MAIN TEXT */
+/* normal page tet black */
+.stMarkdown,p,label{
+    color:#000000 !important;
+    font-family:var(--bodyFont) !important;
+}
+/* header fonts */
+h1,h2,h3,h4,h5,h6{
+    color:#000000 !important;
+    font-family:var(--headerFont) !important;
+    font-weight:600 !important;
 }
 
 
-/* Make ALL text black */
-
-.stApp,
-.stMarkdown,
-p,
-span,
-div,
-label,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #000000 !important;
-    font-family: "Segoe UI", sans-serif !important;
+/* ##########RISK CARDS#########*/
+/* high risk-pink */
+.high-risk{
+    background-color:#FF8266;
+    color:black;
+    /*responsive padding*/
+    padding:clamp(0.75rem, 1.2vw, 1rem);
+    border-radius:0.65rem;
+    font-weight:bold;
+}
+/* mid risk- orange */
+.medium-risk{
+    background-color:#FFB866;
+    color:black;
+    padding:clamp(0.75rem, 1.2vw, 1rem);
+    border-radius:0.65rem;
+    font-weight:bold;
+}
+/* low risk- yellow */
+.low-risk{
+    background-color:#FFFF83;
+    color:black;
+    padding:clamp(0.75rem, 1.2vw, 1rem);
+    border-radius:0.65rem;
+    font-weight:bold;
 }
 
 
-/* Sidebar */
 
-section[data-testid="stSidebar"] {
-    background-color: #FF8266;
+/* ####### NAV SIDEBAR ########### */
+/* sidebar background colour */
+section[data-testid="stSidebar"]{
+    background-color:var(--sideBarColour) !important;
 }
 
-section[data-testid="stSidebar"] * {
-    color: white !important;
-    font-family: "Segoe UI", sans-serif !important;
+/*########SIDEBAR TEXT */
+/*white writing*/
+section[data-testid="stSidebar"] p,section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] a{
+    color:white !important;
+    font-family:var(--body-font) !important;
+}
+section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,section[data-testid="stSidebar"] h4,
+section[data-testid="stSidebar"] h5,section[data-testid="stSidebar"] h6{
+    color:white !important;
+    font-family:var(--headerFont) !important;
+    font-weight:600 !important;
+}
+section[data-testid="stSidebar"]
+[data-testid="stSidebarNav"] li a{
+    font-family:var(--bodyFont) !important;
+    font-weight:600 !important;
 }
 
 
-/* Risk cards */
-
-.high-risk {
-    background-color: #FF8266;
-    color: black;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
+/*#########MATERIAL ICONS */
+/* streamlit materials styling for icons into text */
+span[data-testid="stIconMaterial"]{
+    font-family:"Material Symbols Rounded" !important;
+    font-weight:normal !important;
+    font-style:normal !important;
+    line-height:1 !important;
+    letter-spacing:normal !important;
+    text-transform:none !important;
+    white-space:nowrap !important;
+    word-wrap:normal !important;
+    direction:ltr !important;
+    /* allows material icon names such as "home" to render as icons */
+    -webkit-font-feature-settings:"liga" !important;
+    font-feature-settings:"liga" !important;
+    /* makes icons look smoother */
+    -webkit-font-smoothing:antialiased !important;
 }
 
-.medium-risk {
-    background-color: #FFB866;
-    color: black;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
+
+/* ######DESKTOP- hover expanding sidebar */
+@media (min-width:56.25em)and(hover:hover)and(pointer:fine){
+    /* get rid of streamlit default header at top*/
+    header[data-testid="stHeader"]{
+        display:none !important;
+    }
+    /* get rid of streamlit default coloured line at top*/
+    [data-testid="stDecoration"]{
+        display:none !important;
+    }
+
+    /* #############SIDEBAR */
+    /* thin icon only sidebar, fixed from top to bottom of screen*/
+    section[data-testid="stSidebar"]{
+        position:fixed !important;
+        /* fixed to left of screen */
+        inset-block:0 !important;
+        inset-inline-start:0 !important;
+        /* closed sidebar width */
+        width:var(--sidebarClosed) !important;
+        min-width:var(--sidebarClosed) !important;
+        max-width:var(--sidebarClosed) !important;
+        /* filled with full screen height */
+        height:100dvh !important;
+        background-color:var(--sideBarColour) !important;
+        /* sidebar not filling outside */
+        overflow:hidden !important;
+        /* keeps sidebar above main app content */
+        z-index:9999 !important;
+        /* open close nice smooth animation */
+        transition:width 0.25s ease,min-width 0.25s ease,
+                   max-width 0.25s ease,box-shadow 0.25s ease !important;
+    }
+
+    /* make page move to right for sidebar- main page has space for the collapsed sidebar- doesnt sit ontop of dashboard*/
+    [data-testid="stMain"]{
+        margin-inline-start:var(--sidebarClosed) !important;
+    }
+
+    /* ### HOVER EXPANDING SIDEBAR */
+    /* mouse moves over sidebar?- increase width to show words*/
+    section[data-testid="stSidebar"]:hover{
+        width:var(--sidebarOpened) !important;
+        min-width:var(--sidebarOpened) !important;
+        max-width:var(--sidebarOpened) !important;
+        box-shadow: 0.4rem 0 1.3rem rgba(0,0,0,0.16) !important;  /* slight shadow on sidebar */
+    }
+
+    /* get rid of hidden streamlit sidebar header space - so sidebar can start at top*/
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarHeader"]{
+        width:100% !important;
+        height:0 !important;
+        min-height: 0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+        background-color:var(--sideBarColour) !important;
+    }
+
+    /* nav content start at top of sidebar, nav content fill entire sidebar- allow scrolling if screen height small*/
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarContent"]{
+        width: 100% !important;
+        height: 100% !important;
+        margin:0 !important;
+        padding-block-start:var(--sidebarTopPad) !important;   /* responsive small gap at top */
+        background-color:var(--sideBarColour) !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+        scrollbar-width:none;  /* hide firefox scrollbar */
+    }
+    section[data-testid="stSidebar"]  /* hide chrome/Edge scrollbar */
+    [data-testid="stSidebarContent"]::-webkit-scrollbar{
+        display:none;
+    }
+
+    /* remove default collapse control arrows- because opens with hover, no need for button*/
+
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarCollapseButton"]{
+        display: none !important;
+    }
+
+    /* #### NAV ITEMS */
+    /* default styling for each nav button dashboard,my classes, data management, settings */
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarNav"] li a{
+        min-height:var(--navButtonSize) !important;
+        border-radius:var(--navRadius) !important;  /* rounded translucent box */
+        display:flex !important;
+        align-items:center !important;
+        white-space:nowrap !important; /* page title on one line */
+        overflow:hidden !important; /* anything out of button hidden*/
+        /* transition for smooth change when expanding */
+        transition:
+            width 0.2s ease,
+            margin 0.2s ease,
+            padding 0.2s ease,
+            background-color 0.2s ease !important;
+    }
+
+
+    /* #############CLOSED NAVBAR ################# */
+    /* rounded box around each icon when sidebar closed */
+    section[data-testid="stSidebar"]:not(:hover)
+    [data-testid="stSidebarNav"] li a{
+        height:var(--navButtonSize) !important;
+        width:var(--navButtonSize) !important;
+        margin:clamp(0.5rem, 0.6vh, 0.5rem) auto !important;  /* space between each icon box (vertical) */
+        padding:0 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:0 !important;
+        overflow:hidden !important;
+        /* icon uses absolute positioning-relative to THIS translucent rounded box */
+        position:relative !important;
+        /* WHOLE BOX TO LEFT SLIGHTLY- centred in sidebarnavbar */
+        transform:translateX(-0.3rem) !important;
+    }
+
+    /* #######hide words when sidebar closed */
+    /* nav text technically exists- just transparent when sidebar closed */
+    section[data-testid="stSidebar"]:not(:hover)[data-testid="stSidebarNav"] li a,
+    section[data-testid="stSidebar"]:not(:hover)
+    [data-testid="stSidebarNav"] li a *{
+        color:transparent !important;
+        text-shadow:none !important;
+    }
+
+    /* ###### ICON FULLY CENTRED INSIDE CLOSED BOX */
+    /* icon directly in centre of translucent box- hidden text shouldnt affect this */
+    section[data-testid="stSidebar"]:not(:hover)[data-testid="stSidebarNav"]
+    span[data-testid="stIconMaterial"]{
+        position:absolute !important;  /* exact positioning in nav box */
+        left:50% !important; /* move icon centre point to middle of box */
+        top:50% !important;
+        transform:translate(-50%, -50%) !important;  /* icon centred to that point */
+        width:auto !important;
+        height:auto !important;
+        min-width:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-family:"Material Symbols Rounded" !important;
+        font-size:var(--iconLarger) !important;  /* larger icon size when sidebar closed */
+        line-height:1 !important;
+        color:white !important;  /* icon visible even though other text is transparent */
+        opacity:1 !important;
+        visibility:visible !important;
+        z-index:2 !important;  /* icon above hidden text */
+    }
+
+    /* ###### custom sidebar text hidden */
+    /* Phronesis title,description,teachername/email hidden when sidebar closed */
+    section[data-testid="stSidebar"]:not(:hover)
+    [data-testid="stSidebarUserContent"]{
+        opacity:0 !important;
+        visibility:hidden !important;
+        pointer-events:none !important;
+    }
+
+    /* ##########OPEN NAVBAR########### */
+    /* when nav bar opens- buttons expand to show icon +text */
+    section[data-testid="stSidebar"]:hover
+    [data-testid="stSidebarNav"] li a{
+        width:calc(100% - 1rem) !important;
+        /* vertical and horizontal spacing of open nav buttons */
+        margin:clamp(0.5rem, 0.6vh, 0.5rem) 0.2rem !important;
+        padding-inline:clamp(0.75rem, 1vw, 1rem) !important;
+        justify-content:flex-start !important;  /* align icon + text from left */
+        gap:var(--navGap) !important;  /* responsive gap between icon and page title */
+        color:white !important;
+        font-size:var(--navTextSize) !important;
+        font-family:var(--app-font) !important;
+    }
+
+    /* sidebar opens?- change hidden transparent text back to white */
+    section[data-testid="stSidebar"]:hover [data-testid="stSidebarNav"] li a,
+    section[data-testid="stSidebar"]:hover[data-testid="stSidebarNav"] li a *{
+        color:white !important;
+    }
+
+    /*big icon shrinks to small icon when expanded sidebar */
+    /*absolute centred pos  to normal pos beside page title*/
+    section[data-testid="stSidebar"]:hover
+    [data-testid="stSidebarNav"]
+    span[data-testid="stIconMaterial"]{
+        position:static !important;  /* get rid of closed absolute positioning */
+        transform:none !important;
+        left:auto !important;
+        top:auto !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:var(--iconSmaller) !important; /* smaller fixed space for icon next to text */
+        min-width:var(--iconSmaller) !important;
+        height:var(--iconSmaller) !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-family:"Material Symbols Rounded" !important;
+        font-size:var(--iconSmaller) !important;  /* small icon when navbar open */
+        line-height:1 !important;
+        color:white !important;
+        flex-shrink:0 !important; /* no icon shrinking when limited space*/
+    }
+
+    /* nav bar open- Add title and teacher details back */
+    section[data-testid="stSidebar"]:hover
+    [data-testid="stSidebarUserContent"]{
+        opacity:1 !important;
+        visibility:visible !important;
+        pointer-events:auto !important;
+        /* slight delay makes opening animation look smoother */
+        transition:opacity 0.2s ease 0.08s !important;
+    }
+
+    /* selected page - increase highlight (user knows where they are*/
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarNav"]
+    li a[aria-current="page"]{
+        background-color:rgba(255,255,255,0.22) !important;
+        font-weight:600 !important;
+    }
+
+    /* nav item hover -when mouse hoverhighlight with translucent rounded box */
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarNav"] li a:hover{
+        background-color:rgba(255,255,255,0.16) !important;
+    }
 }
 
-.low-risk {
-    background-color: #FFFF83;
-    color: black;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
+/* MOBILE/TABLET */
+/* touchscreens- hover doesnt work, so use normal full sidebar */
+@media (max-width:56.249em), (hover:none), (pointer:coarse){
+    /* keep streamlit normal mobile header/hamburger button */
+    header[data-testid="stHeader"]{
+        display:flex !important;
+    }
+    /* remove desktop sidebar spacing */
+    [data-testid="stMain"]{
+        margin-inline-start:0 !important;
+    }
+    /* normal slideout sidebar */
+    section[data-testid="stSidebar"]{
+        background-color:var(--sideBarColour) !important;
+        width:min(85vw, 20rem) !important;   /* responsive width- but no sidebar becoming too wide */
+        max-width:min(85vw, 20rem) !important;
+        height:100dvh !important;
+        z-index:9999 !important;
+    }
+    
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarContent"]{
+        width:100% !important;
+        background-color:var(--sideBarColour) !important;
+        padding-inline:clamp(0.6rem, 3vw, 1rem) !important;  /* responsive spacing around text */
+    }
+
+    /* mobile nav buttons */
+    section[data-testid="stSidebar"]
+    [data-testid="stSidebarNav"] li a{
+        min-height:clamp(3rem, 7vh, 3.5rem) !important;
+        border-radius:clamp(0.5rem, 2vw, 0.75rem) !important;
+        color:white !important;
+        font-size:clamp(0.9rem, 3.5vw, 1rem) !important;
+        font-family:"Segoe UI", sans-serif !important;
+    }
+    /* MOBILE-responsive material icon size */
+    section[data-testid="stSidebar"]
+    span[data-testid="stIconMaterial"]{
+        font-family:"Material Symbols Rounded" !important;
+        font-size:clamp(1.3rem, 6vw, 1.6rem) !important;
+        color:white !important;
+    }
 }
+
+/* #######VERY SMALL DEVICES */
+/* make nav bar more of screen width*/
+@media (max-width:30em){
+    section[data-testid="stSidebar"]{
+        width:88vw !important;
+        max-width:88vw !important;
+    }
+}
+
+/* ############MATERIAL ICON PROTECTION - KEEP AT END */
+/* material protection AT END so no CSS rule accidently changes icon to normal text*/
+span[data-testid="stIconMaterial"]{
+    font-family:"Material Symbols Rounded" !important;
+    font-weight:normal !important;
+    font-style:normal !important;
+    letter-spacing:normal !important;
+    text-transform:none !important;
+    white-space:nowrap !important;
+    -webkit-font-feature-settings:"liga" !important;
+    font-feature-settings:"liga" !important;
+    -webkit-font-smoothing:antialiased !important;
+}
+
