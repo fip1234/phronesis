@@ -3,38 +3,45 @@
 ##imports
 import streamlit as st
 from style_loader import load_styles
+from pages.about import show_about_page
 from pages.login_page import show_login_page
 from pages.tutorial import show_tutorial
 from accessibility import apply_accessibility_settings
 
 ##########APP SETUP##########
-
 st.set_page_config(page_title="Phronesis",layout="wide",initial_sidebar_state="auto")
-
-#apply all styling
-load_styles()
-
-#load accessibility settings
-#apply accessibility preferences
-apply_accessibility_settings()
 
 ##########LOGIN STATE##########
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] =False
 
+#controls intro page or sign in/create account page
+if "public_view" not in st.session_state:
+    st.session_state["public_view"] ="intro"
+
 ##########NOT LOGGED IN##########
-if not st.session_state["logged_in"]:
+if not st.session_state["logged_in"]: 
+    #use styling specifically designed for public pages
+    load_styles("public_styles.css")
 
-    #only login page exists before signing in
-    login_page =st.Page(show_login_page,title="Sign In")
+    #apply accessibility preferences
+    apply_accessibility_settings()
 
-    page =st.navigation([login_page],position="hidden")
+    #show sign in/create account page
+    if st.session_state["public_view"] =="login":
+        show_login_page()
 
-    page.run()
+    #first page shown when app opens
+    else:
+        show_about_page()
+
     st.stop()
 
 ##########FIRST LOGIN TUTORIAL##########
 if not st.session_state.get("tutorial_seen",False):
+    #use clean public styling because normal navbar is hidden
+    load_styles("public_styles.css")
+    apply_accessibility_settings()
 
     #hide normal navigation during tutorial
     tutorial_page =st.Page(show_tutorial,title="Welcome")

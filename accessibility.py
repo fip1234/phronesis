@@ -67,12 +67,14 @@ def apply_accessibility_settings():
         .stApp {{
             background-color:{background};
             color:{text_colour};
+            font-family:{font_family};
         }}
 
         .stApp p,
         .stApp label,
-        .stApp span,
-        .stApp div {{
+        .stApp button,
+        .stApp input,
+        .stApp textarea {{
             font-family:{font_family};
         }}
 
@@ -85,8 +87,11 @@ def apply_accessibility_settings():
             background-color:{secondary_background};
         }}
 
-        [data-testid="stSidebar"] * {{
-            font-family:{font_family};
+        /* DO NOT override material icon font */
+        span[data-testid="stIconMaterial"] {{
+            font-family:"Material Symbols Rounded" !important;
+            font-weight:normal !important;
+            font-style:normal !important;
         }}
 
         </style>

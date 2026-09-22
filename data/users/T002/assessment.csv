@@ -1,1 +1,5 @@
 student_id,subject,assessment_title,assessment_date,score,max_score,pass_mark
+S001,Maths,Maths paper 1,2026-09-19,35.0,50.0,0.0
+S002,Maths,Maths paper 1,2026-09-19,45.0,50.0,0.0
+S001,Maths,Maths P2,2026-09-19,30.0,50.0,30.0
+S002,Maths,Maths P2,2026-09-19,48.0,50.0,30.0
