@@ -35,7 +35,7 @@ def apply_accessibility_settings():
         font_family ="Verdana, Arial, sans-serif"
 
     else:
-        font_family ="Arial, sans-serif"
+        font_family ="var(--bodyFont)"
 
 
     ##########THEME##########

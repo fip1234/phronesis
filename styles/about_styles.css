@@ -1,0 +1,963 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+
+/* ##############################ABOUT PAGE############################## */
+
+
+/* ##########STREAMLIT CHROME########## */
+
+header[data-testid="stHeader"]{
+    display:flex !important;
+}
+
+[data-testid="stDecoration"]{
+    display:block !important;
+}
+
+section[data-testid="stSidebar"]{
+    display:none !important;
+}
+
+
+/* ##########BASE########## */
+
+.stApp{
+    font-family:"Nunito",sans-serif;
+    background:#FFFDF9 !important;
+    color:#202020 !important;
+    color-scheme:light !important;
+}
+
+[data-testid="stMainBlockContainer"]{
+    max-width:100% !important;
+    padding:0 !important;
+}
+
+h1,
+h2,
+h3,
+h4{
+    font-family:"Fredoka",sans-serif !important;
+}
+
+p,
+label,
+button{
+    font-family:"Nunito",sans-serif !important;
+}
+
+
+
+
+/* ##############################ABOUT PAGE############################## */
+
+
+/* ##########GENERAL########## */
+
+[data-testid="stMainBlockContainer"]{
+    max-width:100% !important;
+    padding:0 !important;
+}
+
+.stApp{
+    background:#FFFDF9;
+}
+
+
+/* ##########HERO########## */
+
+.st-key-hero_section{
+    width:96%;
+    min-height:92vh;
+    margin:1.5rem auto 0;
+
+    padding:
+        2rem
+        clamp(2rem,5vw,5rem)
+        5rem
+        !important;
+
+    border-radius:2.5rem;
+
+    text-align:center;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 1.2rem 3rem
+        rgba(0,0,0,0.08);
+
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+
+/*subtle hero movement*/
+.st-key-hero_section:hover{
+    box-shadow:
+        0 1.6rem 3.7rem
+        rgba(0,0,0,0.11);
+}
+
+
+/*HUGE PHRONESIS*/
+.st-key-hero_section h1{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(6rem,15vw,12rem)
+        !important;
+
+    font-weight:700 !important;
+
+    line-height:0.85 !important;
+
+    letter-spacing:0.025em !important;
+
+    text-align:center !important;
+
+    color:#FFC88B !important;
+
+    margin:
+        17vh
+        0
+        1rem
+        !important;
+
+    text-shadow:
+        0 0.2rem 1.4rem
+        rgba(255,255,255,0.85);
+}
+
+
+/*hide Streamlit heading anchor/link icon*/
+.st-key-hero_section h1 a{
+    display:none !important;
+}
+
+
+/*hero subtitle*/
+.st-key-hero_section h3{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:
+        clamp(1.25rem,2vw,1.6rem)
+        !important;
+
+    font-weight:600 !important;
+
+    font-style:normal !important;
+
+    color:#303030 !important;
+
+    text-align:center !important;
+
+    margin-bottom:2rem !important;
+
+    text-shadow:
+        0 0.1rem 0.7rem
+        rgba(255,255,255,0.9);
+}
+
+
+/*hero buttons*/
+.st-key-hero_section .stButton button{
+    font-style:normal !important;
+
+    border-radius:999rem !important;
+
+    font-weight:800 !important;
+}
+
+
+/* ##########BUTTONS########## */
+
+.stButton button{
+    font-family:"Nunito",sans-serif !important;
+
+    font-style:normal !important;
+
+    font-weight:800 !important;
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        background-color 0.22s ease
+        !important;
+}
+
+
+.stButton button[kind="primary"]{
+    background:#FF8266 !important;
+
+    color:#FFFFFF !important;
+
+    border:none !important;
+
+    border-radius:999rem !important;
+
+    min-height:3.3rem;
+
+    box-shadow:
+        0 0.8rem 1.8rem
+        rgba(255,130,102,0.25);
+}
+
+
+.stButton button[kind="primary"]:hover{
+    background:#E97157 !important;
+
+    transform:
+        translateY(-0.2rem)
+        scale(1.02);
+
+    box-shadow:
+        0 1.2rem 2.3rem
+        rgba(255,130,102,0.32);
+}
+
+
+/*top Sign Up button*/
+.st-key-top_signup button{
+    background:#FFFFFF !important;
+    color:#202020 !important;
+    border:0.12rem solid #202020 !important;
+    border-radius:999rem !important;
+    font-weight:800 !important;
+}
+
+.st-key-top_signup button:hover{
+    background:#202020 !important;
+    color:#FFFFFF !important;
+}
+
+
+/* ##########YELLOW SECTION########## */
+
+.st-key-yellow_section{
+    width:94%;
+
+    max-width:92rem;
+
+    margin:
+        7rem
+        auto;
+
+    padding:
+        clamp(2.5rem,5vw,4.5rem)
+        !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #FFE99A,
+            #FFD76E
+        );
+
+    border-radius:2.5rem;
+
+    box-shadow:
+        0 1.2rem 3rem
+        rgba(108,84,24,0.12);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.st-key-yellow_section:hover{
+    transform:
+        translateY(-0.4rem);
+
+    box-shadow:
+        0 1.7rem 3.6rem
+        rgba(108,84,24,0.17);
+}
+
+
+/*centre image against text*/
+.st-key-yellow_section [data-testid="stHorizontalBlock"]{
+    align-items:center;
+}
+
+
+/*classroom image*/
+.st-key-yellow_section [data-testid="stImage"] img{
+    width:100% !important;
+
+    aspect-ratio:1 / 1 !important;
+
+    object-fit:cover !important;
+
+    object-position:center !important;
+
+    border-radius:1.6rem !important;
+
+    box-shadow:
+        0 1rem 2.3rem
+        rgba(0,0,0,0.14);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.st-key-yellow_section [data-testid="stImage"] img:hover{
+    transform:
+        scale(1.025)
+        rotate(-0.4deg);
+
+    box-shadow:
+        0 1.4rem 2.8rem
+        rgba(0,0,0,0.18);
+}
+
+
+/*yellow main heading*/
+.st-key-yellow_section h2{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(1.8rem,2.6vw,2.6rem)
+        !important;
+
+    line-height:1.17 !important;
+
+    color:#29251D !important;
+}
+
+
+/*yellow body*/
+.st-key-yellow_section p{
+    font-size:1.05rem !important;
+
+    line-height:1.75 !important;
+
+    color:#504836 !important;
+}
+
+
+/*yellow label*/
+.st-key-yellow_section [data-testid="stCaptionContainer"]{
+    font-size:0.78rem !important;
+
+    font-weight:800 !important;
+
+    letter-spacing:0.14em !important;
+
+    color:#B15B42 !important;
+}
+
+
+/* ##########WHY PHRONESIS########## */
+
+.st-key-why_section{
+    width:96%;
+
+    max-width:96rem;
+
+    margin:
+        7rem
+        auto;
+
+    padding:
+        clamp(3rem,5vw,5rem)
+        clamp(1.5rem,4vw,4rem)
+        !important;
+
+    background:#ECECEC;
+
+    border-radius:2.5rem;
+
+    text-align:center;
+
+    box-shadow:
+        0 1rem 2.7rem
+        rgba(0,0,0,0.05);
+}
+
+
+/*WHY title*/
+.st-key-why_section > div > div > h2{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(2.4rem,4.5vw,4rem)
+        !important;
+
+    margin-bottom:2.5rem !important;
+}
+
+
+/*WHY label*/
+.st-key-why_section > div > div > [data-testid="stCaptionContainer"]{
+    font-weight:800 !important;
+
+    letter-spacing:0.14em !important;
+
+    color:#E16C52 !important;
+}
+
+
+/*PINK CARD*/
+.st-key-why_card_1{
+    background:
+        linear-gradient(
+            145deg,
+            #FFD7D4,
+            #F7C0BD
+        );
+}
+
+
+/*ORANGE CARD*/
+.st-key-why_card_2{
+    background:
+        linear-gradient(
+            145deg,
+            #FFC88B,
+            #FFB16D
+        );
+}
+
+
+/*YELLOW CARD*/
+.st-key-why_card_3{
+    background:
+        linear-gradient(
+            145deg,
+            #FFF09A,
+            #FFE16D
+        );
+}
+
+
+/*ALL WHY CARDS*/
+.st-key-why_card_1,
+.st-key-why_card_2,
+.st-key-why_card_3{
+    width:100%;
+
+    min-height:19rem;
+
+    padding:
+        2rem
+        !important;
+
+    border-radius:1.8rem;
+
+    text-align:left;
+
+    box-shadow:
+        0 0.7rem 1.8rem
+        rgba(0,0,0,0.07);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/*hover animation*/
+.st-key-why_card_1:hover,
+.st-key-why_card_2:hover,
+.st-key-why_card_3:hover{
+    transform:
+        translateY(-0.7rem)
+        rotate(-0.4deg);
+
+    box-shadow:
+        0 1.4rem 2.7rem
+        rgba(0,0,0,0.13);
+}
+
+
+/*card numbers*/
+.st-key-why_card_1 [data-testid="stCaptionContainer"],
+.st-key-why_card_2 [data-testid="stCaptionContainer"],
+.st-key-why_card_3 [data-testid="stCaptionContainer"]{
+    width:3rem;
+
+    height:3rem;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        rgba(255,255,255,0.68);
+
+    border-radius:50%;
+
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:0.9rem !important;
+
+    font-weight:700 !important;
+
+    color:#333333 !important;
+
+    margin-bottom:1rem;
+}
+
+
+/*card headings*/
+.st-key-why_card_1 h3,
+.st-key-why_card_2 h3,
+.st-key-why_card_3 h3{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:1.6rem !important;
+
+    line-height:1.15 !important;
+
+    margin-bottom:0.8rem !important;
+}
+
+
+/*IMPORTANT - normal card text*/
+.st-key-why_card_1 p,
+.st-key-why_card_2 p,
+.st-key-why_card_3 p{
+    width:auto !important;
+
+    height:auto !important;
+
+    display:block !important;
+
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:0.98rem !important;
+
+    font-weight:500 !important;
+
+    line-height:1.65 !important;
+
+    color:#404040 !important;
+
+    margin:0 !important;
+}
+
+
+/* ##########REVIEWS########## */
+
+.st-key-reviews_section{
+    width:94%;
+
+    max-width:92rem;
+
+    margin:
+        7rem
+        auto;
+
+    text-align:center;
+}
+
+
+/*review section heading*/
+.st-key-reviews_section > div > div > h2{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(2.4rem,4.5vw,4rem)
+        !important;
+
+    margin-bottom:2.5rem !important;
+}
+
+
+/*review top label*/
+.st-key-reviews_section > div > div > [data-testid="stCaptionContainer"]{
+    font-weight:800 !important;
+
+    letter-spacing:0.14em !important;
+
+    color:#E16C52 !important;
+}
+
+
+/*REVIEW 1 PINK*/
+.st-key-review_1{
+    background:
+        linear-gradient(
+            145deg,
+            #FFF0EF,
+            #FFD8D4
+        );
+}
+
+
+/*REVIEW 2 ORANGE*/
+.st-key-review_2{
+    background:
+        linear-gradient(
+            145deg,
+            #FFF0DA,
+            #FFD1A2
+        );
+}
+
+
+/*REVIEW 3 YELLOW*/
+.st-key-review_3{
+    background:
+        linear-gradient(
+            145deg,
+            #FFF9D9,
+            #FFE999
+        );
+}
+
+
+/*ALL REVIEW CARDS*/
+.st-key-review_1,
+.st-key-review_2,
+.st-key-review_3{
+    width:100%;
+
+    min-height:17rem;
+
+    padding:
+        2rem
+        !important;
+
+    border-radius:1.8rem;
+
+    text-align:left;
+
+    box-shadow:
+        0 0.8rem 2rem
+        rgba(0,0,0,0.07);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/*review hover*/
+.st-key-review_1:hover,
+.st-key-review_2:hover,
+.st-key-review_3:hover{
+    transform:
+        translateY(-0.65rem)
+        rotate(0.35deg);
+
+    box-shadow:
+        0 1.4rem 2.8rem
+        rgba(0,0,0,0.13);
+}
+
+
+/*quotation mark*/
+.st-key-review_1 h4,
+.st-key-review_2 h4,
+.st-key-review_3 h4{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:3.2rem !important;
+
+    line-height:0.7 !important;
+
+    font-weight:600 !important;
+
+    color:#FF8266 !important;
+
+    margin:
+        0
+        0
+        1rem
+        !important;
+}
+
+
+/*NORMAL review body - no giant bold text*/
+.st-key-review_1 p,
+.st-key-review_2 p,
+.st-key-review_3 p{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:1rem !important;
+
+    font-weight:500 !important;
+
+    line-height:1.7 !important;
+
+    color:#3C3C3C !important;
+
+    width:auto !important;
+
+    height:auto !important;
+}
+
+
+/*teacher participant*/
+.st-key-review_1 [data-testid="stCaptionContainer"],
+.st-key-review_2 [data-testid="stCaptionContainer"],
+.st-key-review_3 [data-testid="stCaptionContainer"]{
+    font-size:0.83rem !important;
+
+    font-weight:700 !important;
+
+    color:#7D7472 !important;
+
+    letter-spacing:0 !important;
+
+    margin-top:1rem;
+}
+
+
+/* ##########CTA########## */
+
+.st-key-cta_section{
+    width:94%;
+
+    max-width:92rem;
+
+    margin:
+        7rem
+        auto;
+
+    padding:
+        clamp(4rem,7vw,6rem)
+        clamp(2rem,5vw,5rem)
+        !important;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            125deg,
+            #FFB65F,
+            #FF846D,
+            #F7B1B0
+        );
+
+    border-radius:2.5rem;
+
+    box-shadow:
+        0 1.4rem 3.4rem
+        rgba(217,107,74,0.18);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.st-key-cta_section:hover{
+    transform:
+        translateY(-0.35rem);
+
+    box-shadow:
+        0 1.8rem 4rem
+        rgba(217,107,74,0.24);
+}
+
+
+.st-key-cta_section h2{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(2.7rem,5.5vw,4.7rem)
+        !important;
+
+    line-height:1 !important;
+}
+
+
+.st-key-cta_section p{
+    font-size:1.05rem !important;
+
+    font-weight:500 !important;
+}
+
+
+.st-key-cta_section [data-testid="stCaptionContainer"]{
+    font-weight:800 !important;
+
+    letter-spacing:0.14em !important;
+
+    color:#893F31 !important;
+}
+
+
+/*white CTA button*/
+.st-key-cta_section .stButton button{
+    background:#FFFFFF !important;
+
+    color:#E76E53 !important;
+
+    font-style:normal !important;
+
+    border:none !important;
+
+    border-radius:999rem !important;
+
+    min-height:3.4rem;
+
+    box-shadow:
+        0 0.8rem 1.7rem
+        rgba(95,46,35,0.12);
+}
+
+
+.st-key-cta_section .stButton button:hover{
+    transform:
+        translateY(-0.25rem)
+        scale(1.02);
+
+    box-shadow:
+        0 1.2rem 2.2rem
+        rgba(95,46,35,0.19);
+
+    background-color:#E76E53 !important;
+    color:#FFFFFF !important;
+}
+
+
+/* ##########FOOTER########## */
+
+.st-key-footer_section{
+    width:94%;
+
+    max-width:92rem;
+
+    margin:
+        6rem
+        auto
+        0;
+
+    padding:
+        3rem
+        1rem;
+
+    text-align:center;
+
+    border-top:
+        1px solid
+        #DFDFDF;
+}
+
+
+.st-key-footer_section h3{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:1.45rem !important;
+}
+
+
+.st-key-footer_section p{
+    font-size:0.95rem !important;
+
+    font-weight:500 !important;
+}
+
+
+.st-key-footer_section a{
+    color:#FF8266 !important;
+
+    font-weight:800 !important;
+
+    text-decoration:none !important;
+}
+
+
+.st-key-footer_section a:hover{
+    text-decoration:underline !important;
+}
+
+
+.st-key-footer_section [data-testid="stCaptionContainer"]{
+    color:#909090 !important;
+
+    font-size:0.8rem !important;
+}
+
+
+/* ##########MOBILE########## */
+
+@media(max-width:50em){
+
+    .st-key-hero_section{
+        width:94%;
+
+        min-height:88vh;
+
+        padding:
+            1rem
+            1.2rem
+            3rem
+            !important;
+    }
+
+
+    .st-key-hero_section h1{
+        font-size:
+            clamp(3.7rem,18vw,6rem)
+            !important;
+
+        margin-top:15vh !important;
+    }
+
+
+    .st-key-yellow_section,
+    .st-key-why_section,
+    .st-key-reviews_section,
+    .st-key-cta_section{
+        width:94%;
+
+        margin:
+            4.5rem
+            auto;
+    }
+
+
+    .st-key-yellow_section{
+        padding:1.5rem !important;
+    }
+
+
+    .st-key-why_section{
+        padding:
+            2.5rem
+            1.3rem
+            !important;
+    }
+
+
+    .st-key-cta_section{
+        padding:
+            3.5rem
+            1.5rem
+            !important;
+    }
+
+
+    .st-key-why_card_1,
+    .st-key-why_card_2,
+    .st-key-why_card_3,
+    .st-key-review_1,
+    .st-key-review_2,
+    .st-key-review_3{
+        min-height:auto;
+
+        margin-bottom:1rem;
+    }
+}
+
+/*larger section labels*/
+.st-key-yellow_section [data-testid="stCaptionContainer"],
+.st-key-why_section > div > div > [data-testid="stCaptionContainer"],
+.st-key-reviews_section > div > div > [data-testid="stCaptionContainer"],
+.st-key-cta_section [data-testid="stCaptionContainer"]{
+    font-size:1rem !important;
+    line-height:1.35 !important;
+}
+
+

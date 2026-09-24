@@ -20,28 +20,28 @@ if "public_view" not in st.session_state:
     st.session_state["public_view"] ="intro"
 
 ##########NOT LOGGED IN##########
-if not st.session_state["logged_in"]: 
-    #use styling specifically designed for public pages
-    load_styles("public_styles.css")
+if not st.session_state["logged_in"]:
 
-    #apply accessibility preferences
-    apply_accessibility_settings()
-
-    #show sign in/create account page
+    ##########LOGIN / SIGN UP##########
     if st.session_state["public_view"] =="login":
+        #load styling only for login/signup page
+        load_styles("login_styles.css")
         show_login_page()
 
-    #first page shown when app opens
+    ##########ABOUT / LANDING PAGE##########
     else:
+        #load styling only for landing page
+        load_styles("about_styles.css")
         show_about_page()
 
+    #prevent logged-in pages loading underneath
     st.stop()
 
 ##########FIRST LOGIN TUTORIAL##########
 if not st.session_state.get("tutorial_seen",False):
     #use clean public styling because normal navbar is hidden
-    load_styles("public_styles.css")
-    apply_accessibility_settings()
+    load_styles("tutorial_styles.css")
+    # apply_accessibility_settings()
 
     #hide normal navigation during tutorial
     tutorial_page =st.Page(show_tutorial,title="Welcome")
@@ -51,8 +51,19 @@ if not st.session_state.get("tutorial_seen",False):
     page.run()
     st.stop()
 
+##########LOGGED IN STYLING##########
+
+#main application styling
+load_styles("styles.css")
+
+#user accessibility preferences only apply inside logged-in app
+apply_accessibility_settings()
 
 ##########LOGGED IN PAGES##########
+
+#FIX!- add full styling - hover,navbar,riskcolours
+load_styles("styles.css")
+apply_accessibility_settings()
 
 dashboard_page =st.Page(
     "pages/dashboard.py",
@@ -78,6 +89,7 @@ settings_page =st.Page(
     title="Settings",
     icon=":material/settings:"
 )
+
 
 
 ##########NORMAL NAV##########

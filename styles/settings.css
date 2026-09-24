@@ -1,0 +1,505 @@
+/* #####SETTINGS STYLING##### */
+
+
+/* ##########SETTINGS PAGE########## */
+
+.st-key-settings_page{
+    width:94%;
+    max-width:92rem;
+    margin:0 auto;
+
+    padding:
+        2.5rem
+        clamp(1.5rem,4vw,4rem)
+        5rem
+        !important;
+}
+
+
+/* main settings heading */
+.st-key-settings_page > div > div > h1{
+    font-size:clamp(2.8rem,5vw,4rem) !important;
+    margin-bottom:0.3rem !important;
+}
+
+
+/* text under Settings heading */
+.st-key-settings_page > div > div > p{
+    font-size:1.05rem !important;
+    color:#575757 !important;
+}
+
+
+/* ##########ALL SETTINGS CARDS########## */
+
+.st-key-settings_profile,
+.st-key-settings_accessibility,
+.st-key-settings_security,
+.st-key-settings_help,
+.st-key-settings_account{
+    width:100%;
+
+    margin:
+        1.5rem
+        0;
+
+    padding:
+        clamp(1.6rem,3vw,2.4rem)
+        !important;
+
+    background:
+        rgba(255,255,255,0.90);
+
+    border:
+        1px solid
+        rgba(0,0,0,0.05);
+
+    border-radius:1.7rem;
+
+    box-shadow:
+        0 0.7rem 1.8rem
+        rgba(0,0,0,0.06);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* slight movement when hovering over each setting */
+.st-key-settings_profile:hover,
+.st-key-settings_accessibility:hover,
+.st-key-settings_security:hover,
+.st-key-settings_help:hover,
+.st-key-settings_account:hover{
+    transform:translateY(-0.25rem);
+
+    box-shadow:
+        0 1rem 2.3rem
+        rgba(0,0,0,0.09);
+}
+
+
+/* ##########DIFFERENT CARD COLOURS########## */
+
+/* profile pink */
+.st-key-settings_profile{
+    border-left:
+        0.45rem solid
+        #F8C9C7;
+}
+
+
+/* accessibility yellow */
+.st-key-settings_accessibility{
+    border-left:
+        0.45rem solid
+        #FFE37F;
+}
+
+
+/* password orange */
+.st-key-settings_security{
+    border-left:
+        0.45rem solid
+        #FFB775;
+}
+
+
+/* tutorial light pink */
+.st-key-settings_help{
+    border-left:
+        0.45rem solid
+        #F7B1B0;
+}
+
+
+/* logout */
+.st-key-settings_account{
+    border-left:
+        0.45rem solid
+        #FF8266;
+}
+
+
+/* ##########CARD LABELS########## */
+
+.st-key-settings_profile [data-testid="stCaptionContainer"],
+.st-key-settings_accessibility [data-testid="stCaptionContainer"],
+.st-key-settings_security [data-testid="stCaptionContainer"],
+.st-key-settings_help [data-testid="stCaptionContainer"],
+.st-key-settings_account [data-testid="stCaptionContainer"]{
+    font-family:var(--bodyFont) !important;
+
+    font-size:0.8rem !important;
+
+    font-weight:800 !important;
+
+    letter-spacing:0.13em !important;
+
+    color:#E16C52 !important;
+}
+
+
+/* accessibility summary shouldnt have huge spacing */
+.st-key-settings_accessibility [data-testid="stCaptionContainer"]:last-of-type{
+    letter-spacing:0 !important;
+
+    font-weight:600 !important;
+
+    color:#737373 !important;
+}
+
+
+/* ##########CARD HEADINGS########## */
+
+.st-key-settings_profile h2,
+.st-key-settings_accessibility h2,
+.st-key-settings_security h2,
+.st-key-settings_help h2,
+.st-key-settings_account h2{
+    font-family:var(--headerFont) !important;
+
+    font-size:1.7rem !important;
+
+    margin:
+        0.2rem
+        0
+        0.5rem
+        !important;
+}
+
+
+/* ##########CARD TEXT########## */
+
+.st-key-settings_profile p,
+.st-key-settings_accessibility p,
+.st-key-settings_security p,
+.st-key-settings_help p,
+.st-key-settings_account p{
+    font-family:var(--bodyFont) !important;
+
+    font-size:0.98rem !important;
+
+    line-height:1.65 !important;
+}
+
+
+/* ##########SETTINGS BUTTONS########## */
+
+.st-key-settings_profile .stButton button,
+.st-key-settings_accessibility .stButton button,
+.st-key-settings_security .stButton button,
+.st-key-settings_help .stButton button,
+.st-key-settings_account .stButton button{
+    width:auto;
+
+    min-height:2.8rem;
+
+    margin-top:0.6rem;
+
+    padding:
+        0.5rem
+        1.3rem
+        !important;
+
+    background:#FFFFFF !important;
+
+    color:#E16C52 !important;
+
+    border:
+        0.1rem solid
+        #E8A293
+        !important;
+
+    border-radius:999rem !important;
+
+    font-family:var(--bodyFont) !important;
+
+    font-weight:800 !important;
+
+    box-shadow:
+        0 0.3rem 0.9rem
+        rgba(0,0,0,0.05);
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease
+        !important;
+}
+
+
+.st-key-settings_profile .stButton button:hover,
+.st-key-settings_accessibility .stButton button:hover,
+.st-key-settings_security .stButton button:hover,
+.st-key-settings_help .stButton button:hover,
+.st-key-settings_account .stButton button:hover{
+    background:#FF8266 !important;
+
+    color:#FFFFFF !important;
+
+    border-color:#FF8266 !important;
+
+    transform:
+        translateY(-0.15rem);
+
+    box-shadow:
+        0 0.7rem 1.3rem
+        rgba(255,130,102,0.18);
+}
+
+
+/* ##########LOG OUT CARD BUTTON########## */
+
+.st-key-settings_account .stButton button{
+    color:#D94F3C !important;
+
+    border-color:#E99285 !important;
+}
+
+
+.st-key-settings_account .stButton button:hover{
+    background:#D94F3C !important;
+
+    color:#FFFFFF !important;
+
+    border-color:#D94F3C !important;
+}
+
+
+/* ##############################POPUP DIALOGS############################## */
+
+
+/* darkens the page behinf popup */
+div[data-baseweb="modal"]{
+    backdrop-filter:blur(0.15rem);
+}
+
+
+/* actual popup box */
+div[data-testid="stDialog"] > div{
+    border-radius:2rem !important;
+
+    background:#FFFDF9 !important;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.06)
+        !important;
+
+    box-shadow:
+        0 2rem 5rem
+        rgba(0,0,0,0.20)
+        !important;
+}
+
+
+/* popup inside spacing */
+div[data-testid="stDialog"] [data-testid="stVerticalBlock"]{
+    gap:0.8rem;
+}
+
+
+/* popup title */
+div[data-testid="stDialog"] h2{
+    font-family:var(--headerFont) !important;
+
+    font-size:1.9rem !important;
+
+    font-weight:600 !important;
+
+    color:#202020 !important;
+}
+
+
+/* normal popup text */
+div[data-testid="stDialog"] p{
+    font-family:var(--bodyFont) !important;
+
+    font-size:0.95rem !important;
+
+    line-height:1.55 !important;
+
+    color:#444444 !important;
+}
+
+
+/* ##########POPUP INPUT LABELS########## */
+
+div[data-testid="stDialog"] label{
+    font-family:var(--bodyFont) !important;
+
+    font-weight:700 !important;
+
+    color:#303030 !important;
+}
+
+
+/* ##########POPUP TEXT INPUTS########## */
+
+div[data-testid="stDialog"] [data-baseweb="input"]{
+    min-height:3rem;
+
+    background:#FFFFFF !important;
+
+    border:
+        1px solid
+        #E5DEDB
+        !important;
+
+    border-radius:0.85rem !important;
+}
+
+
+div[data-testid="stDialog"] [data-baseweb="input"]:focus-within{
+    border-color:#FF9C85 !important;
+
+    box-shadow:
+        0 0 0 0.16rem
+        rgba(255,130,102,0.12)
+        !important;
+}
+
+
+div[data-testid="stDialog"] input{
+    background:#FFFFFF !important;
+
+    color:#202020 !important;
+
+    -webkit-text-fill-color:#202020 !important;
+}
+
+
+/* ##########POPUP SELECT BOXES########## */
+
+div[data-testid="stDialog"] [data-baseweb="select"] > div{
+    background:#FFFFFF !important;
+
+    color:#202020 !important;
+
+    border-radius:0.85rem !important;
+}
+
+
+/* ##########POPUP BUTTONS########## */
+
+div[data-testid="stDialog"] .stButton button{
+    min-height:2.9rem;
+
+    border-radius:999rem !important;
+
+    font-family:var(--bodyFont) !important;
+
+    font-weight:800 !important;
+
+    font-style:normal !important;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease
+        !important;
+}
+
+
+/* normal cancel button */
+div[data-testid="stDialog"] .stButton button:not([kind="primary"]){
+    background:#F3EFED !important;
+
+    color:#4B4644 !important;
+
+    border:none !important;
+}
+
+
+div[data-testid="stDialog"] .stButton button:not([kind="primary"]):hover{
+    background:#E8E1DE !important;
+
+    color:#202020 !important;
+
+    transform:
+        translateY(-0.1rem);
+}
+
+
+/* save / confirm buttons */
+div[data-testid="stDialog"] .stButton button[kind="primary"]{
+    background:#FF8266 !important;
+
+    color:#FFFFFF !important;
+
+    border:none !important;
+
+    box-shadow:
+        0 0.6rem 1.2rem
+        rgba(255,130,102,0.2);
+}
+
+
+div[data-testid="stDialog"] .stButton button[kind="primary"]:hover{
+    background:#E76E53 !important;
+
+    color:#FFFFFF !important;
+
+    transform:
+        translateY(-0.15rem);
+
+    box-shadow:
+        0 0.8rem 1.5rem
+        rgba(255,130,102,0.27);
+}
+
+
+/* make sure button words always visable */
+div[data-testid="stDialog"] .stButton button p{
+    color:inherit !important;
+
+    font-weight:800 !important;
+}
+
+
+/* ##########TOGGLE########## */
+
+div[data-testid="stDialog"] [role="switch"][aria-checked="true"]{
+    background-color:#FF8266 !important;
+}
+
+
+/* ##########MOBILE########## */
+
+@media(max-width:56.249em){
+
+    .st-key-settings_page{
+        width:95%;
+
+        padding:
+            1.5rem
+            1rem
+            3rem
+            !important;
+    }
+
+
+    .st-key-settings_profile,
+    .st-key-settings_accessibility,
+    .st-key-settings_security,
+    .st-key-settings_help,
+    .st-key-settings_account{
+        padding:
+            1.4rem
+            !important;
+
+        border-radius:1.3rem;
+    }
+
+
+    div[data-testid="stDialog"] > div{
+        width:92vw !important;
+
+        max-width:92vw !important;
+
+        border-radius:1.4rem !important;
+    }
+}

@@ -1,203 +1,464 @@
 #imports
 import streamlit as st
 
+from style_loader import load_styles
 from authenticate import update_teacher_name
 from authenticate import change_password
 from authenticate import set_tutorial_seen
 
 
-st.title("Settings")
-st.write("Manage your Phronesis account and preferences.")
+##########STYLING##########
+
+#settings has extra styling ontop of normal app styling
+load_styles("settings.css")
 
 
-##########PROFILE##########
+##########UPDATE NAME POPUP##########
 
-st.write("## Profile")
+@st.dialog("Update Name")
+def updateNamePopup():
 
-st.write(
-    f"**Email:** {st.session_state['teacher_email']}"
-)
+    st.write("Change the name shown on your Phronesis account.")
 
-new_name =st.text_input(
-    "Name",
-    value=st.session_state["teacher_name"]
-)
-
-if st.button("Update Name"):
-
-    updated =update_teacher_name(
-        st.session_state["teacher_id"],
-        new_name
+    newName =st.text_input(
+        "Name",
+        value=st.session_state["teacher_name"]
     )
 
-    if updated:
-        st.session_state["teacher_name"] =" ".join(new_name.split())
-        st.success("Name updated successfully.")
+    buttonLeft,buttonRight =st.columns(2)
 
-    else:
-        st.error("Name cannot be empty.")
+    with buttonLeft:
 
+        if st.button(
+            "Cancel",
+            key="cancel_name",
+            use_container_width=True
+        ):
+            st.rerun()
 
-st.markdown("---")
+    with buttonRight:
 
-##########ACCESSIBILITY##########
+        if st.button(
+            "Save Name",
+            type="primary",
+            key="save_name",
+            use_container_width=True
+        ):
 
-st.write("## Accessibility")
+            updated =update_teacher_name(
+                st.session_state["teacher_id"],
+                newName
+            )
 
-st.write(
-    "Adjust how Phronesis is displayed to make information easier to read."
-)
+            if updated:
 
+                st.session_state["teacher_name"] =" ".join(
+                    newName.split()
+                )
 
-##########READABLE FONT##########
+                st.success(
+                    "Name updated successfully."
+                )
 
-if "dyslexia_font" not in st.session_state:
-    st.session_state["dyslexia_font"] =False
+                st.rerun()
 
-dyslexia_font =st.toggle(
-    "Use a more readable font",
-    value=st.session_state["dyslexia_font"]
-)
+            else:
 
-st.caption(
-    "Uses a clear, spaced font that may make text easier to read."
-)
-
-
-##########FONT SIZE##########
-
-font_options =[
-    "Small",
-    "Medium",
-    "Large",
-    "Extra Large"
-]
-
-current_font_size =st.session_state.get(
-    "font_size",
-    "Medium"
-)
-
-font_size =st.selectbox(
-    "Text Size",
-    font_options,
-    index=font_options.index(current_font_size)
-)
+                st.error(
+                    "Name cannot be empty."
+                )
 
 
-##########DISPLAY MODE##########
+##########ACCESSIBILITY POPUP##########
 
-display_options =[
-    "Light",
-    "Dark"
-]
+@st.dialog("Accessibility Settings")
+def accessibilityPopup():
 
-current_display_mode =st.session_state.get(
-    "display_mode",
-    "Light"
-)
-
-display_mode =st.selectbox(
-    "Display Mode",
-    display_options,
-    index=display_options.index(current_display_mode)
-)
-
-
-##########APPLY SETTINGS##########
-
-if st.button("Apply Accessibility Settings"):
-
-    st.session_state["dyslexia_font"] =dyslexia_font
-    st.session_state["font_size"] =font_size
-    st.session_state["display_mode"] =display_mode
-
-    st.success(
-        "Accessibility settings updated."
+    st.write(
+        "Adjust how Phronesis is displayed to make information easier to read."
     )
 
-    st.rerun()
+
+    ##########READABLE FONT##########
+
+    dyslexiaFont =st.toggle(
+        "Use a more readable font",
+        value=st.session_state.get(
+            "dyslexia_font",
+            False
+        )
+    )
+
+    st.caption(
+        "Uses a clear, spaced font that may make text easier to read."
+    )
 
 
-st.markdown("---")
+    ##########TEXT SIZE##########
+
+    fontOptions =[
+        "Small",
+        "Medium",
+        "Large",
+        "Extra Large"
+    ]
+
+    currentFontSize =st.session_state.get(
+        "font_size",
+        "Medium"
+    )
+
+    fontSize =st.selectbox(
+        "Text Size",
+        fontOptions,
+        index=fontOptions.index(
+            currentFontSize
+        )
+    )
 
 
-##########CHANGE PASSWORD##########
+    ##########DISPLAY MODE##########
 
-st.write("## Change Password")
+    displayOptions =[
+        "Light",
+        "Dark"
+    ]
 
-current_password =st.text_input(
-    "Current Password",
-    type="password"
-)
+    currentDisplayMode =st.session_state.get(
+        "display_mode",
+        "Light"
+    )
 
-new_password =st.text_input(
-    "New Password",
-    type="password"
-)
+    displayMode =st.selectbox(
+        "Display Mode",
+        displayOptions,
+        index=displayOptions.index(
+            currentDisplayMode
+        )
+    )
 
-confirm_password =st.text_input(
-    "Confirm New Password",
-    type="password"
-)
 
-if st.button("Change Password"):
+    ##########BUTTONS##########
 
-    if new_password !=confirm_password:
-        st.error("New passwords do not match.")
+    buttonLeft,buttonRight =st.columns(2)
 
-    else:
+    with buttonLeft:
 
-        success,message =change_password(
-            st.session_state["teacher_id"],
-            current_password,
-            new_password
+        if st.button(
+            "Cancel",
+            key="cancel_accessibility",
+            use_container_width=True
+        ):
+            st.rerun()
+
+    with buttonRight:
+
+        if st.button(
+            "Apply Settings",
+            type="primary",
+            key="apply_accessibility",
+            use_container_width=True
+        ):
+
+            st.session_state["dyslexia_font"] =dyslexiaFont
+            st.session_state["font_size"] =fontSize
+            st.session_state["display_mode"] =displayMode
+
+            st.rerun()
+
+
+##########CHANGE PASSWORD POPUP##########
+
+@st.dialog("Change Password")
+def changePasswordPopup():
+
+    st.write(
+        "Enter your current password before choosing a new one."
+    )
+
+    currentPassword =st.text_input(
+        "Current Password",
+        type="password"
+    )
+
+    newPassword =st.text_input(
+        "New Password",
+        type="password"
+    )
+
+    confirmPassword =st.text_input(
+        "Confirm New Password",
+        type="password"
+    )
+
+
+    buttonLeft,buttonRight =st.columns(2)
+
+    with buttonLeft:
+
+        if st.button(
+            "Cancel",
+            key="cancel_password",
+            use_container_width=True
+        ):
+            st.rerun()
+
+    with buttonRight:
+
+        if st.button(
+            "Save Password",
+            type="primary",
+            key="save_password",
+            use_container_width=True
+        ):
+
+            if newPassword !=confirmPassword:
+
+                st.error(
+                    "New passwords do not match."
+                )
+
+            else:
+
+                success,message =change_password(
+                    st.session_state["teacher_id"],
+                    currentPassword,
+                    newPassword
+                )
+
+                if success:
+
+                    st.success(message)
+
+                else:
+
+                    st.error(message)
+
+
+##########TUTORIAL POPUP##########
+
+@st.dialog("Show Tutorial Again")
+def tutorialPopup():
+
+    st.write(
+        "Would you like to restart the Phronesis introduction tutorial?"
+    )
+
+    st.caption(
+        "This will take you through the tutorial slides again. "
+        "Your account and student data will not be changed."
+    )
+
+
+    buttonLeft,buttonRight =st.columns(2)
+
+    with buttonLeft:
+
+        if st.button(
+            "Cancel",
+            key="cancel_tutorial",
+            use_container_width=True
+        ):
+            st.rerun()
+
+    with buttonRight:
+
+        if st.button(
+            "Restart Tutorial",
+            type="primary",
+            key="restart_tutorial",
+            use_container_width=True
+        ):
+
+            set_tutorial_seen(
+                st.session_state["teacher_id"],
+                False
+            )
+
+            st.session_state["tutorial_seen"] =False
+            st.session_state["tutorial_step"] =0
+
+            st.rerun()
+
+
+##########LOG OUT POPUP##########
+
+@st.dialog("Log Out")
+def logOutPopup():
+
+    st.write(
+        "Are you sure you want to log out of Phronesis?"
+    )
+
+    st.caption(
+        "Your saved student information will remain in your workspace."
+    )
+
+
+    buttonLeft,buttonRight =st.columns(2)
+
+    with buttonLeft:
+
+        if st.button(
+            "Stay Logged In",
+            key="cancel_logout",
+            use_container_width=True
+        ):
+            st.rerun()
+
+    with buttonRight:
+
+        if st.button(
+            "Log Out",
+            type="primary",
+            key="confirm_logout",
+            use_container_width=True
+        ):
+
+            #clear all session infomation when logging out
+            for key in list(
+                st.session_state.keys()
+            ):
+                del st.session_state[key]
+
+            st.rerun()
+
+
+##########SETTINGS PAGE##########
+
+with st.container(key="settings_page"):
+
+    st.title("Settings")
+
+    st.write(
+        "Manage your Phronesis account and preferences."
+    )
+
+
+    ##########PROFILE##########
+
+    with st.container(key="settings_profile"):
+
+        st.caption("ACCOUNT")
+
+        st.write("## Profile")
+
+        st.write(
+            "Manage the basic details connected to your Phronesis account."
         )
 
-        if success:
-            st.success(message)
+        st.write(
+            f"**Email:** {st.session_state['teacher_email']}"
+        )
 
+        st.write(
+            f"**Name:** {st.session_state['teacher_name']}"
+        )
+
+        if st.button(
+            "Update Name",
+            key="open_name"
+        ):
+            updateNamePopup()
+
+
+    ##########ACCESSIBILITY##########
+
+    with st.container(key="settings_accessibility"):
+
+        st.caption("DISPLAY")
+
+        st.write("## Accessibility")
+
+        st.write(
+            "Adjust how Phronesis looks and make information easier to read."
+        )
+
+        currentFont =st.session_state.get(
+            "font_size",
+            "Medium"
+        )
+
+        currentMode =st.session_state.get(
+            "display_mode",
+            "Light"
+        )
+
+        readableFont =st.session_state.get(
+            "dyslexia_font",
+            False
+        )
+
+        if readableFont:
+            readableText ="On"
         else:
-            st.error(message)
+            readableText ="Off"
+
+        st.caption(
+            f"Text size: {currentFont}  •  "
+            f"Display: {currentMode}  •  "
+            f"Readable font: {readableText}"
+        )
+
+        if st.button(
+            "Accessibility Settings",
+            key="open_accessibility"
+        ):
+            accessibilityPopup()
 
 
-st.markdown("---")
+    ##########SECURITY##########
+
+    with st.container(key="settings_security"):
+
+        st.caption("SECURITY")
+
+        st.write("## Password")
+
+        st.write(
+            "Change the password used to sign in to your account."
+        )
+
+        if st.button(
+            "Change Password",
+            key="open_password"
+        ):
+            changePasswordPopup()
 
 
-##########TUTORIAL##########
+    ##########HELP##########
 
-st.write("## Help")
+    with st.container(key="settings_help"):
 
-st.write(
-    "You can show the Phronesis introduction tutorial again at any time."
-)
+        st.caption("HELP")
 
-if st.button("Show Tutorial Again"):
+        st.write("## Tutorial")
 
-    set_tutorial_seen(
-        st.session_state["teacher_id"],
-        False
-    )
+        st.write(
+            "Go through the Phronesis introduction again whenever you need a reminder."
+        )
 
-    st.session_state["tutorial_seen"] =False
-
-    st.rerun()
-
-
-st.markdown("---")
+        if st.button(
+            "Show Tutorial Again",
+            key="open_tutorial"
+        ):
+            tutorialPopup()
 
 
-##########LOG OUT##########
+    ##########ACCOUNT##########
 
-st.write("## Account")
+    with st.container(key="settings_account"):
 
-if st.button(
-    "Log Out",
-    type="primary"
-):
+        st.caption("SESSION")
 
-    #clear session
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
+        st.write("## Account")
 
-    st.rerun()
+        st.write(
+            "Finish your current Phronesis session."
+        )
+
+        if st.button(
+            "Log Out",
+            key="open_logout"
+        ):
+            logOutPopup()

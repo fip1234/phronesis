@@ -91,7 +91,7 @@ section[data-testid="stSidebar"]{
 section[data-testid="stSidebar"] p,section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] a{
     color:white !important;
-    font-family:var(--body-font) !important;
+    font-family:var(--bodyFont) !important;
 }
 section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,section[data-testid="stSidebar"] h4,
@@ -128,10 +128,10 @@ span[data-testid="stIconMaterial"]{
 
 
 /* ######DESKTOP- hover expanding sidebar */
-@media (min-width:56.25em)and(hover:hover)and(pointer:fine){
+@media (min-width:56.25em){
     /* get rid of streamlit default header at top*/
     header[data-testid="stHeader"]{
-        display:none !important;
+        display:flex !important;
     }
     /* get rid of streamlit default coloured line at top*/
     [data-testid="stDecoration"]{
@@ -251,7 +251,7 @@ span[data-testid="stIconMaterial"]{
 
     /* #######hide words when sidebar closed */
     /* nav text technically exists- just transparent when sidebar closed */
-    section[data-testid="stSidebar"]:not(:hover)[data-testid="stSidebarNav"] li a,
+    section[data-testid="stSidebar"]:not(:hover) [data-testid="stSidebarNav"] li a,
     section[data-testid="stSidebar"]:not(:hover)
     [data-testid="stSidebarNav"] li a *{
         color:transparent !important;
@@ -260,7 +260,7 @@ span[data-testid="stIconMaterial"]{
 
     /* ###### ICON FULLY CENTRED INSIDE CLOSED BOX */
     /* icon directly in centre of translucent box- hidden text shouldnt affect this */
-    section[data-testid="stSidebar"]:not(:hover)[data-testid="stSidebarNav"]
+    section[data-testid="stSidebar"]:not(:hover) [data-testid="stSidebarNav"]
     span[data-testid="stIconMaterial"]{
         position:absolute !important;  /* exact positioning in nav box */
         left:50% !important; /* move icon centre point to middle of box */
@@ -301,7 +301,7 @@ span[data-testid="stIconMaterial"]{
         gap:var(--navGap) !important;  /* responsive gap between icon and page title */
         color:white !important;
         font-size:var(--navTextSize) !important;
-        font-family:var(--app-font) !important;
+        font-family:var(--bodyFont) !important;
     }
 
     /* sidebar opens?- change hidden transparent text back to white */
@@ -359,9 +359,38 @@ span[data-testid="stIconMaterial"]{
     }
 }
 
+/* FOR THE MAIN CONTENT BACKGROUND PATTERN */
+[data-testid="stMain"]{
+    position:relative;
+    background-color:#F6F3EE !important;
+}
+
+[data-testid="stMain"]::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+
+    background-image:url("../assets/phronesis_background.png");
+    background-repeat:repeat;
+    background-size:45rem auto;
+    background-position:top left;
+    background-attachment:fixed;
+
+    filter:grayscale(1) brightness(0);
+    opacity:0.08;
+}
+
+[data-testid="stMain"] > div{
+    position:relative;
+    z-index:1;
+}
+
+
 /* MOBILE/TABLET */
 /* touchscreens- hover doesnt work, so use normal full sidebar */
-@media (max-width:56.249em), (hover:none), (pointer:coarse){
+@media (max-width:56.249em){
     /* keep streamlit normal mobile header/hamburger button */
     header[data-testid="stHeader"]{
         display:flex !important;

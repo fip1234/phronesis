@@ -9,212 +9,239 @@ from user_data import create_user_files
 def show_login_page():
 
 
-    ##########BACK TO INTRO##########
+    ##########LOGIN PAGE##########
 
-    #return to public Phronesis introduction page
-    if st.button(
-        "← Back to Phronesis",
-        key="back_to_intro"
-    ):
-        st.session_state["public_view"] ="intro"
-        st.rerun()
+    with st.container(key="auth_page"):
 
 
-    ##########PAGE LAYOUT##########
+        ##########BACK BUTTON##########
 
-    #left side explains Phronesis
-    #right side contains sign in/create account forms
-    intro_col,form_col =st.columns(
-        [0.9,1.1],
-        gap="large"
-    )
+        back_col,empty_col =st.columns([1.6,7])
+
+        with back_col:
+
+            if st.button(
+                "← Back to Phronesis",
+                key="back_to_intro",
+                use_container_width=True
+            ):
+                st.session_state["public_view"] ="intro"
+                st.rerun()
 
 
-    ##########LEFT SIDE##########
+        ##########MAIN LAYOUT##########
 
-    with intro_col:
-
-        st.markdown(
-            """
-            <div class="auth-intro">
-
-                <div class="public-brand">
-                    Phronesis
-                </div>
-
-                <h1>
-                    Student insight without losing teacher judgement.
-                </h1>
-
-                <p>
-                    Bring student information together, identify potential
-                    risk and understand the evidence behind each prediction.
-                </p>
-
-                <p>
-                    Sign in to continue to your classes, dashboard and
-                    student insights.
-                </p>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+        intro_col,form_col =st.columns(
+            [0.9,1.1],
+            gap="large"
         )
 
 
-    ##########RIGHT SIDE##########
+        ##########LEFT PANEL##########
 
-    with form_col:
+        with intro_col:
 
-        st.write("## Welcome")
+            with st.container(key="auth_intro_panel"):
 
-        #switch between existing account and new account forms
-        login_tab,signup_tab =st.tabs([
-            "Sign In",
-            "Create Account"
-        ])
-
-
-        ##########SIGN IN##########
-
-        with login_tab:
-
-            st.write("### Sign In")
-
-            st.caption(
-                "Enter your account details to continue."
-            )
-
-            with st.form("login_form"):
-
-                email =st.text_input(
-                    "Email",
-                    placeholder="name@example.com"
+                st.caption(
+                    "PHRONESIS"
                 )
 
-                password =st.text_input(
-                    "Password",
-                    type="password",
-                    placeholder="Enter your password"
+                st.title(
+                    "Welcome back."
                 )
 
-                login_button =st.form_submit_button(
+                st.subheader(
+                    "Student insight without losing teacher judgement."
+                )
+
+                st.write(
+                    """
+                    Bring student information together, identify
+                    potential risk and understand the evidence
+                    behind each prediction.
+                    """
+                )
+
+                st.write(
+                    """
+                    Sign in to continue to your classes,
+                    dashboard and student insights.
+                    """
+                )
+
+
+        ##########RIGHT PANEL##########
+
+        with form_col:
+
+            with st.container(key="auth_form_panel"):
+
+                st.title(
+                    "Welcome"
+                )
+
+                st.write(
+                    "Sign in to continue or create your Phronesis account."
+                )
+
+
+                ##########TABS##########
+
+                login_tab,signup_tab =st.tabs([
                     "Sign In",
-                    use_container_width=True
-                )
+                    "Create Account"
+                ])
 
 
-            if login_button:
+                ##########SIGN IN##########
 
-                #check entered credentials against teacher account
-                teacher =login_teacher(
-                    email,
-                    password
-                )
+                with login_tab:
 
-                if teacher is None:
-
-                    st.error(
-                        "Incorrect email or password."
+                    st.subheader(
+                        "Sign In"
                     )
 
-                else:
-
-                    #store signed-in teacher information for current session
-                    st.session_state["logged_in"] =True
-                    st.session_state["teacher_id"] =teacher["teacher_id"]
-                    st.session_state["teacher_name"] =teacher["name"]
-                    st.session_state["teacher_email"] =teacher["email"]
-
-                    #ensure teacher has their own data workspace
-                    create_user_files()
-
-                    #check whether teacher has already completed tutorial
-                    tutorial_seen =str(
-                        teacher["tutorial_seen"]
-                    ).lower() =="true"
-
-                    st.session_state["tutorial_seen"] =tutorial_seen
-
-                    #reload app using signed-in state
-                    st.rerun()
-
-
-        ##########SIGN UP##########
-
-        with signup_tab:
-
-            st.write("### Create Account")
-
-            st.caption(
-                "Create your own Phronesis teacher workspace."
-            )
-
-            with st.form("signup_form"):
-
-                name =st.text_input(
-                    "Name",
-                    placeholder="Your name"
-                )
-
-                email =st.text_input(
-                    "Email Address",
-                    placeholder="name@example.com"
-                )
-
-                password =st.text_input(
-                    "Password",
-                    type="password",
-                    placeholder="Create a password"
-                )
-
-                confirm_password =st.text_input(
-                    "Confirm Password",
-                    type="password",
-                    placeholder="Enter your password again"
-                )
-
-                signup_button =st.form_submit_button(
-                    "Create Account",
-                    use_container_width=True
-                )
-
-
-            if signup_button:
-
-                #make sure both password entries match
-                if password !=confirm_password:
-
-                    st.error(
-                        "Passwords do not match."
+                    st.caption(
+                        "Enter your account details to continue."
                     )
 
-                else:
 
-                    #create new teacher account
-                    success,message,teacher =create_account(
-                        name,
-                        email,
-                        password
+                    with st.form("login_form"):
+
+                        email =st.text_input(
+                            "Email",
+                            placeholder="name@example.com"
+                        )
+
+                        password =st.text_input(
+                            "Password",
+                            type="password",
+                            placeholder="Enter your password"
+                        )
+
+                        login_button =st.form_submit_button(
+                            "Sign In",
+                            use_container_width=True
+                        )
+
+
+                    if login_button:
+
+                        teacher =login_teacher(
+                            email,
+                            password
+                        )
+
+
+                        if teacher is None:
+
+                            st.error(
+                                "Incorrect email or password."
+                            )
+
+
+                        else:
+
+                            #store signed-in teacher information
+                            st.session_state["logged_in"] =True
+                            st.session_state["teacher_id"] =teacher["teacher_id"]
+                            st.session_state["teacher_name"] =teacher["name"]
+                            st.session_state["teacher_email"] =teacher["email"]
+
+                            #make sure teacher has their own data workspace
+                            create_user_files()
+
+                            #check if tutorial has already been completed
+                            tutorial_seen =str(
+                                teacher["tutorial_seen"]
+                            ).lower() =="true"
+
+                            st.session_state["tutorial_seen"] =tutorial_seen
+
+                            st.rerun()
+
+
+                ##########CREATE ACCOUNT##########
+
+                with signup_tab:
+
+                    st.subheader(
+                        "Create Account"
                     )
 
-                    if not success:
+                    st.caption(
+                        "Create your own Phronesis teacher workspace."
+                    )
 
-                        st.error(message)
 
-                    else:
+                    with st.form("signup_form"):
 
-                        #automatically sign teacher in after registration
-                        st.session_state["logged_in"] =True
-                        st.session_state["teacher_id"] =teacher["teacher_id"]
-                        st.session_state["teacher_name"] =teacher["name"]
-                        st.session_state["teacher_email"] =teacher["email"]
+                        name =st.text_input(
+                            "Name",
+                            placeholder="Your name"
+                        )
 
-                        #new users should see tutorial on first login
-                        st.session_state["tutorial_seen"] =False
+                        email =st.text_input(
+                            "Email Address",
+                            placeholder="name@example.com"
+                        )
 
-                        #create separate empty data workspace for teacher
-                        create_user_files()
+                        password =st.text_input(
+                            "Password",
+                            type="password",
+                            placeholder="Create a password"
+                        )
 
-                        #reload app and move into first-login tutorial
-                        st.rerun()
+                        confirm_password =st.text_input(
+                            "Confirm Password",
+                            type="password",
+                            placeholder="Enter your password again"
+                        )
+
+                        signup_button =st.form_submit_button(
+                            "Create Account",
+                            use_container_width=True
+                        )
+
+
+                    if signup_button:
+
+                        if password !=confirm_password:
+
+                            st.error(
+                                "Passwords do not match."
+                            )
+
+
+                        else:
+
+                            success,message,teacher =create_account(
+                                name,
+                                email,
+                                password
+                            )
+
+
+                            if not success:
+
+                                st.error(
+                                    message
+                                )
+
+
+                            else:
+
+                                #automatically sign teacher in
+                                st.session_state["logged_in"] =True
+                                st.session_state["teacher_id"] =teacher["teacher_id"]
+                                st.session_state["teacher_name"] =teacher["name"]
+                                st.session_state["teacher_email"] =teacher["email"]
+
+                                #new users should see tutorial
+                                st.session_state["tutorial_seen"] =False
+
+                                #create separate teacher data workspace
+                                create_user_files()
+
+                                st.rerun()
