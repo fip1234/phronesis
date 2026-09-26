@@ -1,4 +1,4 @@
-#Add info like students, classes, subjects
+#attendance.py= add info like students, classes, subjects
 #imports
 import streamlit as st
 import pandas as pd
@@ -13,8 +13,6 @@ def show_attendance():
     students =pd.read_csv(get_user_file("students.csv"))
     classes =pd.read_csv(get_user_file("classes.csv"))
     class_students =pd.read_csv(get_user_file("class_students.csv"))
-
-    ##########SUCCESS MESSAGES##########
 
     #add attendance
     if "attendance_message" in st.session_state:
@@ -116,10 +114,6 @@ def show_attendance():
                 st.session_state["attendance_message"] ="Attendance added successfully!"
                 st.rerun()
 
-    #button which opens add attendance box
-    if st.button("Add Attendance"):
-        add_attendance_dialog(attendance,students,classes,class_students)
-
     ##########DOWNLOAD ATTENDANCE TEMPLATE##########
     #user test fix!- prefilled student ids in attendance template
 
@@ -176,11 +170,6 @@ def show_attendance():
 
         #download template button
         st.download_button("Download attendance Template",data=attendance_template_csv,file_name="attendance_template.csv",mime="text/csv")
-
-    #button for popup
-    if st.button("Download attendance CSV Template"):
-        download_attendance_template()
-
 
     ##########UPLOAD ATTENDANCE CSV##########
     @st.dialog("Upload Attendance CSV")
@@ -364,9 +353,24 @@ def show_attendance():
                 st.session_state["attendance_upload_message"] =(f"{len(new_attendance)} attendance records uploaded successfully!")
                 st.rerun()
 
-    #button which opens upload attendance box
-    if st.button("Upload Attendance CSV"):
-        upload_attendance_csv(attendance,students)
+
+    ##########ATTENDANCE ACTIONS##########
+    #all buttons in one section row
+    with st.container(key="data_actions"):
+        addCol,downloadCol,uploadCol,spaceCol =st.columns([1.5,1.8,1.4,4])
+
+        with addCol:
+            if st.button("＋ Add Attendance", key="add_attendance",use_container_width=True):
+                add_attendance_dialog(attendance,students,classes,class_students)
+
+        with downloadCol:
+            if st.button("Download Template",  key="download_attendance_template",use_container_width=True):
+                download_attendance_template()
+
+        with uploadCol:
+            if st.button("Upload CSV", key="upload_attendance_csv", use_container_width=True):
+                upload_attendance_csv(attendance,students)
+
 
     ##########DELETE ATTENDANCE##########
     #pop-up window to confirm delete attendance
@@ -392,6 +396,43 @@ def show_attendance():
         with col2:
             if st.button("Cancel",use_container_width=True):
                 st.rerun()
+
+    ##########EDIT ATTENDANCE##########
+    #edit appears as a popup
+    @st.dialog("Edit Attendance")
+    def editAttendancePopup(attendance,selectedStudentId,selectedStudentName,selectedAttendance):
+        st.write(f"Update attendance for **{selectedStudentName}**.")
+
+        newTotalSessions =st.number_input("Total Sessions",min_value=1,value=int(selectedAttendance["total_sessions"]), step=1)
+        newSessionsAttended =st.number_input("Sessions Attended",min_value=0,value=int(selectedAttendance["sessions_attended"]), step=1)
+
+        newAbsences =newTotalSessions-newSessionsAttended
+        newAttendancePercentage =(newSessionsAttended/newTotalSessions)*100
+
+        st.write(f"Absences: **{newAbsences}**")
+        #as percentage
+        st.write(f"Attendance: **{newAttendancePercentage:.1f}%**")
+
+        cancelCol,saveCol =st.columns(2)
+
+        with cancelCol:
+            if st.button("Cancel",key="cancel_attendance_edit",use_container_width=True):
+                st.rerun()
+
+        with saveCol:
+            #if save button clicked
+            if st.button("Save Changes",type="primary",key="save_attendance_edit",use_container_width=True):
+                if newSessionsAttended >newTotalSessions:
+                    st.error("The number of sessions attended cannot exceed the total sessions.")
+                    return
+
+                attendance.loc[attendance["student_id"]== selectedStudentId,"total_sessions"] =newTotalSessions
+                attendance.loc[attendance["student_id"]== selectedStudentId,"sessions_attended"] =newSessionsAttended
+
+                attendance.to_csv(get_user_file("attendance.csv"),index=False)
+                st.session_state["update_attendance_message"] ="Attendance updated successfully."
+                st.rerun()
+
 
     ##########VIEW ATTENDANCE##########
     #bold
@@ -424,7 +465,19 @@ def show_attendance():
         ]
 
         #choose attendance directly from table
-        attendance_table =st.dataframe(attendance_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row")
+        attendance_table =st.dataframe(attendance_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row",
+            column_config={
+                "student_id": st.column_config.TextColumn("Student ID"),
+                "name": st.column_config.TextColumn("Student"),
+                "total_sessions": st.column_config.NumberColumn("Total Sessions"),
+                "sessions_attended":st.column_config.NumberColumn("Sessions Attended"),
+                "attendance_percentage": st.column_config.NumberColumn(
+                    "Attendance %",
+                    format="%.1f%%"
+                )
+            }
+        )
+
 
         ##########SELECTED ATTENDANCE##########
         #get selected rows
@@ -435,7 +488,6 @@ def show_attendance():
             #get selected row
             selected_row =selected_rows[0]
 
-
             #get selected student from display table
             selected_attendance =attendance_display.iloc[selected_row]
             selected_student_id =selected_attendance["student_id"]
@@ -445,56 +497,18 @@ def show_attendance():
             if pd.isna(selected_student_name):
                 selected_student_name =(selected_student_id+" - Student no longer exists")
 
-            st.write( "### Manage Selected Attendance")
-            #bold student
-            st.write(f"Selected: **{selected_student_name}**")
+            ##########MANAGE SELECTED ATTENDANCE##########
+            with st.container(key="selected_record"):
+                #5=info 1.2=edit 1.2=delete column width ratio
+                infoCol,editCol,deleteCol =st.columns([5,1.2,1.2])
 
-            ##########EDIT ATTENDANCE##########
-            #input box-   prefill with current attendance name
-            new_total_sessions =st.number_input("Total Sessions", min_value=1,
-                                                value=int(selected_attendance["total_sessions"]), step=1 )
-            
+                with infoCol:
+                    st.write(f"Selected: **{selected_student_name}**")
 
-            #test fix!- dont change the attendance value automatically
-            new_sessions_attended =st.number_input(
-                "Sessions Attended",
-                min_value=0,
-                value=int(selected_attendance["sessions_attended"]),
-                step=1
-            )
+                with editCol:
+                    if st.button("Edit",key="edit_selected_attendance",use_container_width=True):
+                        editAttendancePopup(attendance,selected_student_id,selected_student_name,selected_attendance)
 
-            #show calculated absences
-            new_absences =(new_total_sessions - new_sessions_attended)
-
-            #show calculated percentage
-            new_attendance_percentage =(new_sessions_attended /
-                                        new_total_sessions)*100
-
-            st.write(f"Absences: **{new_absences}**")
-            st.write(f"Attendance: **{new_attendance_percentage:.1f}%**")
-
-            #if update button pressed
-            if st.button("Update Attendance"):
-                #test fix!- dont change the attendance value automatically
-                if new_sessions_attended > new_total_sessions:
-                    st.error("The number of sessions attended cannot exceed the total sessions.")
-
-                else:
-                    #update total sessions
-                    attendance.loc[attendance["student_id"] == selected_student_id, 
-                                "total_sessions"] =new_total_sessions
-
-                    #update sessions attended
-                    attendance.loc[ attendance["student_id"] == selected_student_id,
-                        "sessions_attended"] =new_sessions_attended
-
-                    #save attendance
-                    attendance.to_csv(get_user_file("attendance.csv"),index=False)
-                    #save success message
-                    st.session_state["update_attendance_message"] ="Attendance updated successfully."
-                    st.rerun()
-
-            ##########DELETE ATTENDANCE BUTTON##########
-            #delete button only show when attendance selected
-            if st.button("Delete Attendance",type="primary"):
-                confirm_delete_attendance(attendance,selected_student_id,selected_student_name)
+                with deleteCol:
+                    if st.button("Delete",type="primary",key="delete_selected_attendance",use_container_width=True):
+                        confirm_delete_attendance(attendance,selected_student_id,selected_student_name)
