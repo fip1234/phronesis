@@ -1,0 +1,580 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+
+/* ##############################LOGIN PAGE############################## */
+
+
+/* ##########STREAMLIT CHROME########## */
+
+header[data-testid="stHeader"]{
+    display:none !important;
+}
+
+[data-testid="stDecoration"]{
+    display:none !important;
+}
+
+section[data-testid="stSidebar"]{
+    display:none !important;
+}
+
+
+/* ##########BASE########## */
+
+.stApp{
+    font-family:"Nunito",sans-serif;
+    background:#FFFDF9 !important;
+    color:#202020 !important;
+    color-scheme:light !important;
+}
+
+[data-testid="stMainBlockContainer"]{
+    max-width:100% !important;
+    padding:0 !important;
+}
+
+h1,
+h2,
+h3{
+    font-family:"Fredoka",sans-serif !important;
+}
+
+p,
+label,
+button,
+input{
+    font-family:"Nunito",sans-serif !important;
+}
+/* ##############################LOGIN PAGE############################## */
+
+
+/* ##########PAGE########## */
+
+.st-key-auth_page{
+    width:94%;
+    max-width:92rem;
+    min-height:92vh;
+
+    margin:
+        2rem
+        auto;
+
+    padding:
+        1.5rem
+        clamp(1rem,3vw,2.5rem)
+        3rem
+        !important;
+}
+
+
+/* ##########BACK BUTTON########## */
+
+.st-key-auth_page > div > div:first-child .stButton button{
+    background:#FFFFFF !important;
+    color:#D9654B !important;
+
+    border:
+        1px solid
+        rgba(217,101,75,0.22)
+        !important;
+
+    border-radius:999rem !important;
+
+    min-height:2.8rem;
+
+    font-weight:800 !important;
+
+    box-shadow:
+        0 0.4rem 1.2rem
+        rgba(0,0,0,0.05);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease
+        !important;
+}
+
+
+.st-key-auth_page > div > div:first-child .stButton button:hover{
+    transform:
+        translateY(-0.15rem);
+
+    box-shadow:
+        0 0.7rem 1.5rem
+        rgba(0,0,0,0.08);
+}
+
+
+/* ##########LEFT PANEL########## */
+
+.st-key-auth_intro_panel{
+    min-height:40rem;
+
+    padding:
+        clamp(2.5rem,5vw,4.5rem)
+        !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFE6A2,
+            #FFB66F,
+            #F6B2AF
+        );
+
+    border-radius:2.5rem;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    box-shadow:
+        0 1.3rem 3rem
+        rgba(161,92,58,0.14);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.st-key-auth_intro_panel:hover{
+    transform:
+        translateY(-0.35rem);
+
+    box-shadow:
+        0 1.7rem 3.7rem
+        rgba(161,92,58,0.19);
+}
+
+
+/*small PHRONESIS label*/
+.st-key-auth_intro_panel [data-testid="stCaptionContainer"]{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:0.82rem !important;
+
+    font-weight:800 !important;
+
+    letter-spacing:0.17em !important;
+
+    color:#8B4536 !important;
+}
+
+
+/*welcome title*/
+.st-key-auth_intro_panel h1{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(3.2rem,5vw,5rem)
+        !important;
+
+    font-weight:700 !important;
+
+    line-height:0.95 !important;
+
+    margin:
+        1rem
+        0
+        1.2rem
+        !important;
+
+    color:#28231F !important;
+}
+
+
+/*teacher judgement line*/
+.st-key-auth_intro_panel h3{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(1.6rem,2.5vw,2.3rem)
+        !important;
+
+    line-height:1.15 !important;
+
+    color:#45372F !important;
+
+    margin-bottom:1.6rem !important;
+}
+
+
+/*normal left-panel text*/
+.st-key-auth_intro_panel p{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:1.03rem !important;
+
+    font-weight:500 !important;
+
+    line-height:1.75 !important;
+
+    color:#51463E !important;
+}
+
+
+/* ##########FORM PANEL########## */
+
+.st-key-auth_form_panel{
+    min-height:40rem;
+
+    padding:
+        clamp(2rem,4vw,3.5rem)
+        !important;
+
+    background:#FFFFFF;
+
+    border-radius:2.5rem;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.05);
+
+    box-shadow:
+        0 1.3rem 3rem
+        rgba(0,0,0,0.08);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+.st-key-auth_form_panel:hover{
+    transform:
+        translateY(-0.25rem);
+
+    box-shadow:
+        0 1.6rem 3.5rem
+        rgba(0,0,0,0.11);
+}
+
+
+/*main Welcome*/
+.st-key-auth_form_panel > div > div > h1{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(2.5rem,4vw,3.6rem)
+        !important;
+
+    color:#252525 !important;
+
+    margin-bottom:0.5rem !important;
+}
+
+
+/*intro description*/
+.st-key-auth_form_panel p{
+    font-family:"Nunito",sans-serif !important;
+
+    color:#666666 !important;
+
+    font-size:0.98rem !important;
+}
+
+
+/* ##########TABS########## */
+
+.st-key-auth_form_panel [data-baseweb="tab-list"]{
+    gap:0.5rem;
+
+    background:#F6F3F2;
+
+    padding:0.35rem;
+
+    border-radius:999rem;
+
+    margin:
+        1.8rem
+        0
+        1.5rem;
+}
+
+
+/*individual tabs*/
+.st-key-auth_form_panel button[data-baseweb="tab"]{
+    flex:1;
+
+    min-height:2.8rem;
+
+    border-radius:999rem !important;
+
+    font-family:"Nunito",sans-serif !important;
+
+    font-weight:800 !important;
+
+    color:#6A625F !important;
+
+    background:transparent !important;
+}
+
+
+/*selected tab*/
+.st-key-auth_form_panel button[data-baseweb="tab"][aria-selected="true"]{
+    background:#FFFFFF !important;
+
+    color:#E46F55 !important;
+
+    box-shadow:
+        0 0.3rem 1rem
+        rgba(0,0,0,0.08);
+}
+
+
+/*remove default Streamlit tab underline*/
+.st-key-auth_form_panel [data-baseweb="tab-highlight"]{
+    display:none !important;
+}
+
+
+/* ##########FORM HEADINGS########## */
+
+.st-key-auth_form_panel h3{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:1.65rem !important;
+
+    color:#292929 !important;
+
+    margin-top:1.2rem !important;
+
+    margin-bottom:0.3rem !important;
+}
+
+
+/*caption below Sign In / Create Account*/
+.st-key-auth_form_panel [data-testid="stCaptionContainer"]{
+    color:#858585 !important;
+
+    font-size:0.85rem !important;
+}
+
+
+/* ##########INPUT LABELS########## */
+
+.st-key-auth_form_panel label{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:0.9rem !important;
+
+    font-weight:700 !important;
+
+    color:#3D3938 !important;
+}
+
+
+/* ##########TEXT INPUTS########## */
+
+.st-key-auth_form_panel [data-baseweb="input"]{
+    background:#FAF8F7 !important;
+
+    border:
+        1px solid
+        #E8E2E0
+        !important;
+
+    border-radius:0.9rem !important;
+
+    min-height:3.1rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease
+        !important;
+}
+
+
+/*input actual text*/
+.st-key-auth_form_panel [data-baseweb="input"] input{
+    font-family:"Nunito",sans-serif !important;
+
+    color:#2E2E2E !important;
+
+    background:transparent !important;
+}
+
+
+/*input placeholder*/
+.st-key-auth_form_panel [data-baseweb="input"] input::placeholder{
+    color:#AAA4A2 !important;
+
+    opacity:1 !important;
+}
+
+
+/*input focus*/
+.st-key-auth_form_panel [data-baseweb="input"]:focus-within{
+    border-color:#FF9B83 !important;
+
+    box-shadow:
+        0 0 0 0.18rem
+        rgba(255,130,102,0.12)
+        !important;
+}
+
+
+/*password eye icon*/
+.st-key-auth_form_panel [data-baseweb="input"] button{
+    color:#746D6B !important;
+}
+
+
+/* ##########FORM SUBMIT BUTTONS########## */
+
+.st-key-auth_form_panel [data-testid="stFormSubmitButton"] button{
+    width:100% !important;
+
+    min-height:3.2rem;
+
+    margin-top:0.7rem;
+
+    background:#FF8266 !important;
+
+    color:#FFFFFF !important;
+
+    border:none !important;
+
+    border-radius:999rem !important;
+
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:0.98rem !important;
+
+    font-weight:800 !important;
+
+    box-shadow:
+        0 0.7rem 1.5rem
+        rgba(255,130,102,0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease
+        !important;
+}
+
+
+/*make absolutely sure button text stays visible*/
+.st-key-auth_form_panel [data-testid="stFormSubmitButton"] button p{
+    color:#FFFFFF !important;
+
+    font-weight:800 !important;
+}
+
+
+/*submit hover*/
+.st-key-auth_form_panel [data-testid="stFormSubmitButton"] button:hover{
+    background:#E97157 !important;
+
+    color:#FFFFFF !important;
+
+    transform:
+        translateY(-0.2rem);
+
+    box-shadow:
+        0 1rem 2rem
+        rgba(255,130,102,0.30);
+}
+
+
+/* ##########FORMS########## */
+
+.st-key-auth_form_panel [data-testid="stForm"]{
+    border:none !important;
+
+    padding:0 !important;
+
+    background:transparent !important;
+}
+
+
+/*space fields nicely*/
+.st-key-auth_form_panel [data-testid="stTextInput"]{
+    margin-bottom:0.45rem;
+}
+
+
+/* ##########ERROR MESSAGE########## */
+
+.st-key-auth_form_panel [data-testid="stAlert"]{
+    border-radius:1rem !important;
+
+    margin-top:1rem;
+}
+
+
+/* ##########FORCE LIGHT PUBLIC PAGE########## */
+
+.st-key-auth_page,
+.st-key-auth_page *,
+.st-key-auth_form_panel,
+.st-key-auth_intro_panel{
+    color-scheme:light !important;
+}
+
+
+/*force inputs/form to remain light*/
+.st-key-auth_form_panel input{
+    background:#FAF8F7 !important;
+
+    color:#2E2E2E !important;
+
+    -webkit-text-fill-color:#2E2E2E !important;
+}
+
+
+/* ##########MOBILE########## */
+
+@media(max-width:50em){
+
+    .st-key-auth_page{
+        width:94%;
+
+        margin:
+            1rem
+            auto;
+
+        padding:
+            1rem
+            0
+            2rem
+            !important;
+    }
+
+
+    .st-key-auth_intro_panel,
+    .st-key-auth_form_panel{
+        min-height:auto;
+
+        border-radius:1.8rem;
+
+        padding:
+            2rem
+            1.5rem
+            !important;
+    }
+
+
+    .st-key-auth_intro_panel{
+        margin-bottom:1rem;
+    }
+
+
+    .st-key-auth_intro_panel h1{
+        font-size:3rem !important;
+    }
+
+
+    .st-key-auth_intro_panel h3{
+        font-size:1.5rem !important;
+    }
+
+
+    .st-key-auth_form_panel > div > div > h1{
+        font-size:2.5rem !important;
+    }
+}

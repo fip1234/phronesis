@@ -2,15 +2,16 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_students():
     st.subheader("Students")
     st.write("Add, view and manage students.")
 
     #read student,class and class-student data
-    students =pd.read_csv("data/new/students.csv")
-    classes =pd.read_csv("data/new/classes.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    students =pd.read_csv(get_user_file("students.csv"))
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -123,7 +124,8 @@ def show_students():
                 students =pd.concat([students,new_student],ignore_index=True)
 
                 #save students
-                students.to_csv("data/new/students.csv",index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                
                 #deleted the rerun after saving students-test fix!
 
                 ##########ADD STUDENT TO CLASSES##########
@@ -144,15 +146,12 @@ def show_students():
                     class_students =pd.concat([class_students,new_class_student],ignore_index=True)
 
                 #save classes student
-                class_students.to_csv("data/new/class_students.csv",index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
 
                 #save success message
                 st.session_state["student_message"] ="Student added successfully!"
                 st.rerun()
 
-    #button which opens add student box
-    if st.button("Add Student"):
-        add_student_dialog(students,classes,class_students)
 
     ##########DOWNLOAD STUDENT TEMPLATE##########
     #empty template with subject csv headers
@@ -160,9 +159,6 @@ def show_students():
 
     #turn template into csv
     student_template_csv =student_template.to_csv(index=False)
-
-    #download template button
-    st.download_button("Download Student Template",data=student_template_csv,file_name="student_template.csv",mime="text/csv")
 
     ##########UPLOAD STUDENT CSV##########
     @st.dialog("Upload Student CSV")
@@ -408,17 +404,29 @@ def show_students():
                 class_students =pd.concat([class_students,new_class_students],ignore_index=True)
 
                 #####save
-                students.to_csv("data/new/students.csv",index=False)
-                class_students.to_csv( "data/new/class_students.csv", index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
                 #save success message
                 st.session_state["student_upload_message"] =(f"{len(new_students)}  students uploaded successfully!")
 
                 st.rerun()
 
+    ##########STUDENT ACTIONS##########
+    #main student buttons all in one row so neat
+    with st.container(key="data_actions"):
+        addCol,downloadCol,uploadCol,spaceCol =st.columns([1.4,1.8,1.4,4])
 
-    #button-upload student box
-    if st.button("Upload Student CSV"):
-        upload_student_csv(students,classes,class_students)
+        with addCol:
+            if st.button("＋ Add Student",key="add_student",use_container_width=True):
+                add_student_dialog(students,classes,class_students)
+
+        with downloadCol:
+            st.download_button("Download Template",data=student_template_csv,file_name="student_template.csv",
+                mime="text/csv",key="download_student_template",use_container_width=True)
+
+        with uploadCol:
+            if st.button("Upload CSV",key="upload_student_csv",use_container_width=True):
+                upload_student_csv(students,classes,class_students)
 
     ##########DELETE STUDENT##########
     #pop-up window to confirm delete subject
@@ -439,8 +447,8 @@ def show_students():
                 class_students =class_students[class_students["student_id"] !=selected_student_id].copy()
 
                 #save-student and class student pairs
-                students.to_csv("data/new/students.csv",index=False)
-                class_students.to_csv("data/new/class_students.csv",index=False)
+                students.to_csv(get_user_file("students.csv"),index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
                 st.session_state["delete_student_message"] ="Student deleted successfully!"
                 st.rerun()
 
@@ -448,6 +456,96 @@ def show_students():
         #NO button column 2
         with col2:
             if st.button("Cancel",use_container_width=True):
+                st.rerun()
+                
+    ##########EDIT STUDENT##########
+    #popup to edit selected student
+    @st.dialog("Edit Student")
+    def editStudentPopup(students,classes,class_students,selectedStudentId,selectedStudentName,selectedYearGroup):
+        st.write(f"Update the details for **{selectedStudentName}**.")
+
+        #student details input fields
+        newStudentName =st.text_input("Student Name",value=selectedStudentName)
+        newYearGroup =st.number_input("Year Group",min_value=1,max_value=13,value=int(selectedYearGroup),step=1)
+
+        ##########AVAILABLE CLASSES##########
+        #only show classes for selected year group
+        availableClasses =classes[classes["year_group"] ==newYearGroup].copy()
+
+        if len(availableClasses) >0:
+            availableClasses["class_option"] =(availableClasses["class_name"] +" - "+ availableClasses["class_id"])
+
+            #find students current classes
+            currentClassIds =class_students[class_students["student_id"] ==selectedStudentId]["class_id"].tolist()
+
+            #only preselect classes which still match year group
+            currentClassOptions =availableClasses[availableClasses["class_id"].isin(currentClassIds)]["class_option"].tolist()
+
+            selectedClasses =st.multiselect("Classes",availableClasses["class_option"],default=currentClassOptions)
+
+        else:
+            selectedClasses =[]
+            st.warning("No classes have been created for this year group.")
+
+        ##########BUTTONS##########
+        cancelCol,saveCol =st.columns(2)
+
+        with cancelCol:
+            if st.button("Cancel",key="cancel_student_edit",use_container_width=True):
+                st.rerun()
+
+        with saveCol:
+            if st.button("Save Changes",type="primary",key="save_student_edit",use_container_width=True):
+                #get rid of extra spaces
+                newStudentName =" ".join(newStudentName.split())
+
+                #check same subject twice
+                selectedSubjectIds =[]
+                duplicateSubject =False
+
+                for classOption in selectedClasses:
+                    #get class id
+                    classId =classOption.split(" - ")[-1]
+                    selectedClass =classes[classes["class_id"] ==classId]
+                    #get the subject id for this class
+                    subjectId =selectedClass["subject_id"].iloc[0]
+
+                    #same subject already selected?
+                    if subjectId in selectedSubjectIds:
+                        duplicateSubject =True
+                    else:
+                        selectedSubjectIds.append(subjectId)
+
+                ##########ERROR CHECKING##########
+                if newStudentName =="":
+                    st.error("Student name is a required.")
+                    return
+
+                elif len(selectedClasses) ==0:
+                    st.error("Please select at least one class.")
+                    return
+
+                elif duplicateSubject:
+                    st.error("A student cannot be assigned to more than one class for the same subject.")
+                    return
+
+                #update name and year group
+                students.loc[students["student_id"] ==selectedStudentId,"name"] =newStudentName
+                students.loc[students["student_id"] ==selectedStudentId,"year_group"] =newYearGroup
+
+                #remove old class links
+                class_students =class_students[class_students["student_id"] !=selectedStudentId].copy()
+
+                #add new class links
+                for classOption in selectedClasses:
+                    classId =classOption.split(" - ")[-1]
+                    newClassStudent =pd.DataFrame({"class_id":[classId],"student_id":[selectedStudentId]})
+                    class_students =pd.concat([class_students,newClassStudent],ignore_index=True)
+
+                #save updates
+                students.to_csv(get_user_file("students.csv"),index=False)
+                class_students.to_csv(get_user_file("class_students.csv"),index=False)
+                st.session_state["update_student_message"] ="Student updated successfully."
                 st.rerun()
 
     ##########VIEW STUDENTS##########
@@ -480,8 +578,17 @@ def show_students():
         student_display["classes"] =student_classes
 
         #choose student directly from table
-        student_table =st.dataframe(student_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row")
+        #fix!-so it allows selecting a single student directly from table
+        student_table =st.dataframe(student_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row",
+        column_config={
+            "student_id":st.column_config.TextColumn("Student ID"),
+            "name":st.column_config.TextColumn("Student"),
+            "year_group":st.column_config.NumberColumn("Year Group"),
+            "classes":st.column_config.TextColumn("Classes")
+        }
+    )
 
+        
         ##########SELECTED STUDENT##########
         #get selected rows
         selected_rows =student_table.selection.rows
@@ -497,108 +604,19 @@ def show_students():
             selected_student_name =selected_student["name"]
             selected_year_group =selected_student["year_group"]
 
-            st.write("### Manage Selected Student")
-            #bold student
-            st.write(f"Selected: **{selected_student_name}**")
+            ##########MANAGE SELECTED STUDENT##########
+            #display selected students info -  give delete/edit options
+            #better styling for selected student info
+            with st.container(key="selected_record"):
+                infoCol,editCol,deleteCol =st.columns([5,1.2,1.2])
 
-            ##########EDIT STUDENT##########
-            #input box-   prefill with current name
-            new_student_name =st.text_input("Student Name",value=selected_student_name)
+                with infoCol:
+                    st.write(f"Selected: **{selected_student_name}**")
 
-            #year group-   prefill with current year name
-            new_year_group =st.number_input("Year Group",min_value=1,max_value=13,value=int(selected_year_group),step=1)
+                with editCol:
+                    if st.button("Edit",key="edit_selected_student",use_container_width=True):
+                        editStudentPopup(students,classes,class_students,selected_student_id,selected_student_name,selected_year_group)
 
-            #get classes for selected year group
-            available_classes =classes[classes["year_group"] ==new_year_group].copy()
-
-            #classes exist for year goup? yes-multiselect, no- flag error
-            if len(available_classes) >0:
-                #create class options
-                available_classes["class_option"] =(available_classes["class_name"]+ " - " + available_classes["class_id"])
-
-                #find students current classes
-                current_class_ids =class_students[class_students["student_id"]==selected_student_id]["class_id"].tolist()
-
-                #get current class options
-                current_class_options =available_classes[available_classes["class_id"].isin(current_class_ids)]["class_option"].tolist()
-
-                #choose classes
-                selected_classes =st.multiselect("Classes",available_classes["class_option"],default=current_class_options)
-
-            else:
-                selected_classes =[]
-                st.warning("No classes have been created for this year group.")
-
-            #if update button clicked-remove whitespace,check empty
-            if st.button("Update Student"):
-                #test fix!- get rid of extra whitespace
-                new_student_name =" ".join(new_student_name.split())
-
-                #TEST FIX!---student not in two classes for same subject at once??
-                selected_subject_ids =[]
-                duplicate_subject =False
-
-                for class_option in selected_classes:
-                    ##get classid, selected class, subject id so duplicates checked 
-                    class_id =class_option.split(" - ")[-1]
-                    selected_class =classes[classes["class_id"] ==class_id]
-                    subject_id =selected_class["subject_id"].iloc[0]
-
-                    #same subject already selected?
-                    if subject_id in selected_subject_ids:
-                        duplicate_subject =True
-                    else:
-                        selected_subject_ids.append(subject_id)
-
-
-                #if empty-flag error
-                if new_student_name =="":
-                    st.error("Student name is required.")
-
-                #no class selected?-flag error
-                elif len(selected_classes) ==0:
-                    st.error("Please select at least one class.")
-
-                #test fix!- more than one class for the same subject
-                elif duplicate_subject:
-                    st.error("A student cannot be assigned to more than one class for the same subject.")
-
-
-                else:
-                    #change name-update in dataframe with id
-                    students.loc[students["student_id"] ==selected_student_id,"name"] =new_student_name
-
-                    ##change year group-update in dataframe with id
-                    students.loc[students["student_id"] ==selected_student_id,"year_group"] =new_year_group
-
-                    #remove old class pairs for student
-                    class_students =class_students[class_students["student_id"]!=selected_student_id].copy()
-
-                    #add new selected class pair
-                    for class_option in selected_classes:
-                        #get class id
-                        class_id =class_option.split(" - ")[-1]
-
-                        #create new pair for class student pair
-                        new_class_student =pd.DataFrame(
-                            {
-                                "class_id":[class_id],
-                                "student_id":[selected_student_id]
-                            }
-                        )
-
-                        #add pair
-                        class_students =pd.concat([class_students,new_class_student],ignore_index=True)
-
-                    #save updated students
-                    students.to_csv("data/new/students.csv",index=False)
-
-                    #save updated class student pairs
-                    class_students.to_csv("data/new/class_students.csv",index=False)
-                    st.session_state["update_student_message"] ="Student updated successfully."
-                    st.rerun()
-
-            ##########DELETE STUDENT BUTTON##########
-            #delete button only show when student selected
-            if st.button("Delete Student",type="primary"):
-                confirm_delete_student(students,class_students,selected_student_id,selected_student_name)
+                with deleteCol:
+                    if st.button("Delete",type="primary",key="delete_selected_student",use_container_width=True):
+                        confirm_delete_student(students,class_students,selected_student_id,selected_student_name)            

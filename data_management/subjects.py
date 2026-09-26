@@ -2,13 +2,14 @@
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_subjects():
     st.subheader("Subjects")
     st.write("Add, view and manage subjects.")
 
     #read subject data
-    subjects =pd.read_csv("data/new/subjects.csv")
+    subjects =pd.read_csv(get_user_file("subjects.csv"))
 
     ##########SUCCESS MESSAGES##########
     #add subject
@@ -90,15 +91,11 @@ def show_subjects():
                 subjects =pd.concat([subjects,new_subject],ignore_index=True)
 
                 #save subjects
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
 
                 #save success message
                 st.session_state["subject_message"] ="Subject added successfully!"
                 st.rerun()
-
-    #button which opens add subject box
-    if st.button("Add Subject"):
-        add_subject_dialog(subjects)
 
     ##########DOWNLOAD SUBJECT TEMPLATE##########
     #empty template with subject csv headers
@@ -107,9 +104,6 @@ def show_subjects():
     #turn template into csv
     subject_template_csv =subject_template.to_csv(index=False)
 
-    #download template button
-    st.download_button("Download Subject Template",data=subject_template_csv,file_name="subject_template.csv", mime="text/csv")
-    
     ##########UPLOAD SUBJECT CSV##########
     #pop-up window to upload subject csv
     @st.dialog("Upload Subject CSV")
@@ -215,18 +209,34 @@ def show_subjects():
                 subjects =pd.concat([subjects,new_subjects],ignore_index=True)
 
                 #####save
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
                 #save success message
                 st.session_state["subject_upload_message"] =(f"{len(new_subjects)} subjects uploaded successfully!")
                 st.rerun()
 
-    #button-upload subject box
-    if st.button("Upload Subject CSV"):
-        upload_subject_csv(subjects)
+
+    ##########SUBJECT ACTIONS##########
+    #contains all the action buttons for subjects- add, download, upload
+    with st.container(key="data_actions"):
+        addCol,downloadCol,uploadCol,spaceCol =st.columns([1.4,1.8,1.4,4])
+
+        with addCol:
+            if st.button("＋ Add Subject", key="add_subject",  use_container_width=True):
+                add_subject_dialog(subjects)
+
+        #mime-type for download button
+        with downloadCol:
+            st.download_button("Download Template", data=subject_template_csv,file_name="subject_template.csv",
+                mime="text/csv", key="download_subject_template",  use_container_width=True)
+
+        with uploadCol:
+            if st.button("Upload CSV", key="upload_subject_csv",  use_container_width=True):
+                upload_subject_csv(subjects)
+
 
     ##########DELETE SUBJECT##########
     #read class data-to check if subject is being used already
-    classes =pd.read_csv("data/new/classes.csv")
+    classes =pd.read_csv(get_user_file("classes.csv"))
 
     #pop-up window to confirm delete subject
     @st.dialog("Delete Subject")
@@ -251,7 +261,7 @@ def show_subjects():
                 subjects =subjects[subjects["subject_id"] !=selected_subject_id].copy()
 
                 #save
-                subjects.to_csv("data/new/subjects.csv",index=False)
+                subjects.to_csv(get_user_file("subjects.csv"),index=False)
                 st.session_state["delete_message"] ="Subject deleted successfully!"
                 st.rerun()
 
@@ -286,36 +296,65 @@ def show_subjects():
             selected_subject_id =selected_subject["subject_id"]
             selected_subject_name =selected_subject["subject_name"]
 
-            st.write("### Manage Selected Subject")
-            #bold subject
-            st.write(f"Selected: **{selected_subject_name}**")
-
             ##########RENAME SUBJECT##########
-            #input box-   prefill with current name
-            new_subject_name =st.text_input("Rename Subject",value=selected_subject_name)
+            #changed to a pop-up dialog
+            @st.dialog("Rename Subject")
+            def renameSubjectPopup(subjects,selected_subject_id,selected_subject_name):
+                st.write(f"Update the name of **{selected_subject_name}**.")
 
-            #if rename button clicked- remove whitespace,check empty
-            #test fix-remove extra whitespaces
-            if st.button("Rename Subject"):
-                new_subject_name =" ".join(new_subject_name.split())
+                new_subject_name =st.text_input("Subject Name", value=selected_subject_name)
+                cancelCol,saveCol =st.columns(2)
 
-                #if empty-flag error
-                if new_subject_name =="":
-                    st.error("Subject name is required.")
+                with cancelCol:
+                    if st.button("Cancel",key="cancel_subject_rename",use_container_width=True):
+                        st.rerun()
 
-                #if new name is not same as current & already exists- flag error
-                elif(new_subject_name.lower()!=selected_subject_name.lower() and new_subject_name.lower()
-                    in subjects["subject_name"].str.lower().values):
-                    st.error("This subject already exists.")
+                with saveCol:
+                    if st.button("Save Changes",type="primary",key="save_subject_rename",use_container_width=True):
+                        #remove extra white spaces
+                        new_subject_name =" ".join(
+                            new_subject_name.split()
+                        )
 
-                else:
-                    #change name- update in dataframe with id
-                    subjects.loc[subjects["subject_id"]==selected_subject_id,"subject_name"] =new_subject_name
 
-                    #save updated subjects
-                    subjects.to_csv("data/new/subjects.csv",index=False)
-                    st.session_state["rename_message"] ="Subject renamed successfully."
-                    st.rerun()
+                        #if empty-flag error
+                        if new_subject_name =="":
+                            st.error("Subject name is required.")     
+                            return                   
+
+                        #if new name is not same as current & already exists- flag error
+                        elif(new_subject_name.lower()!=selected_subject_name.lower() and new_subject_name.lower()
+                            in subjects["subject_name"].str.lower().values):
+                            st.error("This subject already exists.")
+
+                        else:
+                            #change name- update in dataframe with id
+                            subjects.loc[subjects["subject_id"]==selected_subject_id,"subject_name"] =new_subject_name
+
+                            #save updated subjects
+                            subjects.to_csv(get_user_file("subjects.csv"),index=False)
+                            st.session_state["rename_message"] ="Subject renamed successfully."
+                            st.rerun()
+
+
+            #get rid of manage selected subject
+            ##########MANAGE SELECTED SUBJECT########
+            #display selected subject 
+            #better styling for selected student info
+            with st.container(key="selected_record"):
+                infoCol,renameCol,deleteCol =st.columns([5,1.2,1.2])
+
+                with infoCol:
+                    st.write(f"Selected: **{selected_subject_name}**")
+
+                with renameCol:
+                    if st.button("Rename",key="rename_selected_subject",use_container_width=True):
+                        renameSubjectPopup(subjects,selected_subject_id,selected_subject_name)
+
+                with deleteCol:
+                    if st.button("Delete",type="primary",key="delete_selected_subject",use_container_width=True):
+                        confirm_delete_subject(subjects,selected_subject_id,selected_subject_name)
+
 
             ##########DELETE SUBJECT BUTTON##########
             #delete button only show when subject selected

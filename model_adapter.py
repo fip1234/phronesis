@@ -1,4 +1,5 @@
-#combines assessment and attendance together
+#model_adapter.py- combines assessment and attendance together
+#imports
 import pandas as pd
 import joblib
 

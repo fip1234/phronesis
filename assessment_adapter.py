@@ -1,3 +1,5 @@
+#assessment adapter.py- this handles validation,processing,feature extraction for assessment data
+#imports
 import pandas as pd
 
 def validate_assessment_data(assessment):
@@ -51,6 +53,12 @@ def validate_assessment_data(assessment):
 
 ################Process assessment data- normal#####################
 def process_assessments(assessment):
+
+    #no assessment data yet
+    if len(assessment) ==0:
+        return pd.DataFrame(columns=["student_id","subject","prev_failure","grade_average",
+                                     "grade_change","assessment_status"])
+    
     #validate assessment data first
     assessment = validate_assessment_data(assessment)
 
@@ -138,6 +146,10 @@ def process_assessments(assessment):
 
 
     #turn results into a dataframe
-    assessment_features = pd.DataFrame(assessment_features)
+    assessment_features =pd.DataFrame(
+        assessment_features,
+        columns=["student_id","subject","prev_failure","grade_average",
+                 "grade_change","assessment_status"]
+    )
 
     return assessment_features

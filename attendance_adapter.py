@@ -1,3 +1,5 @@
+#attendance adapter.py- this handles validation,processing,feature extraction for attendance data
+#imports
 import pandas as pd
 
 def validate_attendance_data(attendance):
@@ -43,6 +45,11 @@ def validate_attendance_data(attendance):
 ################Process attendance data- normal#####################
 def process_attendances(attendance):
 
+    #test fix! no attendance data yet
+    if len(attendance) ==0:
+        return pd.DataFrame(columns=["student_id","absences","attendance_percentage","attendance_status"])
+
+    
     #validate attendance data first
     attendance = validate_attendance_data(attendance)
 

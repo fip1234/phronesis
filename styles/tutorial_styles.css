@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+
+/* ##############################TUTORIAL############################## */
+
+
+/* ##########STREAMLIT CHROME########## */
+
+header[data-testid="stHeader"]{
+    display:none !important;
+}
+
+[data-testid="stDecoration"]{
+    display:none !important;
+}
+
+section[data-testid="stSidebar"]{
+    display:none !important;
+}
+
+
+/* ##########BASE########## */
+
+.stApp{
+    font-family:"Nunito",sans-serif;
+    background:
+        linear-gradient(
+            135deg,
+            #FFF9F3,
+            #FFF3EC
+        )
+        !important;
+
+    color:#202020 !important;
+
+    color-scheme:light !important;
+}
+
+
+[data-testid="stMainBlockContainer"]{
+    max-width:100% !important;
+
+    padding:
+        0
+        !important;
+}
+
+
+h1,
+h2,
+h3{
+    font-family:"Fredoka",sans-serif !important;
+}
+
+
+p,
+label,
+button{
+    font-family:"Nunito",sans-serif !important;
+}
+
+
+/* ##########OUTER PAGE########## */
+
+.st-key-tutorial_page{
+    width:94%;
+
+    max-width:88rem;
+
+    min-height:100vh;
+
+    margin:auto;
+
+    padding:
+        2.5rem
+        1rem
+        4rem
+        !important;
+}
+
+
+/*top tutorial label*/
+.st-key-tutorial_page > div > div:first-child [data-testid="stCaptionContainer"]{
+    font-size:0.82rem !important;
+
+    font-weight:800 !important;
+
+    letter-spacing:0.13em !important;
+
+    color:#E16C52 !important;
+}
+
+
+/* ##########MAIN POPUP########## */
+
+.st-key-tutorial_card{
+    width:88%;
+
+    max-width:72rem;
+
+    margin:
+        3rem
+        auto
+        0;
+
+    padding:
+        clamp(2.5rem,5vw,4.5rem)
+        !important;
+
+    background:#FFFFFF;
+
+    border-radius:2.7rem;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.04);
+
+    box-shadow:
+        0 1.7rem 4rem
+        rgba(0,0,0,0.10);
+
+    text-align:center;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/*small lift gives the card more of a popup feel*/
+.st-key-tutorial_card:hover{
+    transform:
+        translateY(-0.2rem);
+
+    box-shadow:
+        0 2rem 4.5rem
+        rgba(0,0,0,0.12);
+}
+
+
+/*main tutorial slide heading*/
+.st-key-tutorial_card h1{
+    font-family:"Fredoka",sans-serif !important;
+
+    font-size:
+        clamp(2.8rem,5vw,4.7rem)
+        !important;
+
+    font-weight:700 !important;
+
+    line-height:1 !important;
+
+    color:#252525 !important;
+
+    margin-bottom:0.8rem !important;
+}
+
+
+/*subtitle*/
+.st-key-tutorial_card h3{
+    font-family:"Nunito",sans-serif !important;
+
+    font-size:
+        clamp(1rem,1.5vw,1.25rem)
+        !important;
+
+    font-weight:700 !important;
+
+    color:#E16C52 !important;
+
+    margin-bottom:2rem !important;
+}
+
+
+/*normal tutorial description*/
+.st-key-tutorial_card p{
+    max-width:48rem;
+
+    margin:
+        1.7rem
+        auto
+        1.5rem
+        !important;
+
+    font-size:1.05rem !important;
+
+    font-weight:500 !important;
+
+    line-height:1.75 !important;
+
+    color:#555555 !important;
+}
+
+
+/* ##########SCREENSHOT########## */
+
+.st-key-tutorial_card [data-testid="stImage"]{
+    width:100%;
+
+    max-width:58rem;
+
+    margin:
+        2rem
+        auto;
+}
+
+
+/*future screenshots*/
+.st-key-tutorial_card [data-testid="stImage"] img{
+    width:100% !important;
+
+    max-height:28rem;
+
+    object-fit:contain !important;
+
+    object-position:center !important;
+
+    border-radius:1.6rem !important;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.06);
+
+    box-shadow:
+        0 1rem 2.5rem
+        rgba(0,0,0,0.08);
+}
+
+
+/* ##########IMAGE PLACEHOLDER########## */
+
+.st-key-tutorial_image_placeholder{
+    width:100%;
+
+    min-height:22rem;
+
+    margin:
+        2rem
+        auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #F6F2F0,
+            #FCE9E4
+        );
+
+    border:
+        0.12rem
+        dashed
+        #E8B5A8;
+
+    border-radius:1.6rem;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.st-key-tutorial_image_placeholder:hover{
+    transform:
+        scale(1.01);
+
+    background:
+        linear-gradient(
+            135deg,
+            #F8F2EE,
+            #FFE1D8
+        );
+}
+
+
+.st-key-tutorial_image_placeholder p{
+    color:#A3776D !important;
+
+    font-weight:700 !important;
+}
+
+
+/* ##########PROGRESS BAR########## */
+
+.st-key-tutorial_card [data-testid="stProgress"]{
+    max-width:34rem;
+
+    margin:
+        2.5rem
+        auto
+        2rem;
+}
+
+
+/*progress background*/
+.st-key-tutorial_card [data-testid="stProgress"] > div{
+    border-radius:999rem !important;
+}
+
+
+/*progress colour*/
+.st-key-tutorial_card [data-testid="stProgress"] [role="progressbar"]{
+    background:#FF8266 !important;
+
+    border-radius:999rem !important;
+}
+
+
+/* ##########BUTTONS########## */
+
+.st-key-tutorial_card .stButton button{
+    min-height:3.1rem;
+
+    border-radius:999rem !important;
+
+    font-family:"Nunito",sans-serif !important;
+
+    font-weight:800 !important;
+
+    font-style:normal !important;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease
+        !important;
+}
+
+
+/*Next/Get Started*/
+.st-key-tutorial_card .stButton button[kind="primary"]{
+    background:#FF8266 !important;
+
+    color:#FFFFFF !important;
+
+    border:none !important;
+
+    box-shadow:
+        0 0.7rem 1.5rem
+        rgba(255,130,102,0.23);
+}
+
+
+.st-key-tutorial_card .stButton button[kind="primary"]:hover{
+    background:#E97157 !important;
+
+    transform:
+        translateY(-0.2rem);
+
+    box-shadow:
+        0 1rem 2rem
+        rgba(255,130,102,0.30);
+}
+
+
+/*Back*/
+.st-key-tutorial_card .stButton button:not([kind="primary"]){
+    background:#F7F3F1 !important;
+
+    color:#58504D !important;
+
+    border:none !important;
+}
+
+
+.st-key-tutorial_card .stButton button:not([kind="primary"]):hover{
+    background:#EEE7E4 !important;
+
+    transform:
+        translateY(-0.15rem);
+}
+
+
+/* ##########MOBILE########## */
+
+@media(max-width:50em){
+
+    .st-key-tutorial_page{
+        width:96%;
+
+        padding:
+            1rem
+            0
+            2rem
+            !important;
+    }
+
+
+    .st-key-tutorial_card{
+        width:94%;
+
+        margin-top:1.5rem;
+
+        padding:
+            2rem
+            1.3rem
+            !important;
+
+        border-radius:1.8rem;
+    }
+
+
+    .st-key-tutorial_card h1{
+        font-size:
+            clamp(2.3rem,10vw,3.5rem)
+            !important;
+    }
+
+
+    .st-key-tutorial_image_placeholder{
+        min-height:14rem;
+    }
+
+
+    .st-key-tutorial_card [data-testid="stImage"] img{
+        max-height:20rem;
+    }
+}

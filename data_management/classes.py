@@ -1,16 +1,17 @@
-#Add class data
+#classes.py- add class data for data upload and management
 #imports
 import streamlit as st
 import pandas as pd
+from user_data import get_user_file
 
 def show_classes():
     st.subheader("Classes")
     st.write("Add, view and manage classes.")
 
     #read class and subject data
-    classes =pd.read_csv("data/new/classes.csv")
-    subjects =pd.read_csv("data/new/subjects.csv")
-    class_students =pd.read_csv("data/new/class_students.csv")
+    classes =pd.read_csv(get_user_file("classes.csv"))
+    subjects =pd.read_csv(get_user_file("subjects.csv"))
+    class_students =pd.read_csv(get_user_file("class_students.csv"))
 
     ##########SUCCESS MESSAGES##########
 
@@ -108,15 +109,12 @@ def show_classes():
                 classes =pd.concat([classes,new_class],ignore_index=True)
 
                 #save classes
-                classes.to_csv("data/new/classes.csv",index=False)
+                classes.to_csv(get_user_file("classes.csv"),index=False)
 
                 #save success message
                 st.session_state["class_message"] ="Class added successfully!"
                 st.rerun()
 
-    #button which opens add class box
-    if st.button("Add Class"):
-        add_class_dialog(classes,subjects)
 
     ##########DOWNLOAD CLASS TEMPLATE##########
     #empty template with subject csv headers
@@ -124,9 +122,6 @@ def show_classes():
 
     #turn template into csv
     class_template_csv =class_template.to_csv(index=False)
-
-    #download template button
-    st.download_button("Download Class Template",data=class_template_csv,file_name="class_template.csv", mime="text/csv")
 
     ##########UPLOAD CLASS CSV##########
     @st.dialog("Upload Class CSV")
@@ -287,16 +282,30 @@ def show_classes():
                 classes =pd.concat([classes,new_classes],ignore_index=True)
 
                 #####save
-                classes.to_csv("data/new/classes.csv",index=False)
+                classes.to_csv(get_user_file("classes.csv"),index=False)
                 #save success message
                 st.session_state["class_upload_message"] =(f"{len(new_classes)}  classes uploaded successfully!")
 
                 st.rerun()
 
+    ##########CLASS ACTIONS##########
+    #main class buttons all in one section row
+    with st.container(key="data_actions"):
+        addCol,downloadCol,uploadCol,spaceCol =st.columns([1.4,1.8,1.4,4])
 
-    #button-upload class box
-    if st.button("Upload Class CSV"):
-        upload_class_csv(classes,subjects)
+        #all add, download, upload buttons for classes
+        with addCol:
+            if st.button("＋ Add Class" , key="add_class", use_container_width=True):
+                add_class_dialog(classes,subjects)
+
+        with downloadCol:
+            st.download_button("Download Template", data=class_template_csv,
+                file_name="class_template.csv",mime="text/csv",
+                key="download_class_template",use_container_width=True)
+
+        with uploadCol:
+            if st.button("Upload CSV", key="upload_class_csv",use_container_width=True):
+                upload_class_csv(classes,subjects)
 
     ##########DELETE CLASS##########
     #pop-up window to confirm delete subject
@@ -324,7 +333,7 @@ def show_classes():
                     classes =classes[classes["class_id"] !=selected_class_id].copy()
 
                     #save
-                    classes.to_csv("data/new/classes.csv",index=False)
+                    classes.to_csv(get_user_file("classes.csv"),index=False)
                     st.session_state["delete_class_message"] ="Class deleted successfully!"
                     st.rerun()
 
@@ -333,6 +342,80 @@ def show_classes():
         with col2:
             if st.button("Cancel", use_container_width=True):
                 st.rerun()
+
+    ##########EDIT CLASS##########
+    #popup to edit selected class
+    @st.dialog("Edit Class")
+    def editClassPopup(classes,subjects,selectedClassId,selectedClassName,selectedSubjectId,selectedYearGroup):
+        st.write(f"Update the details for **{selectedClassName}**.")
+
+        ##current subject
+        #get selected classes current subject
+        selectedSubject =subjects[subjects["subject_id"] ==selectedSubjectId]
+
+        #dropdown options for subjects
+        subjectNames =subjects["subject_name"].tolist()
+
+        #if current subject still exists
+        if len(selectedSubject) >0:
+            selectedSubjectName =selectedSubject["subject_name"].iloc[0]
+            currentSubjectIndex =subjectNames.index(selectedSubjectName)
+
+        else:
+            selectedSubjectName =None
+            currentSubjectIndex =0
+            st.warning("The subject linked to this class no longer exists. Please choose a new subject.")
+
+        #edit fields
+        newClassName =st.text_input("Class Name",value=selectedClassName)
+        newSubjectName =st.selectbox("Subject",subjectNames,index=currentSubjectIndex)
+        newYearGroup =st.number_input("Year Group",min_value=1,max_value=13,value=int(selectedYearGroup),step=1)
+
+        ##########BUTTONS##########
+        #row for cancel, save buttons
+        cancelCol,saveCol =st.columns(2)
+
+        with cancelCol:
+            if st.button("Cancel",key="cancel_class_edit",use_container_width=True):
+                st.rerun()
+
+        with saveCol:
+            if st.button("Save Changes",type="primary",key="save_class_edit",use_container_width=True):
+                #remove extra spaces
+                newClassName =" ".join(newClassName.split())
+
+                #check duplicate
+                #get other class names so current one doesnt count as duplicate
+                otherClasses =classes[classes["class_id"] !=selectedClassId]
+                existingClassNames =[]
+
+                for existingClass in otherClasses["class_name"]:
+                    cleanClass =" ".join(existingClass.split()).lower()
+                    existingClassNames.append(cleanClass)
+
+                if newClassName =="":
+                    st.error("Class name is required.")
+                    return
+
+                elif newClassName.lower() in existingClassNames:
+                    st.error("This class already exists.")
+                    return
+
+                ##########UPDATE CLASS##########
+                #chosen subject id
+                newSubject =subjects[subjects["subject_name"] ==newSubjectName]
+                newSubjectId =newSubject["subject_id"].iloc[0]
+
+                #update class name, subject, year group
+                classes.loc[classes["class_id"] ==selectedClassId,"class_name"] =newClassName
+                classes.loc[classes["class_id"] ==selectedClassId,"subject_id"] =newSubjectId
+                classes.loc[classes["class_id"] ==selectedClassId,"year_group"] =newYearGroup
+
+                #save changes
+                classes.to_csv(get_user_file("classes.csv"),index=False)
+                st.session_state["update_class_message"] ="Class updated successfully."
+                st.rerun()
+
 
     ##########VIEW CLASSES##########
     #bold
@@ -357,8 +440,15 @@ def show_classes():
             ]
         ]
 
-        #choose class directly from table
-        class_table =st.dataframe(class_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row")
+        #choose class directly from table-edit so added selection_mode="single-row"
+        class_table =st.dataframe(class_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row",
+            column_config={
+                "class_id":st.column_config.TextColumn("Class ID"),
+                "class_name":st.column_config.TextColumn("Class"),
+                "subject_name":st.column_config.TextColumn("Subject"),
+                "year_group":st.column_config.NumberColumn("Year Group")
+            }
+        )
 
         ##########SELECTED CLASS##########
         #get selected rows
@@ -376,87 +466,18 @@ def show_classes():
             selected_subject_id =selected_class["subject_id"]
             selected_year_group =selected_class["year_group"]
 
-            #get current subject
-            selected_subject =subjects[subjects["subject_id"] ==selected_subject_id]
+            #######MANAGE SELECTED CLASS###############
+            with st.container(key="selected_record"):
+                #5=info, 1.2=edit, 1.2=delete column width ratio
+                infoCol,editCol,deleteCol =st.columns([5,1.2,1.2])
 
-            #FIX!! current subject no exist-error
-            if len(selected_subject) ==0:
-                st.warning("The subject linked to this class no longer exists. Please choose a new subject.")
-                selected_subject_name =None
+                with infoCol:
+                    st.write(f"Selected: **{selected_class_name}**")
 
-            else:
-                #get current subject name
-                selected_subject_name =selected_subject["subject_name"].iloc[0]
+                with editCol:
+                    if st.button("Edit",key="edit_selected_class",use_container_width=True):
+                        editClassPopup(classes,subjects,selected_class_id,selected_class_name,selected_subject_id,selected_year_group)
 
-            st.write("### Manage Selected Class")
-            #bold class
-            st.write(f"Selected: **{selected_class_name}**")
-
-            ##########EDIT CLASS##########
-            #input box-   prefill with current name
-            new_class_name =st.text_input("Class Name",value=selected_class_name)
-
-            #get list of subject names
-            subject_names =subjects["subject_name"].tolist()
-
-            #if current subject still exists
-            if selected_subject_name is not None:
-                #find current subject position
-                current_subject_index =subject_names.index(selected_subject_name)
-
-            else:
-                #default to first available subject
-                current_subject_index =0
-
-            #choose subject-prefill with current subject
-            new_subject_name =st.selectbox("Subject",subject_names,index=current_subject_index)
-
-            #choose year group-prefill with current year group
-            new_year_group =st.number_input("Year Group",min_value=1,max_value=13,value=int(selected_year_group),step=1)
-
-            #if update button clicked-remove whitespace,check empty
-            if st.button("Update Class"):
-                new_class_name =" ".join(new_class_name.split())
-
-                #test fix! - check against other existing class names
-                existing_class_names =[]
-                other_classes =classes[classes["class_id"] !=selected_class_id]
-
-                for existing_class in other_classes["class_name"]:
-                    clean_class =" ".join(existing_class.split()).lower()
-                    existing_class_names.append(clean_class)
-
-
-                #if empty-flag error
-                if new_class_name =="":
-                    st.error("Class name is required.")
-
-                #if new name not same as current & already exists-flag error
-                #checks already done for whitespace and case-insensitive duplicates
-                elif new_class_name.lower() in existing_class_names:
-                    st.error("This class already exists.")
-
-                else:
-                    #get subject id from selected subject name
-                    new_subject =subjects[subjects["subject_name"] ==new_subject_name]
-
-                    new_subject_id =new_subject["subject_id"].iloc[0]
-
-                    #change name-update in dataframe with id
-                    classes.loc[classes["class_id"] ==selected_class_id,"class_name"] =new_class_name
-
-                    #change subject-update in dataframe with id
-                    classes.loc[classes["class_id"] ==selected_class_id,"subject_id"] =new_subject_id
-
-                    #change year-update in dataframe with id
-                    classes.loc[classes["class_id"] ==selected_class_id,"year_group"] =new_year_group
-
-                    #save updated classes
-                    classes.to_csv("data/new/classes.csv",index=False)
-                    st.session_state["update_class_message"] ="Class updated successfully."
-                    st.rerun()
-
-            ##########DELETE CLASS BUTTON##########
-            #delete button only show when class selected
-            if st.button("Delete Class",type="primary"):
-                confirm_delete_class(classes,class_students, selected_class_id,selected_class_name)
+                with deleteCol:
+                    if st.button("Delete",type="primary",key="delete_selected_class",use_container_width=True):
+                        confirm_delete_class(classes,class_students,selected_class_id,selected_class_name)

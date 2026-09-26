@@ -1,0 +1,23 @@
+#######JUPYTER TEMPORARY FILES
+.ipynb_checkpoints/
+
+#######VIRTUAL ENVIRONMENTS
+.venv/
+venv/
+env/
+
+#######TEMPORARY/EDITOR FILES
+*.swp
+*.tmp
+
+#######PYTHON CACHE
+__pycache__/
+*.py[cod]
+
+######IDE SETTINGS
+.vscode/
+.idea/
+
+#######OS FILES
+.DS_Store
+Thumbs.db

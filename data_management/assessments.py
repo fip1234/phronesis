@@ -164,10 +164,6 @@ def show_assessments():
                     st.session_state["assessment_message"] ="Assessment added successfully!"
                     st.rerun()
 
-    #button which opens add assessment box
-    if st.button("Add Assessment"):
-        add_assessment_dialog(assessments,classes,subjects,students,class_students)
-
     ##########DOWNLOAD ASSESSMENT TEMPLATE##########
     #test fix!- added student ids prefilled on template
 
@@ -236,10 +232,6 @@ def show_assessments():
 
         #download template button
         st.download_button("Download Assessment Template",data=assessment_template_csv,file_name="assessment_template.csv",mime="text/csv")
-
-    #button for popup
-    if st.button("Download Assessment CSV Template"):
-        download_assessment_template()
 
 
     ##########UPLOAD ASSESSMENT CSV##########
@@ -568,9 +560,23 @@ def show_assessments():
                 st.session_state["assessment_upload_message"] =(f"{len(new_assessments)} assessments uploaded successfully!")
                 st.rerun()
 
-    #button which opens upload assessment box
-    if st.button("Upload Assessment CSV"):
-        upload_assessment_csv(assessments,classes,subjects,students,class_students)
+
+    ##########ASSESSMENT ACTIONS##########
+    #buttons for add,download,upload assessments
+    with st.container(key="data_actions"):
+        addCol,downloadCol,uploadCol,spaceCol =st.columns([1.5,1.8,1.4,4])
+
+        with addCol:
+            if st.button("＋ Add Assessment",key="add_assessment", use_container_width=True):
+                add_assessment_dialog(assessments,classes,subjects,students,class_students)
+
+        with downloadCol:
+            if st.button("Download Template",key="download_assessment_template", use_container_width=True):
+                download_assessment_template()
+
+        with uploadCol:
+            if st.button("Upload CSV",key="upload_assessment_csv", use_container_width=True):
+                upload_assessment_csv(assessments,classes,subjects,students,class_students)
 
     ##########DELETE ASSESSMENT##########
     #pop-up window to confirm delete assessment
@@ -597,6 +603,88 @@ def show_assessments():
         with col2:
             if st.button("Cancel",use_container_width=True):
                 st.rerun()
+
+
+    ##########EDIT ASSESSMENT##########
+    #fix!-new edit assessment dialog 
+    #pop up window for editing assesments-all combined
+    @st.dialog("Edit Assessment")
+    def editAssessmentPopup(assessments,selectedAssessmentIndex,selectedAssessment,selectedStudentId,selectedAssessmentTitle):
+        st.write(f"Update **{selectedAssessmentTitle}**.")
+
+        #input box-   prefill current assessment name
+        newAssessmentTitle =st.text_input("Assessment Title",value=selectedAssessmentTitle)
+
+        #saved date into date conversion
+        currentDate =pd.to_datetime(selectedAssessment["assessment_date"]).date()
+        #date- prefill with current assessment date,max value today
+        newAssessmentDate =st.date_input("Assessment Date",value=currentDate,max_value="today")
+
+        #number input- prefill with current max score, min value 1
+        #CHECK!- max score higher than current score and pass mark!!!!!!!!!
+        newMaxScore =st.number_input("Maximum Score",min_value=1.0,value=float(selectedAssessment["max_score"]),step=1.0)
+
+        #test fix!- make sure student score doesnt pass max score
+        newScore =st.number_input("Student Score",min_value=0.0,value=float(selectedAssessment["score"]),step=1.0)
+
+        newPassMark =st.number_input("Pass Mark",min_value=0.0,max_value=float(newMaxScore),
+            #prefill with current pass mark,
+            #saved pass mark higher than new max score? prefill with new max score
+            value=min(float(selectedAssessment["pass_mark"]),float(newMaxScore)),step=1.0)
+
+        cancelCol,saveCol =st.columns(2)
+
+        with cancelCol:
+            if st.button("Cancel",key="cancel_assessment_edit",use_container_width=True):
+                st.rerun()
+
+        with saveCol:
+            #if update button clicked-remove whitespace,check empty
+            if st.button("Save Changes",type="primary",key="save_assessment_edit",use_container_width=True):
+                #test fix!- whitespaces extra removal
+                newAssessmentTitle =" ".join(newAssessmentTitle.split())
+
+                #test fix!--clean assessment title for duplicate check
+                existingAssessTitles =(assessments["assessment_title"].astype(str).str.split().str.join(" ").str.lower())
+
+                #empty?-flag error
+                if newAssessmentTitle =="":
+                    st.error("Assessment title is required.")
+                    return
+
+                #score cant be above new max score
+                elif newScore >newMaxScore:
+                    st.error("Student score cannot be greater than maximum score.")
+                    return
+
+                #check if updated assessment would create duplicate
+                duplicateAssessment =(
+                    (assessments["student_id"]==selectedStudentId)&
+                    (assessments["subject"].str.lower() ==str(selectedAssessment["subject"]).lower())&
+                    (existingAssessTitles==newAssessmentTitle.lower())&
+                    (pd.to_datetime(assessments["assessment_date"]).dt.date== newAssessmentDate)&
+                    (assessments.index!=selectedAssessmentIndex)
+                ).any()
+
+                #duplicate?-flag error
+                if duplicateAssessment:
+                    st.error("This assessment result already exists for this student.")
+                    return
+
+                #update assessment data
+                assessments.loc[selectedAssessmentIndex,"assessment_title"] =newAssessmentTitle
+                assessments.loc[selectedAssessmentIndex,"assessment_date"] =newAssessmentDate
+                assessments.loc[selectedAssessmentIndex,"score"] =newScore
+                assessments.loc[selectedAssessmentIndex,"max_score"] =newMaxScore
+                assessments.loc[selectedAssessmentIndex,"pass_mark"] =newPassMark
+
+                #save updated classes
+                assessments.to_csv(get_user_file("assessment.csv"), index=False)
+                #save success message
+                st.session_state["update_assessment_message"] = "Assessment updated successfully."
+                st.rerun()
+
+
 
     ##########VIEW ASSESSMENTS##########
     #bold
@@ -627,8 +715,20 @@ def show_assessments():
             ]
         ]
 
-        #choose assessment directly from table
-        assessment_table =st.dataframe(assessment_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row")
+        #new!-choose assessment directly from table
+        #display the table which can let user select an assessment to manage
+        assessment_table =st.dataframe(assessment_display,use_container_width=True,hide_index=True,on_select="rerun",selection_mode="single-row",
+            column_config={
+                "student_id":st.column_config.TextColumn("Student ID"),
+                "name":st.column_config.TextColumn("Student"),
+                "subject":st.column_config.TextColumn("Subject"),
+                "assessment_title":st.column_config.TextColumn("Assessment"),
+                "assessment_date":st.column_config.DateColumn("Date"),
+                "score":st.column_config.NumberColumn("Score"),
+                "max_score":st.column_config.NumberColumn("Max Score"),
+                "pass_mark":st.column_config.NumberColumn("Pass Mark")
+            }
+        )
 
         ##########SELECTED ASSESSMENT##########
         #get selected rows
@@ -655,93 +755,18 @@ def show_assessments():
             else:
                 selected_student_name =(selected_student_id + " - Student no longer exists")
 
-            st.write("### Manage Selected Assessment")
-            #bold assessment
-            st.write(f"Selected: **{selected_assessment_title} - {selected_student_name}**")
+             ##########MANAGE SELECTED ASSESSMENT##########
+            with st.container(key="selected_record"):
+                #5=info 1.2=edit 1.2=delete column width ratio
+                infoCol,editCol,deleteCol =st.columns([5,1.2,1.2])
 
-            ##########EDIT ASSESSMENT##########
-            #input box-   prefill with current assessment name
-            new_assessment_title =st.text_input("Assessment Title", value=selected_assessment_title)
+                with infoCol:
+                    st.write(f"Selected: **{selected_assessment_title} - {selected_student_name}**")
 
-            #convert saved date into date
-            current_date =pd.to_datetime(selected_assessment["assessment_date"]).date()
+                with editCol:
+                    if st.button("Edit",key="edit_selected_assessment",use_container_width=True):
+                        editAssessmentPopup(assessments,selected_assessment_index,selected_assessment,selected_student_id,selected_assessment_title)
 
-            #date- prefill with current assessment date,max value today
-            new_assessment_date =st.date_input("Assessment Date",value=current_date,max_value="today")
-
-            #number input- prefill with current max score, min value 1
-            #CHECK!- max score higher than current score and pass mark!!!!!!!!!
-            new_max_score =st.number_input("Maximum Score",
-                min_value=1.0,
-                value=float(selected_assessment["max_score"]),
-                step=1.0)
-
-            #test fix!- make sure student score doesnt pass max score
-            new_score =st.number_input("Student Score",
-                min_value=0.0,
-                value=float(selected_assessment["score"]),
-                step=1.0)
-
-            new_pass_mark =st.number_input(
-                "Pass Mark",
-                min_value=0.0,
-                max_value=float(new_max_score),
-                #prefill with current pass mark,
-                #saved pass mark higher than new max score? prefill with new max score
-                value=min(float(selected_assessment["pass_mark"]),float(new_max_score)),
-                step=1.0
-            )
-
-            #if update button clicked-remove whitespace,check empty
-            if st.button("Update Assessment"):
-                #test fix!- whitespaces extra removal
-                new_assessment_title =" ".join(new_assessment_title.split())
-
-                #test fix!--clean assessment title for duplicate check
-                existing_assess_titles=(assessments["assessment_title"]  .astype(str)  .str.split()  .str.join(" ")  .str.lower())
-
-                #empty?-flag error
-                if new_assessment_title =="":
-                    st.error("Assessment title is required.")
-
-                #score cant be above new max score
-                elif new_score >new_max_score:
-                        st.error("Student score cannot be greater than maximum score.")
-
-                else:
-                    #check if updated assessment would create duplicate
-                    duplicate_assessment =(
-                        (assessments["student_id"]==selected_student_id) 
-                        &
-                        (assessments["subject"].str.lower()
-                         ==str(selected_assessment["subject"]).lower())  
-                         &
-                        (existing_assess_titles ==new_assessment_title.lower())
-                         &
-                        (pd.to_datetime(assessments["assessment_date"]).dt.date
-                         ==new_assessment_date)   
-                         &
-                        (assessments.index!=selected_assessment_index)).any()
-
-                    #duplicate?-flag error
-                    if duplicate_assessment:
-                        st.error("This assessment result already exists for this student.")
-
-                    else:
-                        #update assessment data
-                        assessments.loc[selected_assessment_index,"assessment_title"] =new_assessment_title
-                        assessments.loc[selected_assessment_index,"assessment_date"] =new_assessment_date
-                        assessments.loc[selected_assessment_index,"score"] =new_score
-                        assessments.loc[selected_assessment_index,"max_score"] =new_max_score
-                        assessments.loc[selected_assessment_index,"pass_mark"] =new_pass_mark
-
-                        #save updated classes
-                        assessments.to_csv(get_user_file("assessment.csv"),index=False)
-                        #save success message
-                        st.session_state["update_assessment_message"] ="Assessment updated successfully."
-                        st.rerun()
-
-            ##########DELETE ASSESSMENT BUTTON##########
-            #delete button only show when assessment selected
-            if st.button("Delete Assessment",type="primary"):
-                confirm_delete_assessment(assessments,selected_assessment_index,selected_assessment_title)
+                with deleteCol:
+                    if st.button("Delete",type="primary",key="delete_selected_assessment",use_container_width=True):
+                        confirm_delete_assessment(assessments,selected_assessment_index,selected_assessment_title)
