@@ -1,4 +1,5 @@
-#loads all finished phronesis data
+#app_data.py- loads all finished phronesis data for display
+#it works by reading through relevant csv files, processes them, and merges them into a single dataframe for use in app
 
 #imports
 import pandas as pd
@@ -12,9 +13,7 @@ from user_data import get_user_file
 
 
 def load_app_data():
-
     ##########READ DATA##########
-
     students =pd.read_csv(get_user_file("students.csv"))
     assessment =pd.read_csv(get_user_file("assessment.csv"))
     attendance =pd.read_csv(get_user_file("attendance.csv"))
@@ -22,132 +21,52 @@ def load_app_data():
     subjects =pd.read_csv(get_user_file("subjects.csv"))
     class_students =pd.read_csv(get_user_file("class_students.csv"))
 
-    #homework
+    #homework data might not exist yet
     homework_file =get_user_file("homework_completion.csv")
-
     if os.path.exists(homework_file):
         homework =pd.read_csv(homework_file)
     else:
-        homework =pd.DataFrame(
-            columns=["student_id","homework_completion"]
-        )
+        homework =pd.DataFrame(columns=["student_id","homework_completion"])
 
-    #behaviour
+    #same for behaviour data
     behaviour_file =get_user_file("behaviour.csv")
-
     if os.path.exists(behaviour_file):
         behaviour =pd.read_csv(behaviour_file)
     else:
-        behaviour =pd.DataFrame(
-            columns=["student_id","behaviour_incidents"]
-        )
-
+        behaviour =pd.DataFrame(columns=["student_id","behaviour_incidents"])
 
     ##########MODEL DATA##########
-
     assessment_features =process_assessments(assessment)
     attendance_features =process_attendances(attendance)
-
-    merged_features =merge_model_features(
-        students,
-        assessment_features,
-        attendance_features
-    )
-
-    prediction_results =risk_predict(
-        merged_features
-    )
-
+    merged_features =merge_model_features(students,assessment_features,attendance_features)
+    prediction_results =risk_predict(merged_features)
 
     ##########CLASS DATA##########
-
-    class_data =class_students.merge(
-        classes,
-        on="class_id",
-        how="left"
-    )
-
-    class_data =class_data.merge(
-        subjects[["subject_id","subject_name"]],
-        on="subject_id",
-        how="left"
-    )
-
-    class_data =class_data.rename(
-        columns={"subject_name":"subject"}
-    )
-
-    class_data =class_data.merge(
-        students[["student_id","name"]],
-        on="student_id",
-        how="left"
-    )
-
+    #merge class_students with classes, subjects, and students to get complete class data
+    class_data =class_students.merge(classes,on="class_id",how="left")
+    class_data =class_data.merge(subjects[["subject_id","subject_name"]],on="subject_id",how="left")
+    class_data =class_data.rename(columns={"subject_name":"subject"})
+    class_data =class_data.merge(students[["student_id","name"]],on="student_id",how="left")
 
     ##########ATTENDANCE##########
+    #attendance merged with class data
+    class_data =class_data.merge(attendance_features,on="student_id",how="left")
 
-    class_data =class_data.merge(
-        attendance_features,
-        on="student_id",
-        how="left"
-    )
-
-
-    ##########HOMEWORK##########
-
-    class_data =class_data.merge(
-        homework[["student_id","homework_completion"]],
-        on="student_id",
-        how="left"
-    )
-
-
-    ##########BEHAVIOUR##########
-
-    class_data =class_data.merge(
-        behaviour[["student_id","behaviour_incidents"]],
-        on="student_id",
-        how="left"
-    )
-
+    ##########HOMEWORK AND BEHAVIOUR##########
+    #hwk and behaviour data merged with class data
+    class_data =class_data.merge(homework[["student_id","homework_completion"]],on="student_id",how="left")
+    class_data =class_data.merge(behaviour[["student_id","behaviour_incidents"]],on="student_id",how="left")
 
     ##########PREDICTIONS##########
-
-    prediction_headers =[
-        "student_id",
-        "subject",
-        "prev_failure",
-        "grade_average",
-        "grade_change",
-        "assessment_status",
-        "prediction_status",
-        "risk_prediction",
-        "model_score"
-    ]
-
-    app_data =class_data.merge(
-        prediction_results[prediction_headers],
-        on=["student_id","subject"],
-        how="left"
-    )
-
+    #prediction results merged with class data
+    prediction_headers =["student_id","subject","prev_failure","grade_average","grade_change","assessment_status","prediction_status","risk_prediction","model_score"]
+    app_data =class_data.merge(prediction_results[prediction_headers],on=["student_id","subject"],how="left")
 
     ##########MISSING DATA##########
-
-    app_data["assessment_status"] =app_data[
-        "assessment_status"
-    ].fillna("Insufficient data")
-
-    app_data["prediction_status"] =app_data[
-        "prediction_status"
-    ].fillna("Insufficient data")
-
-    app_data["risk_prediction"] =app_data[
-        "risk_prediction"
-    ].fillna("Insufficient data")
-
-    app_data["attendance_status"] =app_data[
-        "attendance_status"
-    ].fillna("Insufficient data")
+    #fill missing data with insufficient data for all relevant columns
+    app_data["assessment_status"] =app_data["assessment_status"].fillna("Insufficient data")
+    app_data["prediction_status"] =app_data["prediction_status"].fillna("Insufficient data")
+    app_data["risk_prediction"] =app_data["risk_prediction"].fillna("Insufficient data")
+    app_data["attendance_status"] =app_data["attendance_status"].fillna("Insufficient data")
 
     return app_data
