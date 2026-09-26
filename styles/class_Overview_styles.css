@@ -1,0 +1,168 @@
+/* ##########CLASS OVERVIEW PAGE########## */
+
+/* filters */
+.st-key-class_filters{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.5rem;
+    padding:1.3rem 1.5rem 1.5rem;
+    margin:1.2rem 0 1.5rem;
+    box-shadow:0 0.5rem 1.4rem rgba(0,0,0,0.04);
+}
+
+.st-key-class_filters h3{
+    font-family:var(--headerFont) !important;
+    margin-top:0 !important;
+}
+
+/* class summary */
+.st-key-class_summary{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.7rem;
+    padding:1.4rem 1.5rem;
+    margin-bottom:1.5rem;
+    box-shadow:0 0.5rem 1.4rem rgba(0,0,0,0.04);
+}
+
+/* metrics */
+.st-key-class_summary [data-testid="stMetric"],
+.st-key-student_indicators [data-testid="stMetric"]{
+    background:#FAF7F5;
+    border:1px solid #EEE7E3;
+    border-radius:1.2rem;
+    padding:1rem;
+    min-height:6.2rem;
+}
+
+.st-key-class_summary [data-testid="stMetricLabel"],
+.st-key-student_indicators [data-testid="stMetricLabel"]{
+    font-family:var(--bodyFont) !important;
+    font-weight:700 !important;
+}
+
+.st-key-class_summary [data-testid="stMetricValue"],
+.st-key-student_indicators [data-testid="stMetricValue"]{
+    font-family:var(--headerFont) !important;
+}
+
+/* student table */
+.st-key-class_students{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.7rem;
+    padding:1.4rem;
+    margin-bottom:1.5rem;
+    box-shadow:0 0.5rem 1.4rem rgba(0,0,0,0.04);
+}
+
+.st-key-class_students [data-testid="stDataFrame"]{
+    border:1px solid #E7E1DE !important;
+    border-radius:1.1rem !important;
+    overflow:hidden !important;
+}
+
+/* keep native dataframe tools */
+.st-key-class_students [data-testid="stElementToolbar"]{
+    display:flex !important;
+}
+
+/* student profile heading */
+.st-key-student_profile_header{
+    background:linear-gradient(135deg,#FFF7F4,#FFFFFF);
+    border:1px solid #F0D8D1;
+    border-radius:1.7rem;
+    padding:1.5rem;
+    margin:1.5rem 0 1rem;
+    box-shadow:0 0.5rem 1.4rem rgba(0,0,0,0.04);
+}
+
+/* risk */
+.st-key-student_risk{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.5rem;
+    padding:1.3rem 1.5rem;
+    margin-bottom:1rem;
+}
+
+/* indicators */
+.st-key-student_indicators{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.5rem;
+    padding:1.4rem;
+    margin-bottom:1rem;
+    box-shadow:0 0.4rem 1.2rem rgba(0,0,0,0.035);
+}
+
+/* insights and recommendations */
+.st-key-student_insights,
+.st-key-student_recommendations{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.5rem;
+    padding:1.4rem;
+    min-height:100%;
+    box-shadow:0 0.4rem 1.2rem rgba(0,0,0,0.035);
+}
+
+.st-key-student_insights{
+    border-top:0.25rem solid #70C0B8;
+}
+
+.st-key-student_recommendations{
+    border-top:0.25rem solid #FF8266;
+}
+
+/* parent communication */
+.st-key-parent_communication{
+    background:#FFFFFF;
+    border:1px solid #E7E1DE;
+    border-radius:1.5rem;
+    padding:1.4rem;
+    margin:1rem 0 2rem;
+    box-shadow:0 0.4rem 1.2rem rgba(0,0,0,0.035);
+}
+
+.st-key-parent_communication button{
+    border-radius:999rem !important;
+    background:#FF8266 !important;
+    border-color:#FF8266 !important;
+    color:#FFFFFF !important;
+    font-weight:800 !important;
+}
+
+.st-key-parent_communication button:hover{
+    transform:translateY(-0.1rem);
+    box-shadow:0 0.6rem 1rem rgba(255,130,102,0.2);
+}
+
+/* headings */
+.st-key-class_summary h2,
+.st-key-class_students h3,
+.st-key-student_profile_header h2,
+.st-key-student_profile_header h3,
+.st-key-student_risk h3,
+.st-key-student_indicators h3,
+.st-key-student_insights h3,
+.st-key-student_recommendations h3,
+.st-key-parent_communication h3{
+    font-family:var(--headerFont) !important;
+}
+
+/* mobile */
+@media(max-width:768px){
+    .st-key-class_filters,
+    .st-key-class_summary,
+    .st-key-class_students,
+    .st-key-student_profile_header,
+    .st-key-student_risk,
+    .st-key-student_indicators,
+    .st-key-student_insights,
+    .st-key-student_recommendations,
+    .st-key-parent_communication{
+        padding:1rem;
+        border-radius:1.2rem;
+    }
+}

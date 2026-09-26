@@ -1,3 +1,5 @@
+#attendance adapter.py- this handles validation,processing,feature extraction for attendance data
+#imports
 import pandas as pd
 
 def validate_attendance_data(attendance):

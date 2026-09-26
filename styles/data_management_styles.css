@@ -1,0 +1,490 @@
+/* #####DATA MANAGEMENT STYLING##### */
+
+/* ##########PAGE########## */
+.st-key-data_management_page{
+    width:96%;
+    max-width:96rem;
+    margin:0 auto;
+    padding:2.5rem clamp(1.5rem,4vw,4rem) 5rem !important;
+}
+
+/* main page title */
+.st-key-data_management_page > div > div > h1{
+    font-family:var(--headerFont) !important;
+    font-size:clamp(2.8rem,5vw,4rem) !important;
+    margin-bottom:0.3rem !important;
+}
+
+/* description under page title */
+.st-key-data_management_page > div > div > p{
+    font-family:var(--bodyFont) !important;
+    font-size:1.05rem !important;
+    color:#575757 !important;
+}
+
+/* ##########TOP DATA TYPE BUTTONS########## */
+.st-key-subject_tab button,
+.st-key-class_tab button,
+.st-key-student_tab button,
+.st-key-assessment_tab button,
+.st-key-attendance_tab button{
+    min-height:3rem;
+    border-radius:999rem !important;
+    font-family:var(--bodyFont) !important;
+    font-weight:800 !important;
+    transition:transform 0.2s ease,box-shadow 0.2s ease,
+               background-color 0.2s ease,color 0.2s ease !important;
+}
+
+/* inactive buttons */
+.st-key-subject_tab button[kind="secondary"],
+.st-key-class_tab button[kind="secondary"],
+.st-key-student_tab button[kind="secondary"],
+.st-key-assessment_tab button[kind="secondary"],
+.st-key-attendance_tab button[kind="secondary"]{
+    background:rgba(255,255,255,0.94) !important;
+    color:#5C5552 !important;
+    border:1px solid #E5DEDB !important;
+    box-shadow:0 0.25rem 0.7rem rgba(0,0,0,0.03);
+}
+
+/* active section button */
+.st-key-subject_tab button[kind="primary"],
+.st-key-class_tab button[kind="primary"],
+.st-key-student_tab button[kind="primary"],
+.st-key-assessment_tab button[kind="primary"],
+.st-key-attendance_tab button[kind="primary"]{
+    background:#FF8266 !important;
+    color:#FFFFFF !important;
+    border:none !important;
+    box-shadow:0 0.55rem 1.2rem rgba(255,130,102,0.20);
+}
+
+/* make button words visible */
+.st-key-subject_tab button p,
+.st-key-class_tab button p,
+.st-key-student_tab button p,
+.st-key-assessment_tab button p,
+.st-key-attendance_tab button p{
+    color:inherit !important;
+    font-weight:800 !important;
+}
+
+/* hover animation */
+.st-key-subject_tab button:hover,
+.st-key-class_tab button:hover,
+.st-key-student_tab button:hover,
+.st-key-assessment_tab button:hover,
+.st-key-attendance_tab button:hover{
+    transform:translateY(-0.15rem);
+    box-shadow:0 0.65rem 1.3rem rgba(0,0,0,0.08);
+}
+
+/* ##########MAIN CONTENT CARD########## */
+.st-key-data_content{
+    width:100%;
+    margin-top:1.6rem;
+    padding:clamp(1.8rem,3vw,2.8rem) !important;
+    background:rgba(255,255,255,0.94);
+    border:1px solid rgba(0,0,0,0.05);
+    border-radius:2rem;
+    box-shadow:0 0.9rem 2.2rem rgba(0,0,0,0.06);
+}
+
+/* section heading */
+.st-key-data_content h2,
+.st-key-data_content h3{
+    font-family:var(--headerFont) !important;
+    color:#202020 !important;
+}
+
+/* section intro writing */
+.st-key-data_content p{
+    font-family:var(--bodyFont) !important;
+}
+
+/* ##########DATA ACTION BUTTONS########## */
+/* ##########DATA ACTION BUTTONS########## */
+
+.st-key-data_actions{
+    margin:1.4rem 0 1.8rem;
+}
+
+.st-key-add_subject button,
+.st-key-download_subject_template button,
+.st-key-upload_subject_csv button,
+.st-key-add_class button,
+.st-key-download_class_template button,
+.st-key-upload_class_csv button,
+.st-key-add_student button,
+.st-key-download_student_template button,
+.st-key-upload_student_csv button,
+.st-key-add_assessment button,
+.st-key-download_assessment_template button,
+.st-key-upload_assessment_csv button,
+.st-key-add_attendance button,
+.st-key-download_attendance_template button,
+.st-key-upload_attendance_csv button{
+    min-height:2.9rem;
+    border-radius:999rem !important;
+    font-family:var(--bodyFont) !important;
+    font-weight:800 !important;
+    background:#FFFFFF !important;
+    color:#E16C52 !important;
+    border:0.1rem solid #E8A293 !important;
+    box-shadow:0 0.3rem 0.9rem rgba(0,0,0,0.04);
+    transition:transform 0.2s ease,background-color 0.2s ease,color 0.2s ease,box-shadow 0.2s ease !important;
+}
+
+.st-key-add_subject button p,
+.st-key-download_subject_template button p,
+.st-key-upload_subject_csv button p,
+.st-key-add_class button p,
+.st-key-download_class_template button p,
+.st-key-upload_class_csv button p,
+.st-key-add_student button p,
+.st-key-download_student_template button p,
+.st-key-upload_student_csv button p,
+.st-key-add_assessment button p,
+.st-key-download_assessment_template button p,
+.st-key-upload_assessment_csv button p,
+.st-key-add_attendance button p,
+.st-key-download_attendance_template button p,
+.st-key-upload_attendance_csv button p{
+    color:inherit !important;
+    font-weight:800 !important;
+}
+
+.st-key-add_subject button:hover,
+.st-key-download_subject_template button:hover,
+.st-key-upload_subject_csv button:hover,
+.st-key-add_class button:hover,
+.st-key-download_class_template button:hover,
+.st-key-upload_class_csv button:hover,
+.st-key-add_student button:hover,
+.st-key-download_student_template button:hover,
+.st-key-upload_student_csv button:hover,
+.st-key-add_assessment button:hover,
+.st-key-download_assessment_template button:hover,
+.st-key-upload_assessment_csv button:hover,
+.st-key-add_attendance button:hover,
+.st-key-download_attendance_template button:hover,
+.st-key-upload_attendance_csv button:hover{
+    background:#FF8266 !important;
+    color:#FFFFFF !important;
+    border-color:#FF8266 !important;
+    transform:translateY(-0.15rem);
+    box-shadow:0 0.7rem 1.3rem rgba(255,130,102,0.18);
+}
+
+/* ##########TABLE########## */
+/* keep streamlit dataframe toolbar/search/filter visible */
+.st-key-data_content [data-testid="stDataFrame"]{
+    background:#FFFFFF !important;
+    border-radius:1.2rem !important;
+    border:1px solid #E7E1DE !important;
+    overflow:hidden !important;
+    box-shadow:0 0.5rem 1.3rem rgba(0,0,0,0.04);
+}
+
+/* dont hide the streamlit dataframe toolbar */
+.st-key-data_content [data-testid="stElementToolbar"]{
+    display:flex !important;
+}
+
+/* dataframe toolbar buttons */
+.st-key-data_content [data-testid="stElementToolbar"] button{
+    border-radius:0.65rem !important;
+}
+
+/* keep table area white */
+.st-key-data_content [data-testid="stDataFrame"] > div{
+    background:#FFFFFF !important;
+}
+
+/* ##########SELECTED RECORD########## */
+.st-key-selected_record{
+    margin-top:1.3rem;
+    padding:1.2rem 1.4rem !important;
+    background:#FFF8F5;
+    border:1px solid #F1D8D1;
+    border-radius:1.2rem;
+    box-shadow:0 0.35rem 1rem rgba(0,0,0,0.035);
+    transition:transform 0.2s ease,box-shadow 0.2s ease;
+}
+
+/* slight lift */
+.st-key-selected_record:hover{
+    transform:translateY(-0.1rem);
+    box-shadow:0 0.6rem 1.3rem rgba(0,0,0,0.055);
+}
+
+.st-key-selected_record p{
+    margin:0 !important;
+    font-family:var(--bodyFont) !important;
+}
+
+/* selected record buttons */
+.st-key-selected_record .stButton button{
+    min-height:2.7rem;
+    border-radius:999rem !important;
+    font-family:var(--bodyFont) !important;
+    font-weight:800 !important;
+    background:#FFFFFF !important;
+    color:#E16C52 !important;
+    border:1px solid #E8A293 !important;
+    transition:transform 0.2s ease,box-shadow 0.2s ease,
+               background-color 0.2s ease,color 0.2s ease !important;
+}
+
+/* delete primary button */
+.st-key-selected_record .stButton button[kind="primary"]{
+    background:#FF8266 !important;
+    color:#FFFFFF !important;
+    border-color:#FF8266 !important;
+}
+
+/* make words visible */
+.st-key-selected_record .stButton button p{
+    color:inherit !important;
+    font-weight:800 !important;
+}
+
+/* selected buttons hover */
+.st-key-selected_record .stButton button:hover{
+    transform:translateY(-0.15rem);
+    box-shadow:0 0.55rem 1rem rgba(255,130,102,0.15);
+}
+
+/* ##########SUCCESS / INFO / WARNING BOXES########## */
+.st-key-data_content [data-testid="stAlert"]{
+    border-radius:1rem !important;
+    font-family:var(--bodyFont) !important;
+}
+
+/* ##########DIALOG BACKDROP########## */
+div[data-baseweb="modal"]{
+    backdrop-filter:blur(0.15rem);
+}
+
+/* ##########DIALOG BOX########## */
+div[data-testid="stDialog"] > div{
+    background:#FFFDF9 !important;
+    border-radius:2rem !important;
+    border:1px solid rgba(0,0,0,0.06) !important;
+    box-shadow:0 2rem 5rem rgba(0,0,0,0.20) !important;
+}
+
+/* spacing inside dialog */
+div[data-testid="stDialog"] [data-testid="stVerticalBlock"]{
+    gap:0.8rem;
+}
+
+/* popup title */
+div[data-testid="stDialog"] h2{
+    font-family:var(--headerFont) !important;
+    font-size:1.9rem !important;
+    font-weight:600 !important;
+    color:#202020 !important;
+}
+
+/* popup smaller headings */
+div[data-testid="stDialog"] h3{
+    font-family:var(--headerFont) !important;
+    color:#202020 !important;
+}
+
+/* popup text */
+div[data-testid="stDialog"] p{
+    font-family:var(--bodyFont) !important;
+    font-size:0.95rem !important;
+    line-height:1.55 !important;
+    color:#444444 !important;
+}
+
+/* ##########POPUP LABELS########## */
+div[data-testid="stDialog"] label{
+    font-family:var(--bodyFont) !important;
+    font-weight:700 !important;
+    color:#303030 !important;
+}
+
+/* ##########POPUP INPUTS########## */
+div[data-testid="stDialog"] [data-baseweb="input"]{
+    min-height:3rem;
+    background:#FFFFFF !important;
+    border:1px solid #E5DEDB !important;
+    border-radius:0.85rem !important;
+    transition:border-color 0.2s ease,box-shadow 0.2s ease !important;
+}
+
+/* focus input */
+div[data-testid="stDialog"] [data-baseweb="input"]:focus-within{
+    border-color:#FF9C85 !important;
+    box-shadow:0 0 0 0.16rem rgba(255,130,102,0.12) !important;
+}
+
+/* input text */
+div[data-testid="stDialog"] input{
+    background:#FFFFFF !important;
+    color:#202020 !important;
+    -webkit-text-fill-color:#202020 !important;
+    font-family:var(--bodyFont) !important;
+}
+
+/* placeholder text */
+div[data-testid="stDialog"] input::placeholder{
+    color:#AAA4A2 !important;
+    opacity:1 !important;
+}
+
+/* ##########POPUP SELECT BOXES########## */
+div[data-testid="stDialog"] [data-baseweb="select"] > div{
+    background:#FFFFFF !important;
+    color:#202020 !important;
+    border-radius:0.85rem !important;
+    border-color:#E5DEDB !important;
+}
+
+/* ##########NUMBER INPUTS########## */
+div[data-testid="stDialog"] [data-testid="stNumberInput"]{
+    border-radius:0.85rem !important;
+}
+
+/* ##########DATE INPUTS########## */
+div[data-testid="stDialog"] [data-testid="stDateInput"]{
+    border-radius:0.85rem !important;
+}
+
+/* ##########MULTISELECT########## */
+div[data-testid="stDialog"] [data-baseweb="select"]{
+    font-family:var(--bodyFont) !important;
+}
+
+/* ##########FILE UPLOADER########## */
+div[data-testid="stDialog"] [data-testid="stFileUploader"]{
+    background:#FFFFFF;
+    border-radius:1rem;
+    padding:0.6rem;
+    border:1px solid #ECE5E2;
+}
+
+/* file uploader dropzone */
+div[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"]{
+    background:#FFF8F5 !important;
+    border:1px dashed #E7A99A !important;
+    border-radius:0.9rem !important;
+}
+
+/* ##########PREVIEW TABLE IN POPUP########## */
+div[data-testid="stDialog"] [data-testid="stDataFrame"]{
+    background:#FFFFFF !important;
+    border-radius:1rem !important;
+    border:1px solid #E7E1DE !important;
+    overflow:hidden !important;
+}
+
+/* ##########POPUP BUTTONS########## */
+div[data-testid="stDialog"] .stButton button{
+    min-height:2.9rem;
+    border-radius:999rem !important;
+    font-family:var(--bodyFont) !important;
+    font-weight:800 !important;
+    transition:transform 0.2s ease,box-shadow 0.2s ease,
+               background 0.2s ease !important;
+}
+
+/* primary popup button */
+div[data-testid="stDialog"] .stButton button[kind="primary"]{
+    background:#FF8266 !important;
+    color:#FFFFFF !important;
+    border:none !important;
+    box-shadow:0 0.55rem 1.1rem rgba(255,130,102,0.18);
+}
+
+/* primary hover */
+div[data-testid="stDialog"] .stButton button[kind="primary"]:hover{
+    background:#E76E53 !important;
+    color:#FFFFFF !important;
+    transform:translateY(-0.15rem);
+    box-shadow:0 0.8rem 1.4rem rgba(255,130,102,0.25);
+}
+
+/* cancel / normal popup button */
+div[data-testid="stDialog"] .stButton button:not([kind="primary"]){
+    background:#F3EFED !important;
+    color:#4B4644 !important;
+    border:none !important;
+}
+
+/* cancel hover */
+div[data-testid="stDialog"] .stButton button:not([kind="primary"]):hover{
+    background:#E8E1DE !important;
+    color:#202020 !important;
+    transform:translateY(-0.1rem);
+}
+
+/* make popup button words visible */
+div[data-testid="stDialog"] .stButton button p{
+    color:inherit !important;
+    font-weight:800 !important;
+}
+
+/* ##########DOWNLOAD BUTTON INSIDE POPUP########## */
+div[data-testid="stDialog"] .stDownloadButton button{
+    min-height:2.9rem;
+    border-radius:999rem !important;
+    font-family:var(--bodyFont) !important;
+    font-weight:800 !important;
+    background:#FFFFFF !important;
+    color:#E16C52 !important;
+    border:1px solid #E8A293 !important;
+}
+
+/* ##########WARNING / ERROR / SUCCESS IN POPUPS########## */
+div[data-testid="stDialog"] [data-testid="stAlert"]{
+    border-radius:1rem !important;
+}
+
+/* ##########MOBILE########## */
+@media(max-width:56.249em){
+    .st-key-data_management_page{
+        width:95%;
+        padding:1.5rem 1rem 3rem !important;
+    }
+
+    .st-key-data_content{
+        padding:1.3rem !important;
+        border-radius:1.4rem;
+    }
+
+    /* allow top section buttons to fit better */
+    .st-key-data_management_page [data-testid="stHorizontalBlock"]{
+        gap:0.5rem !important;
+    }
+
+    .st-key-subject_tab button,
+    .st-key-class_tab button,
+    .st-key-student_tab button,
+    .st-key-assessment_tab button,
+    .st-key-attendance_tab button{
+        font-size:0.8rem !important;
+        min-height:2.7rem;
+    }
+
+    /* action buttons can wrap more naturally */
+    .st-key-data_actions [data-testid="stHorizontalBlock"]{
+        gap:0.6rem !important;
+    }
+
+    .st-key-selected_record{
+        padding:1rem !important;
+    }
+
+    /* popup almost full screen on mobile */
+    div[data-testid="stDialog"] > div{
+        width:92vw !important;
+        max-width:92vw !important;
+        border-radius:1.4rem !important;
+    }
+}

@@ -1,3 +1,5 @@
+#assessment adapter.py- this handles validation,processing,feature extraction for assessment data
+#imports
 import pandas as pd
 
 def validate_assessment_data(assessment):
