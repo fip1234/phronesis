@@ -203,6 +203,12 @@ def show_parent_email(student_name,subject,email):
 #load application data
 df =load_app_data()
 
+##########IF NO DATA- NEW TEACHER ACCOUNT##########
+#!FIX-handle when no data is available for the teacher
+if len(df)==0:
+    st.info("No class data is available yet. " "Please go to Data Management to add a subject, class and students." )
+    st.stop()
+    
 ##########FILTERS##########
 #select class options- popup
 with st.container(key="class_filters"):

@@ -11,6 +11,13 @@ The system combines attendance, assessment, behaviour and homework data to gener
 * Explanations of contributing factors
 * Recommended interventions
 
+## Licence and Attribution
+The UCI Student Performance dataset used for model development is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+Dataset citation:
+Cortez, P. (2008). Student Performance [Dataset]. UCI Machine Learning Repository. 
+https://archive.ics.uci.edu/dataset/320/student+performance
+
+
 ## Running the Prototype
 
 1. Open the project folder.
