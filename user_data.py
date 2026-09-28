@@ -27,61 +27,19 @@ def get_user_file(filename):
 
 
 ##########CREATE EMPTY USER DATA##########
-
 def create_user_files():
-
     folder =get_user_folder()
 
+    #csv files and their columns
     files ={
-
-        "students.csv":[
-            "student_id",
-            "name",
-            "year_group"
-        ],
-
-        "subjects.csv":[
-            "subject_id",
-            "subject_name"
-        ],
-
-        "classes.csv":[
-            "class_id",
-            "class_name",
-            "subject_id",
-            "year_group"
-        ],
-
-        "class_students.csv":[
-            "class_id",
-            "student_id"
-        ],
-
-        "assessment.csv":[
-            "student_id",
-            "subject",
-            "assessment_title",
-            "assessment_date",
-            "score",
-            "max_score",
-            "pass_mark"
-        ],
-
-        "attendance.csv":[
-            "student_id",
-            "total_sessions",
-            "sessions_attended"
-        ],
-
-        "homework_completion.csv":[
-            "student_id",
-            "homework_completion"
-        ],
-
-        "behaviour.csv":[
-            "student_id",
-            "behaviour_incidents"
-        ]
+        "students.csv":["student_id","name","year_group"],
+        "subjects.csv":["subject_id","subject_name"],
+        "classes.csv":["class_id","class_name","subject_id","year_group"],
+        "class_students.csv":["class_id","student_id"],
+        "assessment.csv":["student_id","subject","assessment_title","assessment_date","score","max_score","pass_mark"],
+        "attendance.csv":["student_id","total_sessions","sessions_attended"],
+        "homework_completion.csv":["student_id","homework_completion"],
+        "behaviour.csv":["student_id","behaviour_incidents"]
     }
 
     for filename,columns in files.items():

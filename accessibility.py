@@ -14,8 +14,10 @@ def apply_accessibility_settings():
         font_family ="OpenDyslexic, Arial, sans-serif"
         heading_font ="OpenDyslexic, Arial, sans-serif"
         #get open dyslexic font from CDN
-        st.markdown('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/400.css">',
-                    unsafe_allow_html=True)
+        #fix!- bold and not bold
+        st.markdown("""<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/400.css">
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/700.css">
+                    """, unsafe_allow_html=True)
     else:
         font_family ="var(--bodyFont)"
         heading_font ="var(--headerFont)"
@@ -32,23 +34,16 @@ def apply_accessibility_settings():
     st.markdown(
         f"""
         <style>
-        .stApp{{background-color:{background};color:{text_colour};font-family:{font_family};}}
-
-        # apply font family and weight to various elements
-        .stApp p,.stApp label,.stApp button,.stApp input,.stApp textarea,
-        .stApp select,.stApp [data-testid="stMetricLabel"],
-        #apply font family and weight to metric values
-        .stApp [data-testid="stMetricValue"]{{font-family:{font_family} !important; font-weight:400 !important;}}
+        .stApp,.stApp p,.stApp label,.stApp button,.stApp input,.stApp textarea,
+        .stApp select,.stApp h1,.stApp h2,.stApp h3,
+        .stApp [data-testid="stMetricLabel"],.stApp [data-testid="stMetricValue"]{{
+            font-family:{font_family} !important;
+        }}
 
         .stApp p,.stApp label{{font-size:{text_size};}}
-        .stApp h1,.stApp h2,.stApp h3{{font-family:{heading_font} !important;}}
-
         [data-testid="stSidebar"]{{background-color:{secondary_background};}}
+        span[data-testid="stIconMaterial"]{{font-family:"Material Symbols Rounded" !important;}}
 
-        span[data-testid="stIconMaterial"]{{font-family:"Material Symbols Rounded" !important;
-                                            font-weight:normal !important;font-style:normal !important;}}
-
-        #responsive font size for small screens
         @media(max-width:600px){{.stApp h1{{font-size:1.8rem;}}.stApp h2{{font-size:1.5rem;}}}}
         </style>
         """,

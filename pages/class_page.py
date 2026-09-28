@@ -429,14 +429,14 @@ else:
             st.write("### Insights")
 
             for insight in student_insights:
-                st.write("| "+insight)
+                st.write("- "+insight)
 
     with recommendationCol:
         with  st.container(key="student_recommendations"):
             st.write("### Recommended Next Steps")
 
             for recommendation in student_recommendations:
-                st.write("| "+recommendation)
+                st.write("- "+recommendation)
 
 
     ##########EMAIL##########

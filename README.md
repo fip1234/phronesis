@@ -1,43 +1,22 @@
-# Phronesis Prototype
+# Phronesis – Supporting Project Documents
 
-## Overview
-
-Phronesis is a prototype student risk analytics system designed to help teachers identify students who may require additional support.
-
-The system combines attendance, assessment, behaviour and homework data to generate:
-
-* Student risk scores
-* Risk categories (Low, Medium, High)
-* Explanations of contributing factors
-* Recommended interventions
-
-## Licence and Attribution
-The UCI Student Performance dataset used for model development is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
-Dataset citation:
-Cortez, P. (2008). Student Performance [Dataset]. UCI Machine Learning Repository. 
-https://archive.ics.uci.edu/dataset/320/student+performance
-
-
-## Running the Prototype
-
-1. Open the project folder.
-2. Activate the Python environment.
-3. Run:
-
-streamlit run app.py
-
-4. Open the local Streamlit URL shown in the terminal.
+This folder contains supporting evidence produced during the development and evaluation of Phronesis.
 
 ## Files
 
-* students.csv
-* attendance.csv
-* assessment.csv
-* behaviour.csv
-* homework.csv
+### development_log.xlsx
+A chronological development log documenting implementation work, model experimentation, design changes, bugs, fixes and major development decisions.
 
-## Technologies Used
+### testing_log.xlsx
+Records functional, validation, integration and edge-case testing carried out on the final application.
 
-* Python
-* Pandas
-* Streamlit
+### functional_requirements.xlsx
+The project requirements and requirement priorities used during the design and development of Phronesis.
+
+### questionnaire_results
+Anonymous results from the final user evaluation questionnaire. Only responses for which consent was provided were used within the final project report.
+
+### interview_notes
+Anonymised notes from follow-up user interviews carried out as part of the final evaluation.
+
+These documents are provided as supplementary evidence to the final project report and source code.
